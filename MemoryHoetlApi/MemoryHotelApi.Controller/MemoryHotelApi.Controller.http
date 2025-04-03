@@ -1,0 +1,6 @@
+@MemoryHotelApi.Controller_HostAddress = http://localhost:5012
+
+GET {{MemoryHotelApi.Controller_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
