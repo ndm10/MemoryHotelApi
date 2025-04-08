@@ -401,3 +401,10 @@ FodyWeavers.xsd
 
 # Ignore all appsettings files
 appsettings*.json
+
+# Ignore Migrations folder
+MemoryHoetlApi/MemoryHotelApi.DataAccessLayer/Migrations/
+
+# Ignore uploaded images
+MemoryHoetlApi/MemoryHotelApi.Controller/uploads/images/
+MemoryHoetlApi/MemoryHotelApi.Controller/Images/

@@ -10,6 +10,8 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
     {
         private readonly MemoryHotelApiDbContext _context;
         private IUserRepository _userRepository = null!;
+        private IImageRepository _imageRepository = null!;
+        private IRoleRepository _roleRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -22,6 +24,22 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _userRepository ??= new UserRepository(_context);
+            }
+        }
+
+        public IImageRepository? ImageRepository
+        {
+            get
+            {
+                return _imageRepository ??= new ImageRepository(_context);
+            }
+        }
+
+        public IRoleRepository? RoleRepository
+        {
+            get
+            {
+                return _roleRepository ??= new RoleRepository(_context);
             }
         }
 

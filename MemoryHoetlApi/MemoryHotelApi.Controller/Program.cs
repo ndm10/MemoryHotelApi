@@ -1,4 +1,4 @@
-using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+﻿using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Contexts;
@@ -10,12 +10,20 @@ using System.Text;
 using ThomVietApi.BusinessLogicLayer.Mapping;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using ThomVietApi.DataAccessLayer.UnitOfWork;
+using AutoMapper;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.HttpOverrides;
+using MemoryHotelApi.BusinessLogicLayer.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+// Register IMemoryCache
+builder.Services.AddMemoryCache();
+
+builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -43,6 +51,14 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+});
+
+// Config Forwarded Headers
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
 });
 
 // Register the DbContext on the service container
@@ -77,9 +93,14 @@ builder.Services.AddScoped<PasswordHasher>();
 // Register the jwt utility
 builder.Services.AddScoped<JwtUtility>();
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<EmailSender>();
+
 // Register the services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -93,6 +114,25 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotel
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// Serve static files
+// Create the Images directory if it doesn't exist
+string imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+if (!Directory.Exists(imagesPath))
+{
+    Directory.CreateDirectory(imagesPath);
+}
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(imagesPath),
+    RequestPath = "/Images"
+});
+
+// Enable Forwarded Headers
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.MapControllers();
 

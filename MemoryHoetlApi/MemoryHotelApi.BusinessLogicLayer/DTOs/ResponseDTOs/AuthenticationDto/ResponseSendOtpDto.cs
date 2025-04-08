@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto
 {
-    public class ResponseRegisterDto : GenericResponseDto
+    public class ResponseSendOtpDto : GenericResponseDto
     {
     }
 }

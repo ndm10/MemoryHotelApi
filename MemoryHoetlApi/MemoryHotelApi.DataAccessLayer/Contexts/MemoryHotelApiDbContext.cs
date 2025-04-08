@@ -9,6 +9,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Image> Images {  get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
                 {
                     entity.Id = Guid.NewGuid();
                     entity.CreatedDate = now;
+                    entity.IsDeleted = false;
                 }
                 entity.UpdatedDate = now;
             }

@@ -1,6 +1,8 @@
-﻿namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
+﻿using MemoryHotelApi.DataAccessLayer.Entities;
+
+namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
 {
-    public interface IGenericService
+    public interface IGenericService<T> where T : GenericEntity
     {
     }
 }

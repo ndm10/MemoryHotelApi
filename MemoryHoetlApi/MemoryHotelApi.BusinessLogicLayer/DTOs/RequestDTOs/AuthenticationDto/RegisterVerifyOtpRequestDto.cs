@@ -2,11 +2,10 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto
 {
-    public class RequestRegisterDto
+    public class RegisterVerifyOtpRequestDto
     {
-        public required string FullName { get; set; }
-        public required string Email { get; set; }
-        public required string Phone { get; set; }
+        public string? Otp { get; set; }
+        public string? Email { get; set; } = null!;
 
         [JsonIgnore]
         public string? ClientIp { get; set; }
