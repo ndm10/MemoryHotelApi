@@ -55,7 +55,7 @@ namespace MemoryHotelApi.Controller.Controllers
             return Ok(response);
         }
 
-        [HttpPost("send-otp")]
+        [HttpPost("reset-password-send-otp")]
         public async Task<ActionResult<ResponseSendOtpDto>> SendOtp(RequestSendOtpDto request)
         {
             try
@@ -99,7 +99,7 @@ namespace MemoryHotelApi.Controller.Controllers
             }
         }
 
-        [HttpPatch("new-password")]
+        [HttpPatch("set-new-password")]
         public async Task<ActionResult<ResponseLoginDto>> NewPassword(RequestSetPasswordDto request)
         {
             try

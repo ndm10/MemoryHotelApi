@@ -9,7 +9,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IUserRepository? UserRepository { get; }
         IImageRepository? ImageRepository { get; }
         IRoleRepository? RoleRepository { get; }
-        Task<int> SaveChangeAsync();
+        IBannerRepository? BannerRepository { get; }
+        Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }
 }

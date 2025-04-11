@@ -31,7 +31,8 @@ namespace ThomVietApi.DataAccessLayer.SeedData
                     UpdatedDate = DateTime.UtcNow,
                     IsDeleted = false,
                     RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                    FullName = "Nguyễn Đình Trung Đức"
+                    FullName = "Nguyễn Đình Trung Đức",
+                    IsVerified = true,
                 },
                 new User
                 {
@@ -43,7 +44,8 @@ namespace ThomVietApi.DataAccessLayer.SeedData
                     UpdatedDate = DateTime.UtcNow,
                     IsDeleted = false,
                     RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                    FullName = "Minh Nguyễn"
+                    FullName = "Minh Nguyễn",
+                    IsVerified = true,
                 },
                 new User
                 {
@@ -55,7 +57,8 @@ namespace ThomVietApi.DataAccessLayer.SeedData
                     UpdatedDate = DateTime.UtcNow,
                     IsDeleted = false,
                     RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                    FullName = "Nguyễn Ngọc Quang"
+                    FullName = "Nguyễn Ngọc Quang",
+                    IsVerified = true,
                 }
             );
 

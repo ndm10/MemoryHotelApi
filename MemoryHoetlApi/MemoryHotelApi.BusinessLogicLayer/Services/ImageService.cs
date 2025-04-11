@@ -46,7 +46,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     };
 
                     await _unitOfWork.ImageRepository!.AddImageAsync(imageEntity);
-                    await _unitOfWork.SaveChangeAsync();
+                    await _unitOfWork.SaveChangesAsync();
                     filePaths.Add(filePath);
                 }
                 else

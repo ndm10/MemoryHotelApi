@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MemoryHotelApi.DataAccessLayer.Entities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Utilities
 {
@@ -26,7 +26,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
                 issuer: configuration["Jwt:Issuer"],
                 audience: configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials
             );
 

@@ -12,6 +12,7 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
         private IUserRepository _userRepository = null!;
         private IImageRepository _imageRepository = null!;
         private IRoleRepository _roleRepository = null!;
+        private IBannerRepository _bannerRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -43,12 +44,20 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
             }
         }
 
+        public IBannerRepository? BannerRepository
+        {
+            get
+            {
+                return _bannerRepository ??= new BannerRepository(_context);
+            }
+        }
+
         public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
 
-        public async Task<int> SaveChangeAsync()
+        public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
         }

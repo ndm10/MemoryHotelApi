@@ -1,6 +1,7 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.ImageDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ImageDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryHotelApi.Controller.Controllers
@@ -21,6 +22,7 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("upload")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ImageUploadResponseDto>> UploadImage([FromForm] IFormFileCollection files)
         {
             if (files == null || files.Count == 0)

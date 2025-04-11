@@ -1,19 +1,18 @@
-﻿using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+﻿using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Services;
+using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Contexts;
+using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using ThomVietApi.BusinessLogicLayer.Mapping;
-using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using ThomVietApi.DataAccessLayer.UnitOfWork;
-using AutoMapper;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.HttpOverrides;
-using MemoryHotelApi.BusinessLogicLayer.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,9 +100,21 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IBannerService, BannerService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowUrl", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://memory-hotel.vercel.app/", "https://cms-memory-hotel.vercel.app/")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -114,6 +125,8 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotel
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowUrl");
 
 // Serve static files
 // Create the Images directory if it doesn't exist

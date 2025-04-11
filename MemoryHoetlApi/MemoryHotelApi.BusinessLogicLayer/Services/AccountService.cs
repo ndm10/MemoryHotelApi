@@ -45,7 +45,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             user.Password = hashedNewPassword;
 
             // Update the user in the database
-            await _unitOfWork.SaveChangeAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return new ResponseChangePasswordDto
             {
@@ -76,7 +76,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             user.Nationality = request.Nationality;
 
             // Save changes to the database
-            await _unitOfWork.SaveChangeAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return new ResponseUpdateProfileDto
             {

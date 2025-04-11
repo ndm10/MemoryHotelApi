@@ -5,7 +5,6 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Entities;
-using MemoryHotelApi.DataAccessLayer.Repositories;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -100,7 +99,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 _memoryCache.Set(otpKey, otp, _otpExpiration);
 
                 // Send OTP to email
-                await _emailSender.SendOtpEmailAsync(request.Email, otp);
+                await _emailSender.SendOtpRegisterAsync(request.Email, otp);
 
                 if (existingUser == null)
                 {
@@ -128,7 +127,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 }
 
                 // Save change to DB
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return new ResponseRegisterDto
                 {
@@ -179,7 +178,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _memoryCache.Remove(failedAttemptsKey);
 
             // Send OTP to email
-            var sendOtpResponse = _emailSender.SendOtpEmailAsync(request.Email, otp);
+            var sendOtpResponse = _emailSender.SendOtpResetPasswordAsync(request.Email, otp);
 
             return Task.FromResult(new ResponseSendOtpDto
             {
@@ -276,7 +275,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     return new VerifyOtpResponseDto
                     {
                         IsSuccess = false,
-                        Message = "OTP không đúng, vui lòng thử lại",
+                        Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
                 }
             }
@@ -318,7 +317,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Enable user and set password
                 user.IsVerified = true;
                 user.Password = _passwordHasher.HashPassword(request.Password);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangesAsync();
 
                 return await CreateTokenAsync(user);
             }
@@ -342,7 +341,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     return new ResponseLoginDto
                     {
                         IsSuccess = false,
-                        Message = "OTP sai, vui lòng thử lại",
+                        Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
                 }
             }
@@ -384,7 +383,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Enable user and set password
                 user.IsVerified = true;
                 user.Password = _passwordHasher.HashPassword(request.Password);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangesAsync();
 
                 return new ResponseResetPasswordDto
                 {
@@ -412,7 +411,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     return new ResponseResetPasswordDto
                     {
                         IsSuccess = false,
-                        Message = "OTP sai, vui lòng thử lại",
+                        Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
                 }
             }
@@ -434,7 +433,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 var refreshToken = _jwtUtility.GenerateRefreshToken();
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return refreshToken;
             }
@@ -450,6 +449,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 UserId = user.Id,
                 FullName = user.FullName,
                 Phone = user.Phone,
+                ExpiredTimeToken = DateTime.UtcNow.AddHours(1),
+                ExpiredTimeRefreshToken = DateTime.UtcNow.AddDays(7)
             };
             return response;
         }
