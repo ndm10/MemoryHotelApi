@@ -23,12 +23,12 @@ namespace MemoryHotelApi.Controller.Controllers
 
         [HttpPost("upload")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ImageUploadResponseDto>> UploadImage([FromForm] IFormFileCollection files)
+        public async Task<ActionResult<ResponseImageUploadDto>> UploadImage([FromForm] IFormFileCollection files)
         {
             if (files == null || files.Count == 0)
                 return BadRequest("No files were uploaded.");
 
-            var imageDtos = new List<ImageUploadRequestDto>();
+            var imageDtos = new List<RequestImageUploadDto>();
 
             foreach (var file in files)
             {
@@ -38,7 +38,7 @@ namespace MemoryHotelApi.Controller.Controllers
                     {
                         await file.CopyToAsync(memoryStream);
                         var fileContent = memoryStream.ToArray();
-                        imageDtos.Add(new ImageUploadRequestDto
+                        imageDtos.Add(new RequestImageUploadDto
                         {
                             FileName = file.FileName,
                             FileContent = fileContent,
@@ -49,9 +49,9 @@ namespace MemoryHotelApi.Controller.Controllers
             }
 
             var localRootPath = Path.Combine(webHostEnvironment.ContentRootPath, "Images");
-            var urlPath = "Images";
+            var urlPath =  $"{httpContextAccessor.HttpContext!.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images";
             var response = await _imageService.UploadImage(imageDtos, localRootPath, urlPath);
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

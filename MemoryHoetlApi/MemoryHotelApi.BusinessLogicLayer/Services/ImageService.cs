@@ -18,12 +18,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ImageUploadResponseDto> UploadImage(List<ImageUploadRequestDto> imageDtos, string localRootPath, string urlPath)
+        public async Task<ResponseImageUploadDto> UploadImage(List<RequestImageUploadDto> imageDtos, string localRootPath, string urlPath)
         {
             if (imageDtos == null || imageDtos.Count == 0)
             {
-                return new ImageUploadResponseDto()
+                return new ResponseImageUploadDto()
                 {
+                    StatusCode = 400,
                     Message = "No files were uploaded."
                 };
             }
@@ -38,7 +39,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     string fileName = $"{Guid.NewGuid()}{imageDto.FileExtension}";
                     await SaveImageAsync(imageDto.FileContent, fileName, localRootPath);
 
-                    var filePath = Path.Combine(urlPath, fileName);
+                    var filePath = $"{urlPath}/{fileName}";
 
                     var imageEntity = new Image
                     {
@@ -55,33 +56,34 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 }
             }
 
-            return new ImageUploadResponseDto()
+            return new ResponseImageUploadDto()
             {
+                StatusCode = 200,
                 Urls = filePaths
             };
         }
 
-        private ImageUploadResponseDto? ValidateImage(ImageUploadRequestDto imageDto)
+        private ResponseImageUploadDto? ValidateImage(RequestImageUploadDto imageDto)
         {
             string fileExtension = Path.GetExtension(imageDto.FileName).ToLower();
 
             if (imageDto == null || imageDto.FileContent == null || imageDto.FileContent.Length == 0)
             {
-                return new ImageUploadResponseDto()
+                return new ResponseImageUploadDto()
                 {
                     Message = "File content is empty or invalid."
                 };
             }
             else if (!_allowedExtensions.Contains(fileExtension))
             {
-                return new ImageUploadResponseDto()
+                return new ResponseImageUploadDto()
                 {
                     Message = $"Invalid file extension for {imageDto.FileName}. Only {string.Join(", ", _allowedExtensions)} are allowed."
                 };
             }
             else if (!IsValidImageHeader(imageDto.FileContent, fileExtension))
             {
-                return new ImageUploadResponseDto()
+                return new ResponseImageUploadDto()
                 {
                     Message = $"File {imageDto.FileName} is not a valid image based on header."
                 };

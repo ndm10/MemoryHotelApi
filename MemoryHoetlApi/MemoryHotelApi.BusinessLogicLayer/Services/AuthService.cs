@@ -40,6 +40,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If login information is invalid
             if (user == null || user.IsVerified == false)
             {
+                response.StatusCode = 400;
                 response.IsSuccess = false;
                 response.Message = "Tài khoản chưa được đăng ký, vui lòng thử lại!";
                 return response;
@@ -47,6 +48,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             if (!_passwordHasher.VerifyPassword(request.Password, user.Password))
             {
+                response.StatusCode = 400;
                 response.IsSuccess = false;
                 response.Message = "Email hoặc mật khẩu không đúng. Vui lòng thử lại!";
                 return response;
@@ -62,6 +64,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseLoginDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Refresh token không hợp lệ hoặc đã hết hạn."
                 };
@@ -82,6 +85,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseRegisterDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Email này đã được đăng ký!"
                 };
@@ -110,6 +114,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     {
                         return new ResponseRegisterDto
                         {
+                            StatusCode = 500,
                             Message = "Có lỗi xảy ra với phần quyền người dùng. Vui lòng thử lại sau!"
                         };
                     }
@@ -131,41 +136,45 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 await transaction.CommitAsync();
                 return new ResponseRegisterDto
                 {
+                    StatusCode = 200,
                     IsSuccess = true,
                     Message = "Đăng ký thành công. Vui lòng kiểm tra email mã OTP để xác thực tài khoản của bạn.",
                 };
             }
         }
 
-        public Task<ResponseSendOtpDto> SendOtpAsync(RequestSendOtpDto request)
+        public async Task<ResponseSendOtpDto> SendOtpAsync(RequestSendOtpDto request)
         {
             if (string.IsNullOrEmpty(request.Email))
             {
-                return Task.FromResult(new ResponseSendOtpDto
+                return new ResponseSendOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Xin vui lòng nhập Email nhận OTP."
-                });
+                };
             }
 
             if (string.IsNullOrEmpty(request.ClientIp))
             {
-                return Task.FromResult(new ResponseSendOtpDto
+                return new ResponseSendOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Không xác thực được người dùng, vui lòng thử lại sau!"
-                });
+                };
             }
 
             // Check if email of the user exist or not
-            var existingUser = _unitOfWork.UserRepository!.FindUserByEmail(request.Email).Result;
+            var existingUser =  await _unitOfWork.UserRepository!.FindUserByEmail(request.Email);
             if (existingUser == null)
             {
-                return Task.FromResult(new ResponseSendOtpDto
+                return new ResponseSendOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Email này chưa được đăng ký. Vui lòng sử dụng email khác."
-                });
+                };
             }
 
             // Generate OTP
@@ -180,19 +189,21 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Send OTP to email
             var sendOtpResponse = _emailSender.SendOtpResetPasswordAsync(request.Email, otp);
 
-            return Task.FromResult(new ResponseSendOtpDto
+            return new ResponseSendOtpDto
             {
+                StatusCode = 200,
                 IsSuccess = true,
                 Message = "Mã OTP đã được gửi đến email của bạn!"
-            });
+            };
         }
 
-        public async Task<VerifyOtpResponseDto> VerifyOtpAsync(RegisterVerifyOtpRequestDto request)
+        public async Task<ResponseVerifyOtpDto> VerifyOtpAsync(RegisterVerifyOtpRequestDto request)
         {
             if (string.IsNullOrEmpty(request.Otp))
             {
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Xin vuil lòng nhập Otp."
                 };
@@ -200,8 +211,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             if (string.IsNullOrEmpty(request.ClientIp))
             {
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Không xác thực được người dùng, vui lòng thử lại sau!"
                 };
@@ -209,8 +221,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             if (string.IsNullOrEmpty(request.Email))
             {
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Xin vui lòng nhập Email."
                 };
@@ -223,8 +236,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             if (_memoryCache.TryGetValue(lockoutKey, out DateTime lockoutEnd) && lockoutEnd > DateTime.UtcNow)
             {
                 var remainingTime = (lockoutEnd - DateTime.UtcNow).TotalMinutes;
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = $"Bạn đã nhập sai OTP nhiều lần, vui lòng thử lại sau {remainingTime:F1} phút."
                 };
@@ -233,8 +247,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             string otpKey = $"{request.Email}_{request.ClientIp}_OTP";
             if (!_memoryCache.TryGetValue(otpKey, out string? storedOtp) || string.IsNullOrEmpty(storedOtp))
             {
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "OTP không hợp lệ hoặc đã hết hạn."
                 };
@@ -249,8 +264,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 var otpKeyForStepTwo = $"{request.Email}_{request.ClientIp}_OTP_VERIFY";
                 _memoryCache.Set(otpKeyForStepTwo, request.Otp, _otpExpiration);
 
-                return new VerifyOtpResponseDto
+                return new ResponseVerifyOtpDto
                 {
+                    StatusCode = 200,
                     IsSuccess = true,
                     Message = "Xác thực OTP thành công!",
                 };
@@ -264,16 +280,18 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 if (failedAttempts >= Constants.MaxFailedAttempts)
                 {
                     _memoryCache.Set(lockoutKey, DateTime.UtcNow.Add(_lockoutDuration), _lockoutDuration);
-                    return new VerifyOtpResponseDto
+                    return new ResponseVerifyOtpDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"Bạn đã nhập sai OTP nhiều lần, vui lòng thử lại sau {_lockoutDuration.TotalMinutes} phút."
                     };
                 }
                 else
                 {
-                    return new VerifyOtpResponseDto
+                    return new ResponseVerifyOtpDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
@@ -289,6 +307,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseLoginDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Bạn chưa xác thực OTP vui lòng thực hiện lại!"
                 };
@@ -300,6 +319,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseLoginDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Email này chưa được đăng ký!"
                 };
@@ -332,6 +352,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     _memoryCache.Set(lockoutKey, DateTime.UtcNow.Add(_lockoutDuration), _lockoutDuration);
                     return new ResponseLoginDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"Bạn đã nhập sai OTP nhiều lần, vui lòng thử lại sau {_lockoutDuration.TotalMinutes} phút."
                     };
@@ -340,6 +361,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 {
                     return new ResponseLoginDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
@@ -355,6 +377,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseResetPasswordDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Bạn chưa xác thực OTP vui lòng thực hiện lại!"
                 };
@@ -366,6 +389,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseResetPasswordDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Email này chưa được đăng ký!"
                 };
@@ -387,6 +411,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
                 return new ResponseResetPasswordDto
                 {
+                    StatusCode = 200,
                     IsSuccess = true,
                     Message = "Đổi mật khẩu thành công!",
                 };
@@ -402,6 +427,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     _memoryCache.Set(lockoutKey, DateTime.UtcNow.Add(_lockoutDuration), _lockoutDuration);
                     return new ResponseResetPasswordDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"Bạn đã nhập sai OTP nhiều lần, vui lòng thử lại sau {_lockoutDuration.TotalMinutes} phút."
                     };
@@ -410,6 +436,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 {
                     return new ResponseResetPasswordDto
                     {
+                        StatusCode = 400,
                         IsSuccess = false,
                         Message = $"OTP không đúng, bạn còn {Constants.MaxFailedAttempts - failedAttempts} lần thử",
                     };
@@ -443,6 +470,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         {
             var response = new ResponseLoginDto
             {
+                StatusCode = 200,
                 IsSuccess = true,
                 Token = _jwtUtility.GenerateToken(user),
                 RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),

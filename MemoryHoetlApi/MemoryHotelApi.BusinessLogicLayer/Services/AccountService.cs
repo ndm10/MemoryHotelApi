@@ -25,6 +25,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseChangePasswordDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Có lỗi khi xác thực tài khoản!"
                 };
@@ -35,6 +36,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseChangePasswordDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Mật khẩu cũ không chính xác!"
                 };
@@ -49,6 +51,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             return new ResponseChangePasswordDto
             {
+                StatusCode = 200,
                 IsSuccess = true,
                 Message = "Đổi mật khẩu thành công!"
             };
@@ -65,6 +68,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 return new ResponseUpdateProfileDto
                 {
+                    StatusCode = 500,
                     IsSuccess = false,
                     Message = "Có lỗi khi xác thực tài khoản!"
                 };
@@ -80,6 +84,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             return new ResponseUpdateProfileDto
             {
+                StatusCode = 200,
                 IsSuccess = true,
                 Message = "Cập nhật thông tin thành công!"
             };

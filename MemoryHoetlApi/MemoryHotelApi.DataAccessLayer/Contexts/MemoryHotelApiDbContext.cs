@@ -1,7 +1,7 @@
 ﻿using MemoryHotelApi.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using ThomVietApi.DataAccessLayer.SeedData;
+
 
 namespace MemoryHotelApi.DataAccessLayer.Contexts
 {
@@ -11,11 +11,15 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<Role> Roles { get; set; }
         public DbSet<Image> Images {  get; set; }
         public DbSet<Banner> Banners { get; set; }
+        public DbSet<Story> Stories { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Tour> Tours { get; set; }
+        public DbSet<SubTour> SubTours { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            UserSeeder.SeedData(modelBuilder);
-            RoleSeeder.SeedData(modelBuilder);
+            // modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MemoryHotelApiDbContext).Assembly);
         }
 
         public override int SaveChanges()

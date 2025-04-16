@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.ImageDto
 {
-    public class ImageUploadRequestDto
+    public class RequestImageUploadDto
     {
         public string FileName { get; set; } = null!;
         public byte[] FileContent { get; set; } = null!;

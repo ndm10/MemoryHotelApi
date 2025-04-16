@@ -11,7 +11,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
         Task<ResponseLoginDto> LoginAsync(RequestLoginDto request);
         Task<ResponseLoginDto> RefreshTokenAsync(RequestRefreshTokenDto request);
         Task<ResponseRegisterDto> RegisterAsync(RequestRegisterDto request);
-        Task<VerifyOtpResponseDto> VerifyOtpAsync(RegisterVerifyOtpRequestDto request);
+        Task<ResponseVerifyOtpDto> VerifyOtpAsync(RegisterVerifyOtpRequestDto request);
         Task<ResponseLoginDto> SetNewPassword(RequestSetPasswordDto request);
         Task<ResponseResetPasswordDto> ResetPassword(RequestResetPasswordDto request);
     }

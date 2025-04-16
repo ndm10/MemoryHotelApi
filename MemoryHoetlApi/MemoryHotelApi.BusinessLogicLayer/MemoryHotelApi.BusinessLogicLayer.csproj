@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="LinqKit.Core" Version="1.2.8" />
     <PackageReference Include="MailKit" Version="4.11.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
   </ItemGroup>

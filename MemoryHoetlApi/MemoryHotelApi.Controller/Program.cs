@@ -2,7 +2,9 @@
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
+using MemoryHotelApi.Controller.Middlewares;
 using MemoryHotelApi.DataAccessLayer.Contexts;
+using MemoryHotelApi.DataAccessLayer.SeedData;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -101,9 +103,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IBannerService, BannerService>();
+builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<ITourService, TourService>();
+builder.Services.AddScoped<ISubTourService, SubTourService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<DataSeeder>();
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -118,11 +126,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+    await seeder.SeedDataAsync();
+}
+
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
 app.UseHttpsRedirection();
+
+app.UseExceptionMiddleware();
 
 app.UseAuthorization();
 

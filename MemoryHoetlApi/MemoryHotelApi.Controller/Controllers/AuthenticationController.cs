@@ -25,128 +25,69 @@ namespace MemoryHotelApi.Controller.Controllers
             request.ClientIp = clientIp;
 
             var response = await _authService.RegisterAsync(request);
-
-            if (response.IsSuccess == false)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<ResponseLoginDto>> Login([FromBody] RequestLoginDto request)
         {
             var response = await _authService.LoginAsync(request);
-            if (response.IsSuccess == false)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult<ResponseLoginDto>> RefreshToken([FromBody] RequestRefreshTokenDto request)
         {
             var response = await _authService.RefreshTokenAsync(request);
-            if (response.IsSuccess == false)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("reset-password-send-otp")]
         public async Task<ActionResult<ResponseSendOtpDto>> SendOtp(RequestSendOtpDto request)
         {
-            try
-            {
-                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
 
-                // Assign the client Ip
-                request.ClientIp = clientIp;
+            // Assign the client Ip
+            request.ClientIp = clientIp;
 
-                var response = await _authService.SendOtpAsync(request);
-                return Ok(response);
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var response = await _authService.SendOtpAsync(request);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("verify-otp")]
-        public async Task<ActionResult<VerifyOtpResponseDto>> VerifyOtp(RegisterVerifyOtpRequestDto request)
+        public async Task<ActionResult<ResponseVerifyOtpDto>> VerifyOtp(RegisterVerifyOtpRequestDto request)
         {
-            try
-            {
-                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
 
-                // Assign the client Ip
-                request.ClientIp = clientIp;
+            // Assign the client Ip
+            request.ClientIp = clientIp;
 
-                var response = await _authService.VerifyOtpAsync(request);
-
-                if (response.IsSuccess == false)
-                {
-                    return BadRequest(response);
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var response = await _authService.VerifyOtpAsync(request);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("set-new-password")]
         public async Task<ActionResult<ResponseLoginDto>> NewPassword(RequestSetPasswordDto request)
         {
-            try
-            {
-                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
 
-                // Assign the client Ip
-                request.ClientIp = clientIp;
+            // Assign the client Ip
+            request.ClientIp = clientIp;
 
-                var response = await _authService.SetNewPassword(request);
-
-                if (response.IsSuccess == false)
-                {
-                    return BadRequest(response);
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var response = await _authService.SetNewPassword(request);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("reset-password")]
         public async Task<ActionResult<ResponseResetPasswordDto>> ResetPassword(RequestResetPasswordDto request)
         {
-            try
-            {
-                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
 
-                // Assign the client Ip
-                request.ClientIp = clientIp;
+            // Assign the client Ip
+            request.ClientIp = clientIp;
 
-                var response = await _authService.ResetPassword(request);
-
-                if (response.IsSuccess == false)
-                {
-                    return BadRequest(response);
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var response = await _authService.ResetPassword(request);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

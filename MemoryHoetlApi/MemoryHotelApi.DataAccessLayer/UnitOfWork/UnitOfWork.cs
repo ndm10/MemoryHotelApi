@@ -13,6 +13,10 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
         private IImageRepository _imageRepository = null!;
         private IRoleRepository _roleRepository = null!;
         private IBannerRepository _bannerRepository = null!;
+        private IStoryRepository _storyRepository = null!;
+        private ICityRepository _cityRepository = null!;
+        private ITourRepository _tourRepository = null!;
+        private ISubTourRepository _subTourRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -49,6 +53,38 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _bannerRepository ??= new BannerRepository(_context);
+            }
+        }
+
+        public IStoryRepository? IStoryRepository
+        {
+            get
+            {
+                return _storyRepository ??= new StoryRepository(_context);
+            }
+        }
+
+        public ICityRepository? CityRepository
+        {
+            get
+            {
+                return _cityRepository ??= new CityRepository(_context);
+            }
+        }
+
+        public ITourRepository? TourRepository
+        {
+            get
+            {
+                return _tourRepository ??= new TourRepository(_context);
+            }
+        }
+
+        public ISubTourRepository? SubTourRepository
+        {
+            get
+            {
+                return _subTourRepository ??= new SubTourRepository(_context);
             }
         }
 

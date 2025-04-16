@@ -6,6 +6,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
 {
     public interface IImageService : IGenericService<Image>
     {
-        Task<ImageUploadResponseDto> UploadImage(List<ImageUploadRequestDto> imageDtos, string localRootPath, string urlPath);
+        Task<ResponseImageUploadDto> UploadImage(List<RequestImageUploadDto> imageDtos, string localRootPath, string urlPath);
     }
 }

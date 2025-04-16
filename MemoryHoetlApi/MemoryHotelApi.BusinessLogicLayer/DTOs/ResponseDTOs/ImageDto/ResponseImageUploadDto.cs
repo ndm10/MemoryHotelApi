@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ImageDto
 {
-    public class ImageUploadResponseDto : GenericResponseDto
+    public class ResponseImageUploadDto : GenericResponseDto
     {
         public List<string> Urls { get; set; } = null!;
     }

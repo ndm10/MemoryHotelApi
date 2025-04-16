@@ -3,7 +3,6 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Security.Claims;
 
 namespace MemoryHotelApi.Controller.Controllers
@@ -29,6 +28,7 @@ namespace MemoryHotelApi.Controller.Controllers
             {
                 return BadRequest(new ResponseUpdateProfileDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Có lỗi xảy ra trong quá trình xác thực tài khoản!"
                 });
@@ -38,13 +38,7 @@ namespace MemoryHotelApi.Controller.Controllers
 
             // Change password
             var response = await _accountService.UpdateProfile(request);
-
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
 
         [Authorize]
@@ -57,6 +51,7 @@ namespace MemoryHotelApi.Controller.Controllers
             {
                 return BadRequest(new ResponseUpdateProfileDto
                 {
+                    StatusCode = 400,
                     IsSuccess = false,
                     Message = "Có lỗi xảy ra trong quá trình xác thực tài khoản!"
                 });
@@ -66,13 +61,7 @@ namespace MemoryHotelApi.Controller.Controllers
 
             // Change password
             var response = await _accountService.ChangePassword(request);
-
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

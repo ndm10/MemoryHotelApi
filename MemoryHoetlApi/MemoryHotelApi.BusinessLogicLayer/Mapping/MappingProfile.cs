@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
 using MemoryHotelApi.DataAccessLayer.Entities;
 
@@ -16,7 +18,35 @@ namespace ThomVietApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region BannerMapping
-            CreateMap<Banner, UploadBannerDto>().ReverseMap();
+            CreateMap<Banner, RequestUploadBannerDto>().ReverseMap();
+            CreateMap<Banner, GetBannerDto>().ReverseMap();
+            #endregion
+
+            #region StoryMapping
+            CreateMap<Story, GetStoryDto>().ReverseMap();
+            CreateMap<Story, RequestUploadStoryDto>().ReverseMap();
+            #endregion
+
+            #region CityMapping
+            CreateMap<City, GetCityDto>().ReverseMap();
+            CreateMap<City, RequestUploadCityDto>().ReverseMap();
+            #endregion
+
+            #region ImageMapping
+            CreateMap<Image, ResponseGetImageDto>().ReverseMap();
+            #endregion
+
+            #region TourMapping
+            CreateMap<GetTourDto, Tour>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
+            CreateMap<Tour, RequestUploadTourDto>().ReverseMap();
+            #endregion
+
+            #region SubTourMapping
+            CreateMap<GetSubTourDto, SubTour>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
+            #endregion
+
+            #region CityMapping
+            CreateMap<City, GenericResponseGetCityDto>().ReverseMap();
             #endregion
         }
     }
