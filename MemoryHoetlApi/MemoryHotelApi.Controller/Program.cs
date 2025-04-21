@@ -1,4 +1,5 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Common;
+using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
@@ -8,6 +9,7 @@ using MemoryHotelApi.DataAccessLayer.SeedData;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -19,7 +21,30 @@ using ThomVietApi.DataAccessLayer.UnitOfWork;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(
+    opt => opt.InvalidModelStateResponseFactory = context =>
+    {
+        var errorMessages = context.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .ToList();
+
+        var response = new GenericResponseDto
+        {
+            StatusCode = StatusCodes.Status400BadRequest,
+            IsSuccess = false,
+            Errors = new Error
+            {
+                Messages = errorMessages
+            }
+        };
+
+        return new BadRequestObjectResult(response)
+        {
+            StatusCode = StatusCodes.Status400BadRequest
+        };
+    });
 
 // Register IMemoryCache
 builder.Services.AddMemoryCache();

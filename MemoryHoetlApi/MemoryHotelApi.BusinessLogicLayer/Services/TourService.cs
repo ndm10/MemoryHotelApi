@@ -82,6 +82,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 StatusCode = 200,
                 Data = toursDto,
                 IsSuccess = true,
+                TotalCount = tours.Count,
+                TotalPage = (int)Math.Ceiling((double)tours.Count / pageSizeValue),
             };
 
         }
@@ -131,7 +133,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 return new GenericResponseDto
                 {
                     StatusCode = 404,
-                    Message = "Tour not found",
+                    Message = "Không tìm thấy tour",
                     IsSuccess = false,
                 };
             }
@@ -141,6 +143,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             tour.SubTitle = request.SubTitle ?? tour.SubTitle;
             tour.Description = request.Description ?? tour.Description;
             tour.CityId = request.CityId ?? tour.CityId;
+            tour.IsActive = request.IsActive ?? tour.IsActive;
+            tour.Order = request.Order ?? tour.Order;
 
             // Find the image by url
             if (request.ImageUrls != null)
@@ -174,6 +178,18 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<GenericResponseDto> UploadTourAsync(RequestUploadTourDto request)
         {
+            var tours = await _unitOfWork.TourRepository!.GetAllAsync();
+            var orders = tours.Select(x => x.Order).ToList();
+            var maxOrder = orders.Max();
+
+            // Check if the Order is null or not
+            if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)
+            {
+                // If Order is null, set it to the maximum value in the database
+                maxOrder = maxOrder + 1;
+                request.Order = maxOrder;
+            }
+
             // Mapping data to tour entity
             var tour = _mapper.Map<Tour>(request);
 

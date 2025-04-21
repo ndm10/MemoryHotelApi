@@ -9,6 +9,7 @@
         public string TravelSchedule { get; set; } = null!;
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
+        public int Order { get; set; }
         public bool IsActive { get; set; }
         public Guid TourId { get; set; }
         public ICollection<Image> Images { get; set; } = new List<Image>();

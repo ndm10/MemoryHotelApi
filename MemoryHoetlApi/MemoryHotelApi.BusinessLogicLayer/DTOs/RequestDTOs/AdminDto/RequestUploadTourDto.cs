@@ -17,6 +17,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         [Required(ErrorMessage = "Vui lòng nhập thành phố của tour")]
         public Guid CityId { get; set; }
 
+        public int? Order { get; set; }
+
         [Required(ErrorMessage = "Vui chọn ảnh cho tour")]
         public required List<string> ImageUrls { get; set; }
     }

@@ -166,5 +166,40 @@ namespace MemoryHotelApi.Controller.Controllers
             var response = await _tourService.SoftDeleteTourAsync(id);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("subtour")]
+        public async Task<ActionResult<ResponseGetSubToursDto>> GetSubTours(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? tourId)
+        {
+            var response = await _subTourService.GetSubToursAsync(pageIndex, pageSize, textSearch, status, tourId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("subtour/{id}")]
+        public async Task<ActionResult<ResponseGetSubToursDto>> GetSubTour(Guid id)
+        {
+            var response = await _subTourService.GetSubTourAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("subtour")]
+        public async Task<ActionResult<GenericResponseDto>> UploadSubTour(RequestUploadSubTourDto request)
+        {
+            var response = await _subTourService.UploadSubTourAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("subtour/{id}")]
+        public async Task<ActionResult<GenericResponseDto>> UpdateSubTour(RequestUpdateSubTourDto request, Guid id)
+        {
+            var response = await _subTourService.UpdateSubTourAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("subtour/{id}")]
+        public async Task<ActionResult<GenericResponseDto>> DeleteSubTour(Guid id)
+        {
+            var response = await _subTourService.SoftDeleteSubTourAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

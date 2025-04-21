@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using LinqKit;
 using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.HomepageDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
@@ -18,6 +20,21 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<ResponseGetBannersHomepageDto> GetAllBannersAsync()
+        {
+            var predicate = PredicateBuilder.New<Banner>(x => !x.IsDeleted);
+            var banners = await _unitOfWork.BannerRepository!.GetAllAsync(predicate);
+
+            var bannerDtos = _mapper.Map<List<GetBannerDto>>(banners.OrderBy(x => x.Order));
+
+            return new ResponseGetBannersHomepageDto
+            {
+                StatusCode = 200,
+                Data = bannerDtos,
+                IsSuccess = true,
+            };
         }
 
         public async Task<ResponseGetBannerDto> GetBannerAsync(Guid id)

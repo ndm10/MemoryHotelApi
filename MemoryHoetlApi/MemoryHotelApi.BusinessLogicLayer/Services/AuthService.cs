@@ -477,7 +477,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 UserId = user.Id,
                 FullName = user.FullName,
                 Phone = user.Phone,
-                ExpiredTimeToken = DateTime.UtcNow.AddHours(1),
+                ExpiredTimeToken = DateTime.UtcNow.AddDays(Constants.TokenExpiredTime),
                 ExpiredTimeRefreshToken = DateTime.UtcNow.AddDays(7)
             };
             return response;

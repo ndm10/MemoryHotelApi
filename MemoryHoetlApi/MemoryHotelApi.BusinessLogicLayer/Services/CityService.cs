@@ -181,6 +181,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             return new GenericResponseDto
             {
+                StatusCode = 200,
                 IsSuccess = true,
                 Message = "Tải thành phố lên thành công.",
             };

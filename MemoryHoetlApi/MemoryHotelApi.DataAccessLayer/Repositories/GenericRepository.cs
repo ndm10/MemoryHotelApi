@@ -20,7 +20,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             await _context.AddAsync(entity);
         }
 
-        public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null)
+        public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null, string[]? include = null)
         {
             var query = _context.Set<T>().AsQueryable();
 
@@ -29,7 +29,35 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 query = query.Where(predicate);
             }
 
+            if(include != null)
+            {
+                foreach (var inc in include)
+                {
+                    query = query.Include(inc);
+                }
+            }
+
             query = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, string[]? include = null)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            if (include != null)
+            {
+                foreach (var inc in include)
+                {
+                    query = query.Include(inc);
+                }
+            }
 
             return await query.ToListAsync();
         }

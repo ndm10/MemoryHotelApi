@@ -15,6 +15,8 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<City> Cities { get; set; }
         public DbSet<Tour> Tours { get; set; }
         public DbSet<SubTour> SubTours { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<Amenity> Amenities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

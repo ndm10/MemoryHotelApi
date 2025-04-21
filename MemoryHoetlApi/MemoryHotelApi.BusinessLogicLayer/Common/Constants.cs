@@ -6,5 +6,6 @@
         public const string RoleUserName = "User";
         public const int PageSizeDefault = 10;
         public const int PageIndexDefault = 1;
+        public const int TokenExpiredTime = 1; // in day
     }
 }

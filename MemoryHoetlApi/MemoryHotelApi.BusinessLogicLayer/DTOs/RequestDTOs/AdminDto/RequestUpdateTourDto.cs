@@ -6,6 +6,8 @@
         public string? SubTitle { get; set; }
         public string? Description { get; set; }
         public Guid? CityId { get; set; }
+        public int? Order { get; set; }
         public List<string>? ImageUrls { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
