@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
 {
-    public interface IGenericService<T> where T : GenericEntity
+    public interface IGenericService<T> where T : BaseEntity
     {
     }
 }

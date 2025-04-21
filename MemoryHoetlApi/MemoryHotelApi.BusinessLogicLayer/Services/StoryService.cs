@@ -82,13 +82,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> SoftDeleteStoryAsync(Guid id)
+        public async Task<BaseResponseDto> SoftDeleteStoryAsync(Guid id)
         {
             var story = await _unitOfWork.IStoryRepository!.GetByIdAsync(id);
 
             if (story == null || story.IsDeleted)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     IsSuccess = false,
@@ -102,7 +102,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Update the banner in the database
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,
@@ -110,7 +110,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UpdateStoryAsync(RequestUpdateStoryDto request, Guid id)
+        public async Task<BaseResponseDto> UpdateStoryAsync(RequestUpdateStoryDto request, Guid id)
         {
             // Find the banner by ID
             var story = await _unitOfWork.IStoryRepository!.GetByIdAsync(id);
@@ -118,7 +118,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if the banner exists
             if (story == null || story.IsDeleted)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     IsSuccess = false,
@@ -136,7 +136,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Save the changes to the database
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,
@@ -144,11 +144,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UploadStoryAsync(RequestUploadStoryDto request)
+        public async Task<BaseResponseDto> UploadStoryAsync(RequestUploadStoryDto request)
         {
             if (request == null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 400,
                     IsSuccess = false,
@@ -175,7 +175,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,

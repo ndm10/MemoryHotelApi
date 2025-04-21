@@ -9,8 +9,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
     {
         Task<ResponseGetSubTourDto> GetSubTourAsync(Guid id);
         Task<ResponseGetSubToursDto> GetSubToursAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? tourId);
-        Task<GenericResponseDto> SoftDeleteSubTourAsync(Guid id);
-        Task<GenericResponseDto> UpdateSubTourAsync(RequestUpdateSubTourDto request, Guid id);
-        Task<GenericResponseDto> UploadSubTourAsync(RequestUploadSubTourDto request);
+        Task<BaseResponseDto> SoftDeleteSubTourAsync(Guid id);
+        Task<BaseResponseDto> UpdateSubTourAsync(RequestUpdateSubTourDto request, Guid id);
+        Task<BaseResponseDto> UploadSubTourAsync(RequestUploadSubTourDto request);
     }
 }

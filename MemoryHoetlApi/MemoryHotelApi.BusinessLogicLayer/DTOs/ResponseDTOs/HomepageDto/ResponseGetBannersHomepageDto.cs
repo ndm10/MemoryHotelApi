@@ -3,7 +3,7 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.HomepageDto
 {
-    public class ResponseGetBannersHomepageDto : GenericResponseDto
+    public class ResponseGetBannersHomepageDto : BaseResponseDto
     {
         public List<GetBannerDto>? Data { get; set; }
     }

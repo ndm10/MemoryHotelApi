@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.DataAccessLayer.Entities
 {
-    public class Image : GenericEntity
+    public class Image : BaseEntity
     {
         public string Url { get; set; } = null!;
         public ICollection<Tour> Tours { get; set; } = new List<Tour>();

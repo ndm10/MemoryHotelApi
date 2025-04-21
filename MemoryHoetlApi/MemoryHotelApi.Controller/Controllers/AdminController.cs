@@ -16,15 +16,19 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IStoryService _storyService;
         private readonly ICityService _cityService;
         private readonly ITourService _tourService;
-        public readonly ISubTourService _subTourService;
+        private readonly ISubTourService _subTourService;
+        private readonly IBranchService _branchService;
+        private readonly IAmenityService _amenityService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IAmenityService amenityService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
             _cityService = cityService;
             _tourService = tourService;
             _subTourService = subTourService;
+            _branchService = branchService;
+            _amenityService = amenityService;
         }
 
         [HttpGet("banner")]
@@ -42,21 +46,21 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("banner")]
-        public async Task<ActionResult<GenericResponseDto>> UploadBanner(RequestUploadBannerDto request)
+        public async Task<ActionResult<BaseResponseDto>> UploadBanner(RequestUploadBannerDto request)
         {
             var response = await _bannerService.UploadBannerAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("banner/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> UpdateBanner(RequestUpdateBannerDto request, Guid id)
+        public async Task<ActionResult<BaseResponseDto>> UpdateBanner(RequestUpdateBannerDto request, Guid id)
         {
             var response = await _bannerService.UpdateBannerAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("banner/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> DeleteBanner(Guid id)
+        public async Task<ActionResult<BaseResponseDto>> DeleteBanner(Guid id)
         {
             var response = await _bannerService.SoftDeleteAsync(id);
             return StatusCode(response.StatusCode, response);
@@ -77,21 +81,21 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("story")]
-        public async Task<ActionResult<GenericResponseDto>> UploadStory(RequestUploadStoryDto request)
+        public async Task<ActionResult<BaseResponseDto>> UploadStory(RequestUploadStoryDto request)
         {
             var response = await _storyService.UploadStoryAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("story/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> UpdateStory(RequestUpdateStoryDto request, Guid id)
+        public async Task<ActionResult<BaseResponseDto>> UpdateStory(RequestUpdateStoryDto request, Guid id)
         {
             var response = await _storyService.UpdateStoryAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("story/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> DeleteStory(Guid id)
+        public async Task<ActionResult<BaseResponseDto>> DeleteStory(Guid id)
         {
             var response = await _storyService.SoftDeleteStoryAsync(id);
             return StatusCode(response.StatusCode, response);
@@ -112,21 +116,21 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("city")]
-        public async Task<ActionResult<GenericResponseDto>> UploadCity(RequestUploadCityDto request)
+        public async Task<ActionResult<BaseResponseDto>> UploadCity(RequestUploadCityDto request)
         {
             var response = await _cityService.UploadCityAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("city/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> UpdateCity(RequestUpdateCityDto request, Guid id)
+        public async Task<ActionResult<BaseResponseDto>> UpdateCity(RequestUpdateCityDto request, Guid id)
         {
             var response = await _cityService.UpdateCityAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("city/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> DeleteCity(Guid id)
+        public async Task<ActionResult<BaseResponseDto>> DeleteCity(Guid id)
         {
             var response = await _cityService.SoftDeleteCityAsync(id);
             return StatusCode(response.StatusCode, response);
@@ -147,21 +151,21 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("tour")]
-        public async Task<ActionResult<GenericResponseDto>> UploadTour(RequestUploadTourDto request)
+        public async Task<ActionResult<BaseResponseDto>> UploadTour(RequestUploadTourDto request)
         {
             var response = await _tourService.UploadTourAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("tour/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> UpdateTour(RequestUpdateTourDto request, Guid id)
+        public async Task<ActionResult<BaseResponseDto>> UpdateTour(RequestUpdateTourDto request, Guid id)
         {
             var response = await _tourService.UpdateTourAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("tour/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> DeleteTour(Guid id)
+        public async Task<ActionResult<BaseResponseDto>> DeleteTour(Guid id)
         {
             var response = await _tourService.SoftDeleteTourAsync(id);
             return StatusCode(response.StatusCode, response);
@@ -182,23 +186,93 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpPost("subtour")]
-        public async Task<ActionResult<GenericResponseDto>> UploadSubTour(RequestUploadSubTourDto request)
+        public async Task<ActionResult<BaseResponseDto>> UploadSubTour(RequestUploadSubTourDto request)
         {
             var response = await _subTourService.UploadSubTourAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("subtour/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> UpdateSubTour(RequestUpdateSubTourDto request, Guid id)
+        public async Task<ActionResult<BaseResponseDto>> UpdateSubTour(RequestUpdateSubTourDto request, Guid id)
         {
             var response = await _subTourService.UpdateSubTourAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("subtour/{id}")]
-        public async Task<ActionResult<GenericResponseDto>> DeleteSubTour(Guid id)
+        public async Task<ActionResult<BaseResponseDto>> DeleteSubTour(Guid id)
         {
             var response = await _subTourService.SoftDeleteSubTourAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("amenity")]
+        public async Task<ActionResult<ResponseGetAmenitiesDto>> GetAmenities(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _amenityService.GetAmenities(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("amenity/{id}")]
+        public async Task<ActionResult<ResponseGetAmenityDto>> GetAmenity(Guid id)
+        {
+            var response = await _amenityService.GetAmenity(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("amenity")]
+        public async Task<ActionResult<BaseResponseDto>> UploadAmenity(RequestUploadAmenityDto request)
+        {
+            var response = await _amenityService.UploadAmenityAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("amenity/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateAmenity(RequestUpdateAmenityDto request, Guid id)
+        {
+            var response = await _amenityService.UpdateAmenityAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("amenity/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteAmenity(Guid id)
+        {
+            var response = await _amenityService.SoftDeleteAmenityAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("branch")]
+        public async Task<ActionResult<ResponseGetBranchesDto>> GetBranches(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _branchService.GetBranchesAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("branch/{id}")]
+        public async Task<ActionResult<ResponseGetBranchDto>> GetBranch(Guid id)
+        {
+            var response = await _branchService.GetBranchAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("branch")]
+        public async Task<ActionResult<BaseResponseDto>> UploadBranch(RequestUploadBranchDto request)
+        {
+            var response = await _branchService.UploadBranchAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("branch/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateBranch(RequestUpdateBranchDto request, Guid id)
+        {
+            var response = await _branchService.UpdateBranchAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("branch/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteBranch(Guid id)
+        {
+            var response = await _branchService.SoftDeleteBranchAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

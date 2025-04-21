@@ -4,7 +4,7 @@ using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
-    public class GenericService<T> : IGenericService<T> where T : GenericEntity
+    public class GenericService<T> : IGenericService<T> where T : BaseEntity
     {
 
         protected readonly IMapper _mapper;

@@ -88,7 +88,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         }
 
-        public async Task<GenericResponseDto> SoftDeleteTourAsync(Guid id)
+        public async Task<BaseResponseDto> SoftDeleteTourAsync(Guid id)
         {
             // Find the tour by id
             var tour = await _unitOfWork.TourRepository!.GetByIdAsync(id);
@@ -96,7 +96,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If tour is null
             if (tour is null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     Message = "Tour not found",
@@ -110,7 +110,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Update the tour to database
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 Message = "Xóa tour thành công",
@@ -118,7 +118,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UpdateTourAsync(RequestUpdateTourDto request, Guid id)
+        public async Task<BaseResponseDto> UpdateTourAsync(RequestUpdateTourDto request, Guid id)
         {
             var includes = new string[] {
                 nameof(Tour.Images),
@@ -130,7 +130,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If tour is not found
             if (tour is null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     Message = "Không tìm thấy tour",
@@ -153,7 +153,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Check if images is null
                 if (images is null || images.Count == 0)
                 {
-                    return new GenericResponseDto
+                    return new BaseResponseDto
                     {
                         StatusCode = 400,
                         Message = "Có lỗi với việc tả ảnh lên, vui lòng thử lại sau",
@@ -168,7 +168,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _unitOfWork.TourRepository.Update(tour);
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 Message = "Cập nhật tour thành công",
@@ -176,11 +176,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UploadTourAsync(RequestUploadTourDto request)
+        public async Task<BaseResponseDto> UploadTourAsync(RequestUploadTourDto request)
         {
-            var tours = await _unitOfWork.TourRepository!.GetAllAsync();
+            var predicate = PredicateBuilder.New<Tour>(x => !x.IsDeleted);
+
+            var tours = await _unitOfWork.TourRepository!.GetAllAsync(predicate);
             var orders = tours.Select(x => x.Order).ToList();
-            var maxOrder = orders.Max();
+            var maxOrder = orders.Count() > 0 ? orders.Max() : 1;
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)
@@ -199,7 +201,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if images is null
             if (images is null || images.Count == 0)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 400,
                     Message = "Có lỗi với việc tả ảnh lên, vui lòng thử lại sau",
@@ -219,7 +221,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             await _unitOfWork.TourRepository!.AddAsync(tour);
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 Message = "Tải lên tour thành công",

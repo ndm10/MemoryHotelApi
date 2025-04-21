@@ -2,8 +2,8 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetBannerDto : BaseResponseDto
+    public class ResponseGetBranchDto : BaseResponseDto
     {
-        public GetBannerDto? Data { get; set; }
+        public GetBranchDto? Data { get; set; }
     }
 }

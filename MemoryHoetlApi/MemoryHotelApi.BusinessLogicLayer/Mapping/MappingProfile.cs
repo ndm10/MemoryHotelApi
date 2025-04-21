@@ -35,7 +35,7 @@ namespace ThomVietApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region ImageMapping
-            CreateMap<Image, ResponseGetImageDto>().ReverseMap();
+            CreateMap<Image, ResponseGetImageDtoCommon>().ReverseMap();
             #endregion
 
             #region TourMapping
@@ -50,7 +50,17 @@ namespace ThomVietApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region CityMapping
-            CreateMap<City, GenericResponseGetCityDto>().ReverseMap();
+            CreateMap<City, ResponseGetCityDtoCommon>().ReverseMap();
+            #endregion
+
+            #region AmenityMapping
+            CreateMap<Amenity, GetAmenityDto>().ReverseMap();
+            CreateMap<Amenity, RequestUploadAmenityDto>().ReverseMap();
+            #endregion
+
+            #region GetBranchDto
+            CreateMap<GetBranchDto, Branch>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
+            CreateMap<Branch, RequestUploadBranchDto>().ReverseMap();
             #endregion
         }
     }

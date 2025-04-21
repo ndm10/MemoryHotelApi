@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class GenericResponseDto
+    public class BaseResponseDto
     {
         public int StatusCode { get; set; }
         public bool IsSuccess { get; set; }

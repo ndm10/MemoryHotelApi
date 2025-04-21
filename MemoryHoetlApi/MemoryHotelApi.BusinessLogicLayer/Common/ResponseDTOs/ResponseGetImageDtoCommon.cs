@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class ResponseGetImageDto
+    public class ResponseGetImageDtoCommon
     {
         public string? Url { get; set; }
     }

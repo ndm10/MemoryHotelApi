@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace MemoryHotelApi.DataAccessLayer.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : GenericEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         protected readonly MemoryHotelApiDbContext _context;
 
@@ -42,7 +42,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, string[]? include = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, string[]? include = null)
         {
             var query = _context.Set<T>().AsQueryable();
 

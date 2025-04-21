@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetToursDto : GenericResponseDto
+    public class ResponseGetToursDto : BaseResponseDto
     {
         public List<GetTourDto>? Data { get; set; }
         public int TotalCount { get; set; }
@@ -17,7 +17,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public string Description { get; set; } = null!;
         public List<string>? Images { get; set; }
         public List<GetSubTourDto>? SubTours { get; set; }
-        public GenericResponseGetCityDto? City { get; set; }
+        public ResponseGetCityDtoCommon? City { get; set; }
         public int Order { get; set; }
         public bool IsActive { get; set; }
     }

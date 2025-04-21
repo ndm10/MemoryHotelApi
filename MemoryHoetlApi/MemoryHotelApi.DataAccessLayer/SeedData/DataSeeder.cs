@@ -28,7 +28,8 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         Description = "Admin role",
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        IsActive = true
                     },
                     new Role
                     {
@@ -37,7 +38,8 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         Description = "User role",
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        IsActive = true
                     }
                 };
                 _context.Roles.AddRange(roles);
@@ -57,7 +59,9 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         UpdatedDate = DateTime.UtcNow,
                         IsDeleted = false,
                         RoleId = Guid.Parse("f0263e28-97d6-48eb-9b7a-ebd9b383a7e7"),
-                        FullName = "User"
+                        FullName = "User",
+                        IsVerified = true,
+                        IsActive = true,
                     },
                     new User
                     {
@@ -71,6 +75,7 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
                         FullName = "Nguyễn Đình Trung Đức",
                         IsVerified = true,
+                        IsActive = true,
                     },
                     new User
                     {
@@ -84,6 +89,7 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
                         FullName = "Minh Nguyễn",
                         IsVerified = true,
+                        IsActive = true,
                     },
                     new User
                     {
@@ -97,6 +103,7 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
                         FullName = "Nguyễn Ngọc Quang",
                         IsVerified = true,
+                        IsActive = true,
                     },
                     new User
                     {
@@ -110,6 +117,7 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
                         FullName = "Admin",
                         IsVerified = true,
+                        IsActive = true,
                     }
                 };
                 _context.Users.AddRange(users);
@@ -129,7 +137,8 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RegionKey = "north",
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        IsActive = true
                     },
                     new City
                     {
@@ -140,7 +149,8 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RegionKey = "central",
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        IsActive = true
                     },
                     new City
                     {
@@ -151,7 +161,8 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         RegionKey = "south",
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        IsActive = true
                     }
                 };
                 _context.Cities.AddRange(cities);

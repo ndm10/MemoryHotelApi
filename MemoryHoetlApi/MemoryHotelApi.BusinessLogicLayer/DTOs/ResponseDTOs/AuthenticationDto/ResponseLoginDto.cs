@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto
 {
-    public class ResponseLoginDto : GenericResponseDto
+    public class ResponseLoginDto : BaseResponseDto
     {
         public string? Token { get; set; }
         public DateTime? ExpiredTimeToken { get; set; }

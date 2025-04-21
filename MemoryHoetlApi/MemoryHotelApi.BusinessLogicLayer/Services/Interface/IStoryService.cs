@@ -8,8 +8,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
     {
         Task<ResponseGetStoryDto> GetStoryAsync(Guid id);
         Task<ResponseGetStoriesDto> GetStoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status);
-        Task<GenericResponseDto> SoftDeleteStoryAsync(Guid id);
-        Task<GenericResponseDto> UpdateStoryAsync(RequestUpdateStoryDto request, Guid id);
-        Task<GenericResponseDto> UploadStoryAsync(RequestUploadStoryDto request);
+        Task<BaseResponseDto> SoftDeleteStoryAsync(Guid id);
+        Task<BaseResponseDto> UpdateStoryAsync(RequestUpdateStoryDto request, Guid id);
+        Task<BaseResponseDto> UploadStoryAsync(RequestUploadStoryDto request);
     }
 }

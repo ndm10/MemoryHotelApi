@@ -81,7 +81,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public Task<GenericResponseDto> SoftDeleteCityAsync(Guid id)
+        public Task<BaseResponseDto> SoftDeleteCityAsync(Guid id)
         {
             // Find the city by the ID
             var city = _unitOfWork.CityRepository!.GetByIdAsync(id).Result;
@@ -89,7 +89,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If the city not found
             if(city == null || city.IsDeleted)
             {
-                return Task.FromResult(new GenericResponseDto
+                return Task.FromResult(new BaseResponseDto
                 {
                     StatusCode = 404,
                     IsSuccess = false,
@@ -105,7 +105,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             _unitOfWork.SaveChangesAsync();
 
-            return Task.FromResult(new GenericResponseDto
+            return Task.FromResult(new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,
@@ -113,7 +113,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             });
         }
 
-        public Task<GenericResponseDto> UpdateCityAsync(RequestUpdateCityDto request, Guid id)
+        public Task<BaseResponseDto> UpdateCityAsync(RequestUpdateCityDto request, Guid id)
         {
             // Find the city by ID
             var city = _unitOfWork.CityRepository!.GetByIdAsync(id).Result;
@@ -121,7 +121,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If the city not found
             if (city == null || city.IsDeleted)
             {
-                return Task.FromResult(new GenericResponseDto
+                return Task.FromResult(new BaseResponseDto
                 {
                     StatusCode = 404,
                     IsSuccess = false,
@@ -139,7 +139,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _unitOfWork.CityRepository.Update(city);
 
             _unitOfWork.SaveChangesAsync();
-            return Task.FromResult(new GenericResponseDto
+            return Task.FromResult(new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,
@@ -147,11 +147,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             });
         }
 
-        public async Task<GenericResponseDto> UploadCityAsync(RequestUploadCityDto request)
+        public async Task<BaseResponseDto> UploadCityAsync(RequestUploadCityDto request)
         {
             if (request == null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 400,
                     IsSuccess = false,
@@ -179,7 +179,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,

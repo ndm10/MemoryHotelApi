@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetCityDto : GenericResponseDto
+    public class ResponseGetCityDto : BaseResponseDto
     {
         public GetCityDto? Data { get; set; }
     }

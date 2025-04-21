@@ -30,7 +30,7 @@ builder.Services.AddControllers()
             .Select(e => e.ErrorMessage)
             .ToList();
 
-        var response = new GenericResponseDto
+        var response = new BaseResponseDto
         {
             StatusCode = StatusCodes.Status400BadRequest,
             IsSuccess = false,
@@ -132,6 +132,8 @@ builder.Services.AddScoped<IStoryService, StoryService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ITourService, TourService>();
 builder.Services.AddScoped<ISubTourService, SubTourService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IAmenityService, AmenityService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

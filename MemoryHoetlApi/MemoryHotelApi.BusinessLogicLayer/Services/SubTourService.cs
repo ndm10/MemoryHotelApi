@@ -96,7 +96,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> SoftDeleteSubTourAsync(Guid id)
+        public async Task<BaseResponseDto> SoftDeleteSubTourAsync(Guid id)
         {
             // Find the sub tour by ID
             var subTour = await _unitOfWork.SubTourRepository!.GetByIdAsync(id);
@@ -104,7 +104,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If sub tour is not found
             if (subTour == null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     IsSuccess = false,
@@ -118,7 +118,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Update the sub tour in the database
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 IsSuccess = true,
@@ -126,7 +126,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UpdateSubTourAsync(RequestUpdateSubTourDto request, Guid id)
+        public async Task<BaseResponseDto> UpdateSubTourAsync(RequestUpdateSubTourDto request, Guid id)
         {
             var includes = new string[] {
                 nameof(SubTour.Images),
@@ -138,7 +138,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If tour is not found
             if (subTour is null)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 404,
                     Message = "Không tìm thấy tour du lịch này",
@@ -165,7 +165,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Check if images is null
                 if (images is null || images.Count == 0)
                 {
-                    return new GenericResponseDto
+                    return new BaseResponseDto
                     {
                         StatusCode = 400,
                         Message = "Có lỗi với việc tả ảnh lên, vui lòng thử lại sau",
@@ -180,7 +180,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _unitOfWork.SubTourRepository.Update(subTour);
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 Message = "Cập nhật tour thành công",
@@ -188,11 +188,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponseDto> UploadSubTourAsync(RequestUploadSubTourDto request)
+        public async Task<BaseResponseDto> UploadSubTourAsync(RequestUploadSubTourDto request)
         {
-            var tours = await _unitOfWork.TourRepository!.GetAllAsync();
-            var orders = tours.Select(x => x.Order).ToList();
-            var maxOrder = orders.Max();
+            var predicate = PredicateBuilder.New<SubTour>(x => !x.IsDeleted);
+
+            var subTours = await _unitOfWork.SubTourRepository!.GetAllAsync(predicate);
+            var orders = subTours.Select(x => x.Order).ToList();
+            var maxOrder = orders.Count() > 0 ? orders.Max() : 1;
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)
@@ -211,7 +213,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if images is null
             if (images is null || images.Count == 0)
             {
-                return new GenericResponseDto
+                return new BaseResponseDto
                 {
                     StatusCode = 400,
                     Message = "Có lỗi với việc tả ảnh lên, vui lòng thử lại sau",
@@ -231,7 +233,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             await _unitOfWork.SubTourRepository!.AddAsync(subTour);
             await _unitOfWork.SaveChangesAsync();
 
-            return new GenericResponseDto
+            return new BaseResponseDto
             {
                 StatusCode = 200,
                 Message = "Tải lên tour thành công",

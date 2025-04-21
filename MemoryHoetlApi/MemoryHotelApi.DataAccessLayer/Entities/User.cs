@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.DataAccessLayer.Entities
 {
-    public class User : GenericEntity
+    public class User : BaseEntity
     {
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;

@@ -39,11 +39,11 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is GenericEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
+                .Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
             foreach (var entry in entries)
             {
-                var entity = (GenericEntity)entry.Entity;
+                var entity = (BaseEntity)entry.Entity;
                 var now = DateTime.UtcNow; // Use UTC for consistency
 
                 if (entry.State == EntityState.Added)
@@ -51,6 +51,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
                     entity.Id = Guid.NewGuid();
                     entity.CreatedDate = now;
                     entity.IsDeleted = false;
+                    entity.IsActive = true;
                 }
                 entity.UpdatedDate = now;
             }

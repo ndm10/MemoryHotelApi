@@ -10,8 +10,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
         Task<ResponseGetBannerDto> GetBannerAsync(Guid id);
         Task<ResponseGetBannersHomepageDto> GetAllBannersAsync();
         Task<ResponseGetBannersDto> GetBannersAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status);
-        Task<GenericResponseDto> SoftDeleteAsync(Guid id);
-        Task<GenericResponseDto> UpdateBannerAsync(RequestUpdateBannerDto request, Guid id);
-        Task<GenericResponseDto> UploadBannerAsync(RequestUploadBannerDto request);
+        Task<BaseResponseDto> SoftDeleteAsync(Guid id);
+        Task<BaseResponseDto> UpdateBannerAsync(RequestUpdateBannerDto request, Guid id);
+        Task<BaseResponseDto> UploadBannerAsync(RequestUploadBannerDto request);
     }
 }

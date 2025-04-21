@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.DataAccessLayer.Entities
 {
-    public class SubTour : GenericEntity
+    public class SubTour : BaseEntity
     {
         public string Title { get; set; } = null!;
         public string DepartureTime { get; set; } = null!;
@@ -10,7 +10,6 @@
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
         public int Order { get; set; }
-        public bool IsActive { get; set; }
         public Guid TourId { get; set; }
         public ICollection<Image> Images { get; set; } = new List<Image>();
         public Tour Tour { get; set; } = null!;

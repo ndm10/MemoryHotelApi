@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto
 {
-    public class ResponseUpdateProfileDto : GenericResponseDto
+    public class ResponseUpdateProfileDto : BaseResponseDto
     {
     }
 }
