@@ -15,8 +15,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using ThomVietApi.BusinessLogicLayer.Mapping;
-using ThomVietApi.DataAccessLayer.UnitOfWork;
+using MemoryHotelApi.BusinessLogicLayer.Mapping;
+using MemoryHotelApi.DataAccessLayer.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +54,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ThomVietApi", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MemoryHotelApi", Version = "v1" });
 
     // Define Bearer Auth
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -122,6 +122,8 @@ builder.Services.AddScoped<JwtUtility>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<EmailSender>();
 
+builder.Services.AddScoped<StringUtility>();
+
 // Register the services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -133,7 +135,7 @@ builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ITourService, TourService>();
 builder.Services.AddScoped<ISubTourService, SubTourService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
-builder.Services.AddScoped<IAmenityService, AmenityService>();
+builder.Services.AddScoped<IConvenienceService, ConvenienceService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

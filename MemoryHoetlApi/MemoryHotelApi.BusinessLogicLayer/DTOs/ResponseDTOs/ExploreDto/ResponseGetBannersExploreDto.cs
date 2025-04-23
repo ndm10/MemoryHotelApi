@@ -1,14 +1,14 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 
-namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.HomepageDto
+namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
-    public class ResponseGetBannersHomepageDto : BaseResponseDto
+    public class ResponseGetBannersExploreDto : BaseResponseDto
     {
         public List<GetBannerDto>? Data { get; set; }
     }
 
-    public class GetBannersHomepageDto
+    public class GetBannersExploreDto
     {
         public string? ImageUrl { get; set; }
         public string? Link { get; set; }

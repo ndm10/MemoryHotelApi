@@ -89,7 +89,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             return new ResponseGetSubToursDto
             {
                 StatusCode = 200,
-                Data = _mapper.Map<List<GetSubTourDto>>(subTours),
+                Data = _mapper.Map<List<GetSubTourDto>>(subTours.OrderBy(x => x.Order)),
                 IsSuccess = true,
                 TotalCount = subTours.Count,
                 TotalPages = (int)Math.Ceiling((double)subTours.Count / pageSizeValue)
@@ -194,7 +194,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             var subTours = await _unitOfWork.SubTourRepository!.GetAllAsync(predicate);
             var orders = subTours.Select(x => x.Order).ToList();
-            var maxOrder = orders.Count() > 0 ? orders.Max() : 1;
+            var maxOrder = orders.Count() > 0 ? orders.Max() : 0;
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)

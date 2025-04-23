@@ -18,9 +18,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ITourService _tourService;
         private readonly ISubTourService _subTourService;
         private readonly IBranchService _branchService;
-        private readonly IAmenityService _amenityService;
+        private readonly IConvenienceService _convenienceService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IAmenityService amenityService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -28,7 +28,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _tourService = tourService;
             _subTourService = subTourService;
             _branchService = branchService;
-            _amenityService = amenityService;
+            _convenienceService = convenienceService;
         }
 
         [HttpGet("banner")]
@@ -206,38 +206,38 @@ namespace MemoryHotelApi.Controller.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("amenity")]
-        public async Task<ActionResult<ResponseGetAmenitiesDto>> GetAmenities(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        [HttpGet("convenience")]
+        public async Task<ActionResult<ResponseGetConveniencesDto>> GetConveniences(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
-            var response = await _amenityService.GetAmenities(pageIndex, pageSize, textSearch, status);
+            var response = await _convenienceService.GetConveniencesAsync(pageIndex, pageSize, textSearch, status);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("amenity/{id}")]
-        public async Task<ActionResult<ResponseGetAmenityDto>> GetAmenity(Guid id)
+        [HttpGet("convenience/{id}")]
+        public async Task<ActionResult<ResponseGetConvenienceDto>> GetConvenience(Guid id)
         {
-            var response = await _amenityService.GetAmenity(id);
+            var response = await _convenienceService.GetConvenienceAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("amenity")]
-        public async Task<ActionResult<BaseResponseDto>> UploadAmenity(RequestUploadAmenityDto request)
+        [HttpPost("convenience")]
+        public async Task<ActionResult<BaseResponseDto>> UploadConvenience(RequestUploadConvenienceDto request)
         {
-            var response = await _amenityService.UploadAmenityAsync(request);
+            var response = await _convenienceService.UploadConvenienceAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPatch("amenity/{id}")]
-        public async Task<ActionResult<BaseResponseDto>> UpdateAmenity(RequestUpdateAmenityDto request, Guid id)
+        [HttpPatch("convenience/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateConvenience(RequestUpdateConvenienceDto request, Guid id)
         {
-            var response = await _amenityService.UpdateAmenityAsync(request, id);
+            var response = await _convenienceService.UpdateConvenienceAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete("amenity/{id}")]
-        public async Task<ActionResult<BaseResponseDto>> DeleteAmenity(Guid id)
+        [HttpDelete("convenience/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteConvenience(Guid id)
         {
-            var response = await _amenityService.SoftDeleteAmenityAsync(id);
+            var response = await _convenienceService.SoftDeleteConvenienceAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 

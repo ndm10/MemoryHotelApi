@@ -15,7 +15,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         ITourRepository? TourRepository { get; }
         ISubTourRepository? SubTourRepository { get; }
         IBranchRepository? BranchRepository { get; }
-        IAmenityRepository? AmenityRepository { get; }
+        IConvenienceRepository? ConvenienceRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }

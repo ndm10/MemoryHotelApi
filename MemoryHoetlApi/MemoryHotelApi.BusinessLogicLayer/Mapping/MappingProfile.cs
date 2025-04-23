@@ -4,10 +4,10 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
-using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.HomepageDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.DataAccessLayer.Entities;
 
-namespace ThomVietApi.BusinessLogicLayer.Mapping
+namespace MemoryHotelApi.BusinessLogicLayer.Mapping
 {
     public class MappingProfile : Profile
     {
@@ -21,7 +21,7 @@ namespace ThomVietApi.BusinessLogicLayer.Mapping
             #region BannerMapping
             CreateMap<Banner, RequestUploadBannerDto>().ReverseMap();
             CreateMap<Banner, GetBannerDto>().ReverseMap();
-            CreateMap<Banner, ResponseGetBannersHomepageDto>().ReverseMap();
+            CreateMap<Banner, ResponseGetBannersExploreDto>().ReverseMap();
             #endregion
 
             #region StoryMapping
@@ -53,14 +53,21 @@ namespace ThomVietApi.BusinessLogicLayer.Mapping
             CreateMap<City, ResponseGetCityDtoCommon>().ReverseMap();
             #endregion
 
-            #region AmenityMapping
-            CreateMap<Amenity, GetAmenityDto>().ReverseMap();
-            CreateMap<Amenity, RequestUploadAmenityDto>().ReverseMap();
+            #region ConvenienceMapping
+            CreateMap<Convenience, GetConvenienceDto>().ReverseMap();
+            CreateMap<Convenience, GetConvenienceDtoCommon>().ReverseMap();
+            CreateMap<Convenience, RequestUploadConvenienceDto>().ReverseMap();
             #endregion
 
             #region GetBranchDto
             CreateMap<GetBranchDto, Branch>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
             CreateMap<Branch, RequestUploadBranchDto>().ReverseMap();
+            #endregion
+
+            #region LocationExploreMapping
+            CreateMap<LocationExplore, UploadLocationExploreDto>().ReverseMap();
+            CreateMap<LocationExplore, ResponseGetLocationExploreDtoCommon>().ReverseMap();
+            CreateMap<GetBranchesExploreDto, Branch>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
             #endregion
         }
     }

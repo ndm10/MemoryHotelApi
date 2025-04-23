@@ -4,7 +4,7 @@ using MemoryHotelApi.DataAccessLayer.Repositories;
 using MemoryHotelApi.DataAccessLayer.Repositories.Interface;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 
-namespace ThomVietApi.DataAccessLayer.UnitOfWork
+namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -18,7 +18,7 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
         private ITourRepository _tourRepository = null!;
         private ISubTourRepository _subTourRepository = null!;
         private IBranchRepository _branchRepository = null!;
-        private IAmenityRepository _amenityRepository = null!;
+        private IConvenienceRepository _convenienceRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -98,11 +98,11 @@ namespace ThomVietApi.DataAccessLayer.UnitOfWork
             }
         }
 
-        public IAmenityRepository? AmenityRepository
+        public IConvenienceRepository? ConvenienceRepository
         {
             get
             {
-                return _amenityRepository ??= new AmenityRepository(_context);
+                return _convenienceRepository ??= new ConvenienceRepository(_context);
             }
         }
 

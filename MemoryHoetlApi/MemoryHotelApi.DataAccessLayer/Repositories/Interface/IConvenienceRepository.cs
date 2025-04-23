@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.DataAccessLayer.Repositories.Interface
 {
-    public interface IAmenityRepository : IGenericRepository<Amenity>
+    public interface IConvenienceRepository : IGenericRepository<Convenience>
     {
     }
 }

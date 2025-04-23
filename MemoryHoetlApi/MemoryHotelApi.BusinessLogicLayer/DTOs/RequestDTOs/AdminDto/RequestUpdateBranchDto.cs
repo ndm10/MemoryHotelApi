@@ -7,16 +7,19 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
     {
         public string? Name { get; set; }
         public string? Address { get; set; }
-        public string? LocationHighlights { get; set; }
-        public string? SuitableFor { get; set; }
+        public List<string>? LocationHighlights { get; set; }
+        public List<string>? SuitableFor { get; set; }
 
         [NumberGreaterThan(0, ErrorMessage = "Giá phòng phải lớn hơn 0 đồng")]
         public decimal? PricePerNight { get; set; }
 
         public string? Description { get; set; }
         public int? Order { get; set; }
+        public string? Slug { get; set; }
         public bool? IsActive { get; set; }
         public List<string>? ImageUrls { get; set; }
-        public List<Guid>? AmenityIDs { get; set; } 
+        public List<Guid> GeneralConvenienceIDs { get; set; } = new List<Guid>();
+        public List<Guid> HighlightedConvenienceIDs { get; set; } = new List<Guid>();
+        public List<UploadLocationExploreDto> LocationExplores { get; set; } = new List<UploadLocationExploreDto>();
     }
 }

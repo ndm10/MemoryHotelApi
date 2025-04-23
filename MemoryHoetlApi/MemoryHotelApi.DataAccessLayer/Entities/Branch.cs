@@ -4,12 +4,14 @@
     {
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;
-        public string LocationHighlights { get; set; } = null!;
-        public string SuitableFor { get; set; } = null!;
+        public List<string> LocationHighlights { get; set; } = null!;
+        public List<string> SuitableFor { get; set; } = null!;
         public decimal PricePerNight { get; set; }
         public string Description { get; set; } = null!;
-        public int Order { get; set; }
+        public string Slug { get; set; } = null!;
         public ICollection<Image> Images { get; set; } = new List<Image>();
-        public ICollection<Amenity> Amenities { get; set; } = new List<Amenity>();
+        public ICollection<Convenience> GeneralConveniences { get; set; } = new List<Convenience>();
+        public ICollection<Convenience> HighlightedConveniences { get; set; } = new List<Convenience>();
+        public ICollection<LocationExplore> LocationExplores { get; set; } = new List<LocationExplore>();
     }
 }

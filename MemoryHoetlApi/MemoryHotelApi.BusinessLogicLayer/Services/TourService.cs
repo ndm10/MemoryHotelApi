@@ -75,7 +75,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             var tours = await _unitOfWork.TourRepository!.GetTourPaginationAsync(pageIndexValue, pageSizeValue, predicate);
-            var toursDto = _mapper.Map<List<GetTourDto>>(tours);
+            var toursDto = _mapper.Map<List<GetTourDto>>(tours.OrderBy(x => x.Order));
 
             return new ResponseGetToursDto
             {
@@ -182,7 +182,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             var tours = await _unitOfWork.TourRepository!.GetAllAsync(predicate);
             var orders = tours.Select(x => x.Order).ToList();
-            var maxOrder = orders.Count() > 0 ? orders.Max() : 1;
+            var maxOrder = orders.Count() > 0 ? orders.Max() : 0;
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)

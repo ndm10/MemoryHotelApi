@@ -7,6 +7,7 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
+using System;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
@@ -49,7 +50,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             return new ResponseGetCitiesDto
             {
                 StatusCode = 200,
-                Data = _mapper.Map<List<GetCityDto>>(cities),
+                Data = _mapper.Map<List<GetCityDto>>(cities.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
                 TotalRecord = cities.Count(),
                 IsSuccess = true,
@@ -159,7 +160,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            var maxOrder = await _unitOfWork.BannerRepository!.GetMaxOrder();
+            var predicate = PredicateBuilder.New<City>(x => !x.IsDeleted);
+            var cities = await _unitOfWork.CityRepository!.GetAllAsync(predicate);
+            var orders = cities.Select(x => x.Order).ToList();
+            var maxOrder = orders.Count() > 0 ? orders.Max() : 0;
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || request.Order == null || request.Order == 0)

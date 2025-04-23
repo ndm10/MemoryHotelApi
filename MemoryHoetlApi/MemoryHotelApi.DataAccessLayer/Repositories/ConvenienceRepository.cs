@@ -4,9 +4,9 @@ using MemoryHotelApi.DataAccessLayer.Repositories.Interface;
 
 namespace MemoryHotelApi.DataAccessLayer.Repositories
 {
-    public class AmenityRepository : GenericRepository<Amenity>, IAmenityRepository
+    public class ConvenienceRepository : GenericRepository<Convenience>, IConvenienceRepository
     {
-        public AmenityRepository(MemoryHotelApiDbContext context) : base(context)
+        public ConvenienceRepository(MemoryHotelApiDbContext context) : base(context)
         {
         }
     }

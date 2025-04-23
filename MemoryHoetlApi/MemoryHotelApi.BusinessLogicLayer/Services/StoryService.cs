@@ -50,7 +50,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             return new ResponseGetStoriesDto
             {
                 StatusCode = 200,
-                Data = _mapper.Map<List<GetStoryDto>>(stories),
+                Data = _mapper.Map<List<GetStoryDto>>(stories.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
                 TotalRecord = stories.Count(),
                 IsSuccess = true,

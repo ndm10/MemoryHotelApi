@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
 {
-    public class RequestUpdateAmenityDto
+    public class RequestUpdateConvenienceDto
     {
         public string? Icon { get; set; } = null!;
         public string? Name { get; set; } = null!;

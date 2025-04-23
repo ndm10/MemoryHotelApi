@@ -4,7 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
-using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.HomepageDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
@@ -22,14 +22,14 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _mapper = mapper;
         }
 
-        public async Task<ResponseGetBannersHomepageDto> GetAllBannersAsync()
+        public async Task<ResponseGetBannersExploreDto> GetAllBannersAsync()
         {
-            var predicate = PredicateBuilder.New<Banner>(x => !x.IsDeleted);
+            var predicate = PredicateBuilder.New<Banner>(x => !x.IsDeleted && x.IsActive);
             var banners = await _unitOfWork.BannerRepository!.GetAllAsync(predicate);
 
             var bannerDtos = _mapper.Map<List<GetBannerDto>>(banners.OrderBy(x => x.Order));
 
-            return new ResponseGetBannersHomepageDto
+            return new ResponseGetBannersExploreDto
             {
                 StatusCode = 200,
                 Data = bannerDtos,

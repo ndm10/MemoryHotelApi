@@ -4,7 +4,9 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 
@@ -14,10 +16,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public BranchService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly StringUtility _stringUtility;
+
+        public BranchService(IUnitOfWork unitOfWork, IMapper mapper, StringUtility stringUtility)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _stringUtility = stringUtility;
         }
 
         public async Task<ResponseGetBranchDto> GetBranchAsync(Guid id)
@@ -25,7 +30,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var includes = new string[]
             {
                 nameof(Branch.Images),
-                nameof(Branch.Amenities)
+                nameof(Branch.GeneralConveniences),
+                nameof(Branch.HighlightedConveniences),
+                nameof(Branch.LocationExplores)
             };
 
             // Find the branch by id
@@ -53,7 +60,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var includes = new string[]
             {
                 nameof(Branch.Images),
-                nameof(Branch.Amenities)
+                nameof(Branch.GeneralConveniences),
+                nameof(Branch.HighlightedConveniences),
+                nameof(Branch.LocationExplores)
             };
 
             // Default values for pagination
@@ -87,6 +96,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 TotalPage = totalPages,
                 TotalRecord = branches.Count()
             };
+        }
+
+        public Task<ResponseGetBranchesExploreDto> GetBranchesExploreAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<BaseResponseDto> SoftDeleteBranchAsync(Guid id)
@@ -123,7 +137,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var includes = new string[]
             {
                 nameof(Branch.Images),
-                nameof(Branch.Amenities)
+                nameof(Branch.GeneralConveniences),
+                nameof(Branch.HighlightedConveniences),
+                nameof(Branch.LocationExplores)
             };
 
             // Find the branch by id
@@ -140,11 +156,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            // Validate the amenities exist in the Database or not
-            if (request.AmenityIDs != null && request.AmenityIDs.Count > 0)
+            // Validate the conveniences exist in the Database or not
+            if (request.GeneralConvenienceIDs != null && request.GeneralConvenienceIDs.Count > 0)
             {
-                var amenities = await _unitOfWork.AmenityRepository!.GetAllAsync(x => request.AmenityIDs.Contains(x.Id));
-                if (amenities == null || amenities.Count() == 0)
+                var conveniences = await _unitOfWork.ConvenienceRepository!.GetAllAsync(x => request.GeneralConvenienceIDs.Contains(x.Id));
+                if (conveniences == null || conveniences.Count() == 0)
                 {
                     return new BaseResponseDto
                     {
@@ -154,12 +170,25 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     };
                 }
 
-                branch.Amenities.Clear();
+                branch.GeneralConveniences.Clear();
+                branch.GeneralConveniences = conveniences.ToList();
+            }
 
-                foreach (var amenity in amenities)
+            if (request.HighlightedConvenienceIDs != null && request.HighlightedConvenienceIDs.Count > 0)
+            {
+                var conveniences = await _unitOfWork.ConvenienceRepository!.GetAllAsync(x => request.HighlightedConvenienceIDs.Contains(x.Id));
+                if (conveniences == null || conveniences.Count() == 0)
                 {
-                    branch.Amenities.Add(amenity);
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 400,
+                        Message = "ID dịch vụ không hợp lệ vui lòng thử lại",
+                        IsSuccess = false,
+                    };
                 }
+
+                branch.HighlightedConveniences.Clear();
+                branch.HighlightedConveniences = conveniences.ToList();
             }
 
             // Check images exist in the database
@@ -179,14 +208,23 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 branch.Images = images.ToList();
             }
 
+            // Update the LocationExplore
+            if (request.LocationExplores != null && request.LocationExplores.Count > 0)
+            {
+                var locationExplores = _mapper.Map<List<LocationExplore>>(request.LocationExplores);
+                branch.LocationExplores.Clear();
+                branch.LocationExplores = locationExplores;
+            }
+
             // Map the request to the branch entity
             branch.Name = request.Name?.Trim().Replace("\\s+", " ") ?? branch.Name;
             branch.Address = request.Address?.Trim().Replace("\\s+", " ") ?? branch.Address;
-            branch.LocationHighlights = request.LocationHighlights?.Trim().Replace("\\s+", " ") ?? branch.LocationHighlights;
-            branch.SuitableFor = request.SuitableFor?.Trim().Replace("\\s+", " ") ?? branch.SuitableFor;
+            branch.LocationHighlights = request.LocationHighlights ?? branch.LocationHighlights;
+            branch.SuitableFor = request.SuitableFor ?? branch.SuitableFor;
             branch.PricePerNight = request.PricePerNight ?? branch.PricePerNight;
             branch.Description = request.Description ?? branch.Description;
             branch.Order = request.Order ?? branch.Order;
+            branch.Slug = request.Slug ?? branch.Slug;
             branch.IsActive = request.IsActive ?? branch.IsActive;
 
             // Update the branch in the database
@@ -202,9 +240,20 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<BaseResponseDto> UploadBranchAsync(RequestUploadBranchDto request)
         {
-            // Validate the amenities exist in the Database or not
-            var amenities = await _unitOfWork.AmenityRepository!.GetAllAsync(x => request.AmenityIDs.Contains(x.Id));
-            if (amenities == null || amenities.Count() == 0)
+            // Validate the conveniences exist in the Database or not
+            var generalConveniences = await _unitOfWork.ConvenienceRepository!.GetAllAsync(x => request.GeneralConvenienceIDs.Contains(x.Id));
+            if (generalConveniences == null || generalConveniences.Count() == 0)
+            {
+                return new BaseResponseDto
+                {
+                    StatusCode = 400,
+                    Message = "ID dịch vụ không hợp lệ vui lòng thử lại",
+                    IsSuccess = false,
+                };
+            }
+
+            var highlightedConveniences = await _unitOfWork.ConvenienceRepository!.GetAllAsync(x => request.HighlightedConvenienceIDs.Contains(x.Id));
+            if (highlightedConveniences == null || highlightedConveniences.Count() == 0)
             {
                 return new BaseResponseDto
                 {
@@ -216,6 +265,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             var predicate = PredicateBuilder.New<Branch>(x => !x.IsDeleted);
 
+            // Calculate the maximum order in the database
             var branches = await _unitOfWork.BranchRepository!.GetAllAsync(predicate);
             var orders = branches.Select(x => x.Order).ToList();
             var maxOrder = orders.Count() > 0 ? orders.Max() : 1;
@@ -245,17 +295,56 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            // Add images to tour
+            // Add images to branch
             foreach (var image in images)
             {
                 branch.Images.Add(image);
             }
 
-            branch.Amenities = amenities.ToList();
+            // Add conveniences to branch
+            branch.GeneralConveniences = generalConveniences.ToList();
+            branch.HighlightedConveniences = highlightedConveniences.ToList();
 
-            // Format the name and address
-            branch.Name = branch.Name.Trim().Replace("\\s+", " ");
-            branch.Address = branch.Address.Trim().Replace("\\s+", " ");
+            // Generate the slug if slug in the request is null
+            if(string.IsNullOrEmpty(request.Slug))
+            {
+                var slug = _stringUtility.GenerateSlug(request.Name);
+
+                // Check if the slug is unique
+                var existingBranch = await _unitOfWork.BranchRepository!.GetBySlugAsync(slug);
+                if (existingBranch != null)
+                {
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 400,
+                        Message = "Slug đã tồn tại, vui lòng thử lại",
+                        IsSuccess = false,
+                    };
+                }
+
+                branch.Slug = slug;
+            }
+            else
+            {
+                // Check if the slug is unique
+                var existingBranch = await _unitOfWork.BranchRepository!.GetBySlugAsync(request.Slug);
+                if (existingBranch != null)
+                {
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 400,
+                        Message = "Slug đã tồn tại, vui lòng thử lại",
+                        IsSuccess = false,
+                    };
+                }
+            }
+
+            // Add location explores to branch
+            if (request.LocationExplores != null && request.LocationExplores.Count > 0)
+            {
+                var locationExplores = _mapper.Map<List<LocationExplore>>(request.LocationExplores);
+                branch.LocationExplores = locationExplores;
+            }
 
             // Add tour to database
             await _unitOfWork.BranchRepository!.AddAsync(branch);
