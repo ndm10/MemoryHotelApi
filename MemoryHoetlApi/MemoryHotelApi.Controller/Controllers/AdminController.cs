@@ -19,8 +19,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ISubTourService _subTourService;
         private readonly IBranchService _branchService;
         private readonly IConvenienceService _convenienceService;
+        private readonly IRoomCategoryService _roomCategoryService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -29,6 +30,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _subTourService = subTourService;
             _branchService = branchService;
             _convenienceService = convenienceService;
+            _roomCategoryService = roomCategoryService;
         }
 
         [HttpGet("banner")]
@@ -273,6 +275,41 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<BaseResponseDto>> DeleteBranch(Guid id)
         {
             var response = await _branchService.SoftDeleteBranchAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("roomcategory")]
+        public async Task<ActionResult<ResponseGetRoomCategoriesDto>> GetRoomCategories(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _roomCategoryService.GetRoomCategoriesAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("roomcategory/{id}")]
+        public async Task<ActionResult<ResponseGetRoomCategoryDto>> GetRoomCategory(Guid id)
+        {
+            var response = await _roomCategoryService.GetRoomCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("roomcategory")]
+        public async Task<ActionResult<BaseResponseDto>> UploadRoomCategory(RequestUploadRoomCategoryDto request)
+        {
+            var response = await _roomCategoryService.UploadRoomCategoryAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("roomcategory/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateRoomCategory(RequestUpdateRoomCategoryDto request, Guid id)
+        {
+            var response = await _roomCategoryService.UpdateRoomCategoryAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("roomcategory/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteRoomCategory(Guid id)
+        {
+            var response = await _roomCategoryService.SoftDeleteRoomCategoryAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

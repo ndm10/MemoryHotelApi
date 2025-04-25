@@ -11,6 +11,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
         Task<ResponseGetBranchDto> GetBranchAsync(Guid id);
         Task<ResponseGetBranchesDto> GetBranchesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status);
         Task<ResponseGetBranchesExploreDto> GetBranchesExploreAsync();
+        Task<ResponseGetBranchExploreDto> GetBranchExploreAsync(Guid id);
         Task<BaseResponseDto> SoftDeleteBranchAsync(Guid id);
         Task<BaseResponseDto> UpdateBranchAsync(RequestUpdateBranchDto request, Guid id);
         Task<BaseResponseDto> UploadBranchAsync(RequestUploadBranchDto request);

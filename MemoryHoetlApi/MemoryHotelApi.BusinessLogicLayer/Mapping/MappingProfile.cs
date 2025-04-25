@@ -69,6 +69,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<LocationExplore, ResponseGetLocationExploreDtoCommon>().ReverseMap();
             CreateMap<GetBranchesExploreDto, Branch>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
             #endregion
+
+            #region RoomCategoryMapping
+            CreateMap<RoomCategory, RoomCategoryDto>().ReverseMap();
+            CreateMap<RoomCategory, RequestUploadRoomCategoryDto>().ReverseMap();
+            CreateMap<RoomCategory, RoomCategoryExploreDto>().ReverseMap();
+            #endregion
         }
     }
 }

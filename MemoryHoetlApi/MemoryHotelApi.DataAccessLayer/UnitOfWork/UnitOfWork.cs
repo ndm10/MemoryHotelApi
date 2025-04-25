@@ -19,6 +19,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private ISubTourRepository _subTourRepository = null!;
         private IBranchRepository _branchRepository = null!;
         private IConvenienceRepository _convenienceRepository = null!;
+        private IRoomCategoryRepository _roomCategoryRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -106,6 +107,13 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             }
         }
 
+        public IRoomCategoryRepository? RoomCategoryRepository
+        {
+            get
+            {
+                return _roomCategoryRepository ??= new RoomCategoryRepository(_context);
+            }
+        }
         public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();

@@ -53,5 +53,36 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
 
             return result;
         }
+
+        public string FormatFirstEachWordToUpperCase(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            input = input.Trim();
+            input = Regex.Replace(input, @"\s+", " ");
+
+            string[] words = input.Split(' ');
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i].Length > 0)
+                {
+                    words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                }
+            }
+
+            return string.Join(" ", words);
+        }
+
+        public string UpperFirstLetter(string input)
+        {
+            // Check if the input is null or empty
+            if (string.IsNullOrWhiteSpace(input) || string.IsNullOrEmpty(input))
+                return string.Empty;
+            
+            input = input.Trim();
+            input = Regex.Replace(input, @"\s+", " ");
+            return char.ToUpper(input[0]) + input.Substring(1).ToLower();
+        }
     }
 }

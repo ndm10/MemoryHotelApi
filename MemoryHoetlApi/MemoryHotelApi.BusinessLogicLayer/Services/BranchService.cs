@@ -32,7 +32,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 nameof(Branch.Images),
                 nameof(Branch.GeneralConveniences),
                 nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores)
+                nameof(Branch.LocationExplores),
+                nameof(Branch.RoomCategories)
             };
 
             // Find the branch by id
@@ -62,7 +63,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 nameof(Branch.Images),
                 nameof(Branch.GeneralConveniences),
                 nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores)
+                nameof(Branch.LocationExplores),
+                nameof(Branch.RoomCategories)
             };
 
             // Default values for pagination
@@ -98,9 +100,57 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public Task<ResponseGetBranchesExploreDto> GetBranchesExploreAsync()
+        public async Task<ResponseGetBranchesExploreDto> GetBranchesExploreAsync()
         {
-            throw new NotImplementedException();
+            var includes = new string[]
+            {
+                nameof(Branch.Images),
+                nameof(Branch.GeneralConveniences),
+                nameof(Branch.HighlightedConveniences),
+                nameof(Branch.LocationExplores),
+                nameof(Branch.RoomCategories)
+            };
+
+            // Get all the branches from the database
+            var branches = await _unitOfWork.BranchRepository!.GetAllAsync((x => !x.IsDeleted && x.IsActive), includes);
+
+            // Map the branches to the DTO and return
+            return new ResponseGetBranchesExploreDto
+            {
+                StatusCode = 200,
+                IsSuccess = true,
+                Data = _mapper.Map<List<GetBranchesExploreDto>>(branches.OrderBy(x => x.Order))
+            };
+        }
+
+        public async Task<ResponseGetBranchExploreDto> GetBranchExploreAsync(Guid id)
+        {
+            var includes = new string[]
+            {
+                nameof(Branch.Images),
+                nameof(Branch.GeneralConveniences),
+                nameof(Branch.HighlightedConveniences),
+                nameof(Branch.LocationExplores),
+                nameof(Branch.RoomCategories)
+            };
+
+            // Find the branch by id
+            var branch = await _unitOfWork.BranchRepository!.GetByIdIncludeAsync(id, includes);
+            if (branch == null || branch.IsDeleted)
+            {
+                return new ResponseGetBranchExploreDto
+                {
+                    StatusCode = 404,
+                    Message = "Không tìm thấy chi nhánh này",
+                };
+            }
+
+            return new ResponseGetBranchExploreDto
+            {
+                StatusCode = 200,
+                IsSuccess = true,
+                Data = _mapper.Map<GetBranchesExploreDto>(branch)
+            };
         }
 
         public async Task<BaseResponseDto> SoftDeleteBranchAsync(Guid id)
@@ -139,7 +189,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 nameof(Branch.Images),
                 nameof(Branch.GeneralConveniences),
                 nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores)
+                nameof(Branch.LocationExplores),
+                nameof(Branch.RoomCategories)
             };
 
             // Find the branch by id
@@ -205,6 +256,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     };
 
                 }
+
                 branch.Images = images.ToList();
             }
 
@@ -214,6 +266,29 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 var locationExplores = _mapper.Map<List<LocationExplore>>(request.LocationExplores);
                 branch.LocationExplores.Clear();
                 branch.LocationExplores = locationExplores;
+            }
+
+            // Check if room category Id exist in the Database
+            if (request.RoomCategoryIDs != null && request.RoomCategoryIDs.Count > 0)
+            {
+                foreach (var roomCategoryId in request.RoomCategoryIDs)
+                {
+                    var roomCategory = await _unitOfWork.RoomCategoryRepository!.GetByIdAsync(roomCategoryId);
+                    if (roomCategory == null || roomCategory.IsDeleted)
+                    {
+                        return new BaseResponseDto
+                        {
+                            StatusCode = 400,
+                            Message = "ID hạng phòng không hợp lệ vui lòng thử lại",
+                            IsSuccess = false,
+                        };
+                    }
+                    branch.RoomCategories.Add(roomCategory);
+                }
+
+                // If all room category is valid, add to branch
+                var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => request.RoomCategoryIDs.Contains(x.Id));
+                branch.RoomCategories = roomCategories.ToList();
             }
 
             // Map the request to the branch entity
@@ -306,7 +381,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             branch.HighlightedConveniences = highlightedConveniences.ToList();
 
             // Generate the slug if slug in the request is null
-            if(string.IsNullOrEmpty(request.Slug))
+            if (string.IsNullOrEmpty(request.Slug))
             {
                 var slug = _stringUtility.GenerateSlug(request.Name);
 
@@ -344,6 +419,29 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 var locationExplores = _mapper.Map<List<LocationExplore>>(request.LocationExplores);
                 branch.LocationExplores = locationExplores;
+            }
+
+            // Check if room category Id exist in the Database
+            if (request.RoomCategoryIDs != null && request.RoomCategoryIDs.Count > 0)
+            {
+                foreach (var roomCategoryId in request.RoomCategoryIDs)
+                {
+                    var roomCategory = await _unitOfWork.RoomCategoryRepository!.GetByIdAsync(roomCategoryId);
+                    if (roomCategory == null || roomCategory.IsDeleted)
+                    {
+                        return new BaseResponseDto
+                        {
+                            StatusCode = 400,
+                            Message = "ID hạng phòng không hợp lệ vui lòng thử lại",
+                            IsSuccess = false,
+                        };
+                    }
+                    branch.RoomCategories.Add(roomCategory);
+                }
+
+                // If all room category is valid, add to branch
+                var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => request.RoomCategoryIDs.Contains(x.Id));
+                branch.RoomCategories = roomCategories.ToList();
             }
 
             // Add tour to database

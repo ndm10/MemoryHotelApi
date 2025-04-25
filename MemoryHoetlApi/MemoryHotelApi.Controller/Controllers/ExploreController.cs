@@ -30,5 +30,12 @@ namespace MemoryHotelApi.Controller.Controllers
             var response = await _branchService.GetBranchesExploreAsync();
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("branch/{id}")]
+        public async Task<ActionResult<ResponseGetBranchExploreDto>> GetBranch(Guid id)
+        {
+            var response = await _branchService.GetBranchExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

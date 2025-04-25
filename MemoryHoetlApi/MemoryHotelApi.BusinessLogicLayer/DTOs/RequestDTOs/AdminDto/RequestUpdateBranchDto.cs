@@ -18,8 +18,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public string? Slug { get; set; }
         public bool? IsActive { get; set; }
         public List<string>? ImageUrls { get; set; }
-        public List<Guid> GeneralConvenienceIDs { get; set; } = new List<Guid>();
-        public List<Guid> HighlightedConvenienceIDs { get; set; } = new List<Guid>();
-        public List<UploadLocationExploreDto> LocationExplores { get; set; } = new List<UploadLocationExploreDto>();
+        public List<Guid>? GeneralConvenienceIDs { get; set; }
+        public List<Guid>? HighlightedConvenienceIDs { get; set; }
+        public List<UploadLocationExploreDto>? LocationExplores { get; set; }
+        public List<Guid>? RoomCategoryIDs { get; set; }
     }
 }

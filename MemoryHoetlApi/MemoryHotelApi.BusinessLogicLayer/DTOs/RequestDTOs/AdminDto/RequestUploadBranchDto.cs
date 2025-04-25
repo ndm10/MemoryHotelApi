@@ -1,5 +1,4 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Utilities.AttributeValidations;
-using MemoryHotelApi.DataAccessLayer.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
@@ -35,6 +34,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public List<Guid> HighlightedConvenienceIDs { get; set; } = new List<Guid>();
 
         public List<UploadLocationExploreDto> LocationExplores { get; set; } = new List<UploadLocationExploreDto>();
+
+        public List<Guid> RoomCategoryIDs { get; set; } = new List<Guid>();
     }
 
     public class UploadLocationExploreDto

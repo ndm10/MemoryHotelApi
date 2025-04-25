@@ -18,6 +18,10 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Convenience> Conveniences { get; set; }
         public DbSet<LocationExplore> LocationExplores { get; set; }
+        public DbSet<RoomCategory> RoomCategories { get; set; }
+        public DbSet<MembershipTierBenefit> MembershipTierBenefits { get; set; }
+        public DbSet<MembershipTier> MembershipTiers { get; set; }
+        public DbSet<MembershipTierMembershipTierBenefit> MembershipTierMembershipTierBenefits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
