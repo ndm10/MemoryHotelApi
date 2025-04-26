@@ -17,6 +17,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IBranchRepository? BranchRepository { get; }
         IConvenienceRepository? ConvenienceRepository { get; }
         IRoomCategoryRepository? RoomCategoryRepository { get; }
+        IMembershipTierRepository? MembershipTierRepository { get; }
+        IMembershipTierBenefitRepository? MembershipTierBenefitRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }

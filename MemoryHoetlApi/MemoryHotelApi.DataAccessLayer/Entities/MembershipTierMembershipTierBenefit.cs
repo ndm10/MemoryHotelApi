@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.DataAccessLayer.Entities
 {
-    public class MembershipTierMembershipTierBenefit : BaseEntity
+    public class MembershipTierMembershipTierBenefit
     {
         public Guid MembershipTierId { get; set; }
         public MembershipTier MembershipTier { get; set; } = new MembershipTier();

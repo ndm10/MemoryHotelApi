@@ -16,6 +16,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #region UserMapping
             CreateMap<User, ResponseLoginDto>().ReverseMap();
             CreateMap<User, RequestRegisterDto>().ReverseMap();
+            CreateMap<User, MembershipDto>().ReverseMap();
             #endregion
 
             #region BannerMapping
@@ -74,6 +75,24 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<RoomCategory, RoomCategoryDto>().ReverseMap();
             CreateMap<RoomCategory, RequestUploadRoomCategoryDto>().ReverseMap();
             CreateMap<RoomCategory, RoomCategoryExploreDto>().ReverseMap();
+            #endregion
+
+            #region MembershipTierMapping
+            CreateMap<MembershipTier, MembershipTierDto>()
+                .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits));
+            CreateMap<RequestUploadMembershipTierDto, MembershipTier>().ForMember(dest => dest.Benefits, otp => otp.Ignore());
+            #endregion
+
+            #region MembershipTierBenefitMapping
+            CreateMap<MembershipTierBenefit, MembershipTierBenefitDto>().ReverseMap();
+            CreateMap<MembershipTierBenefit, RequestUploadMembershipTierBenefitDto>().ReverseMap();
+            #endregion
+
+            #region MembershipTierMembershipTierBenefitMapping
+            CreateMap<MembershipTierMembershipTierBenefit, MembershipTierMembershipTierBenefitDto>()
+                .ForMember(dest => dest.Id, otp => otp.MapFrom(src => src.MembershipTierBenefit.Id))
+                .ForMember(dest => dest.Benefit, otp => otp.MapFrom(src => src.MembershipTierBenefit.Benefit))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value)); ;
             #endregion
         }
     }

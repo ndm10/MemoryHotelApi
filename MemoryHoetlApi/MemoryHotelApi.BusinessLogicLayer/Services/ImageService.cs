@@ -10,12 +10,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class ImageService : GenericService<Image>, IImageService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly HashSet<string> _allowedExtensions = new HashSet<string> { ".png", ".jpg", ".jpeg" };
 
-        public ImageService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper)
+        public ImageService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseImageUploadDto> UploadImage(List<RequestImageUploadDto> imageDtos, string localRootPath, string urlPath)

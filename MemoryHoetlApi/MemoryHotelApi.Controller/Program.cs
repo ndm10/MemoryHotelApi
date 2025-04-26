@@ -137,6 +137,8 @@ builder.Services.AddScoped<ISubTourService, SubTourService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IConvenienceService, ConvenienceService>();
 builder.Services.AddScoped<IRoomCategoryService, RoomCategoryService>();
+builder.Services.AddScoped<IMembershipTierService, MembershipTierService>();
+builder.Services.AddScoped<IMembershipTierBenefitService, MembershipTierBenefitService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

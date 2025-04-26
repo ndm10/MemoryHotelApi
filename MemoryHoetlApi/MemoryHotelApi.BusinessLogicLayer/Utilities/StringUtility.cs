@@ -54,7 +54,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             return result;
         }
 
-        public string FormatFirstEachWordToUpperCase(string input)
+        public string UpperCaseFirstEachWord(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;

@@ -169,22 +169,6 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                 _context.Cities.AddRange(cities);
             }
 
-            // Seed data for membership tiers
-            if(!await _context.MembershipTiers.AnyAsync())
-            {
-                var membershipTiers = new List<MembershipTier>
-                {
-                    new MembershipTier
-                    {
-                        Id = Guid.Parse("f52d021b-1e79-4827-a06e-ffbb66935e38"),
-                        Icon = "http://27.71.27.24:5000/Images/1023236f-af26-4dc3-9198-b361a1e07265.png",
-                        Name = "Thành viên Mới",
-                        Description = "Thành viên mới website"
-                    },
-                };
-                _context.MembershipTiers.AddRange(membershipTiers);
-            }
-
             await _context.SaveChangesAsync();
         }
     }

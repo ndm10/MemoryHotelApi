@@ -295,6 +295,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             branch.Name = request.Name?.Trim().Replace("\\s+", " ") ?? branch.Name;
             branch.Address = request.Address?.Trim().Replace("\\s+", " ") ?? branch.Address;
             branch.LocationHighlights = request.LocationHighlights ?? branch.LocationHighlights;
+            branch.BranchLocation = request.BranchLocation ?? branch.BranchLocation;
             branch.SuitableFor = request.SuitableFor ?? branch.SuitableFor;
             branch.PricePerNight = request.PricePerNight ?? branch.PricePerNight;
             branch.Description = request.Description ?? branch.Description;

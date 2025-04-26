@@ -20,6 +20,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private IBranchRepository _branchRepository = null!;
         private IConvenienceRepository _convenienceRepository = null!;
         private IRoomCategoryRepository _roomCategoryRepository = null!;
+        private IMembershipTierRepository _membershipTierRepository = null!;
+        private IMembershipTierBenefitRepository _membershipTierBenefitRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -114,6 +116,23 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
                 return _roomCategoryRepository ??= new RoomCategoryRepository(_context);
             }
         }
+
+        public IMembershipTierRepository? MembershipTierRepository
+        {
+            get
+            {
+                return _membershipTierRepository ??= new MembershipTierRepository(_context);
+            }
+        }
+
+        public IMembershipTierBenefitRepository? MembershipTierBenefitRepository
+        {
+            get
+            {
+                return _membershipTierBenefitRepository ??= new MembershipTierBenefitRepository(_context);
+            }
+        }
+
         public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();

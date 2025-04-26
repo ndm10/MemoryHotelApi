@@ -13,6 +13,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         [NumberGreaterThan(0, ErrorMessage = "Giá phòng phải lớn hơn 0 đồng")]
         public decimal? PricePerNight { get; set; }
 
+        public string? BranchLocation { get; set; }
         public string? Description { get; set; }
         public int? Order { get; set; }
         public string? Slug { get; set; }

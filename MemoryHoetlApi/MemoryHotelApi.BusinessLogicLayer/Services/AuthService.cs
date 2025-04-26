@@ -12,7 +12,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class AuthService : GenericService<User>, IAuthService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly PasswordHasher _passwordHasher;
         private readonly JwtUtility _jwtUtility;
         private readonly IMemoryCache _memoryCache;
@@ -21,9 +20,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         private readonly TimeSpan _otpExpiration = TimeSpan.FromMinutes(3);
         private readonly TimeSpan _lockoutDuration = TimeSpan.FromSeconds(10);
 
-        public AuthService(IMapper mapper, PasswordHasher passwordHasher, IUnitOfWork unitOfWork, JwtUtility jwtUtility, IMemoryCache memoryCache, EmailSender emailSender) : base(mapper)
+        public AuthService(IMapper mapper, PasswordHasher passwordHasher, IUnitOfWork unitOfWork, JwtUtility jwtUtility, IMemoryCache memoryCache, EmailSender emailSender) : base(mapper, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
             _jwtUtility = jwtUtility;
             _memoryCache = memoryCache;
@@ -166,7 +164,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Check if email of the user exist or not
-            var existingUser =  await _unitOfWork.UserRepository!.FindUserByEmail(request.Email);
+            var existingUser = await _unitOfWork.UserRepository!.FindUserByEmail(request.Email);
             if (existingUser == null)
             {
                 return new ResponseSendOtpDto

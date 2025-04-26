@@ -16,7 +16,7 @@ namespace MemoryHotelApi.DataAccessLayer.EntityConfigurations
 
             builder.HasOne(mtmtb => mtmtb.MembershipTierBenefit)
                 .WithMany(mt => mt.Tiers)
-                .HasForeignKey(mtmtb => mtmtb.MembershipTierId);
+                .HasForeignKey(mtmtb => mtmtb.MembershipTierBenefitId);
         }
     }
 }

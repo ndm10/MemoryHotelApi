@@ -21,6 +21,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         [Required(ErrorMessage = "Vui lòng điền giá phòng của khách sạn")]
         public decimal PricePerNight { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng điền địa điểm của khách sạn")]
+        public string BranchLocation { get; set; } = null!;
+
         public string? Description { get; set; } = null!;
 
         public int? Order { get; set; }

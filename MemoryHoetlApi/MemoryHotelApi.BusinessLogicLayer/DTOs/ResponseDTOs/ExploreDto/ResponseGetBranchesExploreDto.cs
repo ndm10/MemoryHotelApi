@@ -15,6 +15,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
         public List<string>? LocationHighlights { get; set; }
         public List<string>? SuitableFor { get; set; }
         public decimal? PricePerNight { get; set; }
+        public string? BranchLocation { get; set; }
         public string? Description { get; set; }
         public int? Order { get; set; }
         public string? Slug { get; set; }

@@ -20,8 +20,11 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IBranchService _branchService;
         private readonly IConvenienceService _convenienceService;
         private readonly IRoomCategoryService _roomCategoryService;
+        private readonly IUserService _userService;
+        private readonly IMembershipTierService _membershipTierService;
+        private readonly IMembershipTierBenefitService _membershipTierBenefitService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -31,6 +34,9 @@ namespace MemoryHotelApi.Controller.Controllers
             _branchService = branchService;
             _convenienceService = convenienceService;
             _roomCategoryService = roomCategoryService;
+            _userService = userService;
+            _membershipTierService = membershipTierService;
+            _membershipTierBenefitService = membershipTierBenefitService;
         }
 
         [HttpGet("banner")]
@@ -278,38 +284,122 @@ namespace MemoryHotelApi.Controller.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("roomcategory")]
+        [HttpGet("room-category")]
         public async Task<ActionResult<ResponseGetRoomCategoriesDto>> GetRoomCategories(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             var response = await _roomCategoryService.GetRoomCategoriesAsync(pageIndex, pageSize, textSearch, status);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("roomcategory/{id}")]
+        [HttpGet("room-category/{id}")]
         public async Task<ActionResult<ResponseGetRoomCategoryDto>> GetRoomCategory(Guid id)
         {
             var response = await _roomCategoryService.GetRoomCategoryAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("roomcategory")]
+        [HttpPost("room-category")]
         public async Task<ActionResult<BaseResponseDto>> UploadRoomCategory(RequestUploadRoomCategoryDto request)
         {
             var response = await _roomCategoryService.UploadRoomCategoryAsync(request);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPatch("roomcategory/{id}")]
+        [HttpPatch("room-category/{id}")]
         public async Task<ActionResult<BaseResponseDto>> UpdateRoomCategory(RequestUpdateRoomCategoryDto request, Guid id)
         {
             var response = await _roomCategoryService.UpdateRoomCategoryAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpDelete("roomcategory/{id}")]
+        [HttpDelete("room-category/{id}")]
         public async Task<ActionResult<BaseResponseDto>> DeleteRoomCategory(Guid id)
         {
             var response = await _roomCategoryService.SoftDeleteRoomCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership")]
+        public async Task<ActionResult<ResponseGetMembershipsDto>> GetMemberships(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _userService.GetMembershipsAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership/{id}")]
+        public async Task<ActionResult<ResponseGetMembershipDto>> GetMembership(Guid id)
+        {
+            var response = await _userService.GetMembershipAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership-tier")]
+        public async Task<ActionResult<ResponseGetMembershipTiersDto>> GetMembershipTier(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _membershipTierService.GetMembershipTiersAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership-tier/{id}")]
+        public async Task<ActionResult<ResponseGetMembershipTierDto>> GetMembershipTier(Guid id)
+        {
+            var response = await _membershipTierService.GetMembershipTierAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("membership-tier")]
+        public async Task<ActionResult<BaseResponseDto>> UploadMembershipTier(RequestUploadMembershipTierDto request)
+        {
+            var response = await _membershipTierService.UploadMembershipTierAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("membership-tier/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateMembershipTier(RequestUpdateMembershipTierDto request, Guid id)
+        {
+            var response = await _membershipTierService.UpdateMembershipTierAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("membership-tier/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteMembershipTier(Guid id)
+        {
+            var response = await _membershipTierService.SoftDeleteMembershipTierAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership-tier-benefit")]
+        public async Task<ActionResult<ResponseGetMembershipTierBenefitsDto>> GetMembershipTierBenefits(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _membershipTierBenefitService.GetMembershipTierBenefitsAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("membership-tier-benefit/{id}")]
+        public async Task<ActionResult<ResponseGetMembershipTierBenefitDto>> GetMembershipTierBenefit(Guid id)
+        {
+            var response = await _membershipTierBenefitService.GetMembershipTierBenefitAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("membership-tier-benefit")]
+        public async Task<ActionResult<BaseResponseDto>> UploadMembershipTierBenefit(RequestUploadMembershipTierBenefitDto request)
+        {
+            var response = await _membershipTierBenefitService.UploadMembershipTierBenefitAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("membership-tier-benefit/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateMembershipTierBenefit(RequestUpdateMembershipTierBenefitDto request, Guid id)
+        {
+            var response = await _membershipTierBenefitService.UpdateMembershipTierBenefitAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("membership-tier-benefit/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteMembershipTierBenefit(Guid id)
+        {
+            var response = await _membershipTierBenefitService.SoftDeleteMembershipTierBenefitAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }
