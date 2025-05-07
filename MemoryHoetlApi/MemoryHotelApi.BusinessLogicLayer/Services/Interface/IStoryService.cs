@@ -1,6 +1,7 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
 {
@@ -11,5 +12,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
         Task<BaseResponseDto> SoftDeleteStoryAsync(Guid id);
         Task<BaseResponseDto> UpdateStoryAsync(RequestUpdateStoryDto request, Guid id);
         Task<BaseResponseDto> UploadStoryAsync(RequestUploadStoryDto request);
+        Task<ResponseGetStoriesExploreDto> GetStoriesExploreAsync();
     }
 }

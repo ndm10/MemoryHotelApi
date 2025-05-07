@@ -2,11 +2,11 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetConveniencesDto : GenericResponsePagination<GetConvenienceDto>
+    public class ResponseGetConveniencesDto : GenericResponsePagination<ConvenienceDto>
     {
     }
 
-    public class GetConvenienceDto
+    public class ConvenienceDto
     {
         public Guid Id { get; set; }
         public string Icon { get; set; } = null!;

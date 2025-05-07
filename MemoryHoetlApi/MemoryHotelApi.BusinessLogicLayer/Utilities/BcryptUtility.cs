@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Utilities
 {
-    public class PasswordHasher
+    public class BcryptUtility
     {
         private const int WorkFactor = 12; // Adjust based on security needs (10-14 typical)
 

@@ -12,7 +12,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class AuthService : GenericService<User>, IAuthService
     {
-        private readonly PasswordHasher _passwordHasher;
+        private readonly BcryptUtility _passwordHasher;
         private readonly JwtUtility _jwtUtility;
         private readonly IMemoryCache _memoryCache;
         private readonly EmailSender _emailSender;
@@ -20,7 +20,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         private readonly TimeSpan _otpExpiration = TimeSpan.FromMinutes(3);
         private readonly TimeSpan _lockoutDuration = TimeSpan.FromSeconds(10);
 
-        public AuthService(IMapper mapper, PasswordHasher passwordHasher, IUnitOfWork unitOfWork, JwtUtility jwtUtility, IMemoryCache memoryCache, EmailSender emailSender) : base(mapper, unitOfWork)
+        public AuthService(IMapper mapper, BcryptUtility passwordHasher, IUnitOfWork unitOfWork, JwtUtility jwtUtility, IMemoryCache memoryCache, EmailSender emailSender) : base(mapper, unitOfWork)
         {
             _passwordHasher = passwordHasher;
             _jwtUtility = jwtUtility;
@@ -92,6 +92,17 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Mapping data
             var user = _mapper.Map<User>(request);
 
+            // Find membership tier by IsDeleteAllowed
+            var membershipTier = await _unitOfWork.MembershipTierRepository!.FindMembershipTierByIsDeleteAllowedAsync();
+            if (membershipTier == null)
+            {
+                return new ResponseRegisterDto
+                {
+                    StatusCode = 500,
+                    Message = "Có lỗi xảy ra với hạng thành viên. Vui lòng liên hệ admin để được hỗi trợ!"
+                };
+            }
+
             // Save change to DB and send OTP to email
             using (var transaction = _unitOfWork.BeginTransaction())
             {
@@ -120,7 +131,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     // Setting values
                     user.IsVerified = false;
                     user.RoleId = userRole.Id;
+                    user.Role = userRole;
                     user.Password = string.Empty;
+                    user.MembershipTierId = membershipTier.Id;
+                    user.MembershipTier = membershipTier;
                     await userRepository.AddAsync(user);
                 }
                 else

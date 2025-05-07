@@ -16,6 +16,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public ICollection<MembershipTierMembershipTierBenefitDto> Benefits { get; set; } = new List<MembershipTierMembershipTierBenefitDto>();
         public int Order { get; set; }
         public bool IsActive { get; set; }
+        public bool IsDeleteAllowed { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }

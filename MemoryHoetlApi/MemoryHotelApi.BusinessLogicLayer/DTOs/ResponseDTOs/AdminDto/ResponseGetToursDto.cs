@@ -18,7 +18,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public List<string>? Images { get; set; }
         public List<GetSubTourDto>? SubTours { get; set; }
         public ResponseGetCityDtoCommon? City { get; set; }
-        public int Order { get; set; }
+        public int? Order { get; set; }
+        public string? Slug { get; set; }
         public bool IsActive { get; set; }
     }
 }

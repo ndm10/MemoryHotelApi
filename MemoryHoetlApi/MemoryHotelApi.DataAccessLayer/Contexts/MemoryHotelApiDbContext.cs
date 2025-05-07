@@ -22,6 +22,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<MembershipTierBenefit> MembershipTierBenefits { get; set; }
         public DbSet<MembershipTier> MembershipTiers { get; set; }
         public DbSet<MembershipTierMembershipTierBenefit> MembershipTierMembershipTierBenefits { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

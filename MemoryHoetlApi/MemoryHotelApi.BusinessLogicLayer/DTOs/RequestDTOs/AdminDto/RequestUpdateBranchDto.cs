@@ -17,6 +17,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public string? Description { get; set; }
         public int? Order { get; set; }
         public string? Slug { get; set; }
+        public string? HotelCode { get; set; }
         public bool? IsActive { get; set; }
         public List<string>? ImageUrls { get; set; }
         public List<Guid>? GeneralConvenienceIDs { get; set; }

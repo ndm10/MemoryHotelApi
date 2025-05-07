@@ -12,6 +12,7 @@
         public Guid? MembershipTierId { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
+        public bool IsDeletedAllowed { get; set; }
         public Role Role { get; set; } = new Role();
         public MembershipTier? MembershipTier { get; set; }
     }

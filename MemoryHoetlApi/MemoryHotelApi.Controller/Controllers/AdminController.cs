@@ -1,4 +1,5 @@
-﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+﻿using MemoryHotelApi.BusinessLogicLayer.Common;
+using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
@@ -23,8 +24,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IUserService _userService;
         private readonly IMembershipTierService _membershipTierService;
         private readonly IMembershipTierBenefitService _membershipTierBenefitService;
+        private readonly IRoomService _roomService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -37,6 +39,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _userService = userService;
             _membershipTierService = membershipTierService;
             _membershipTierBenefitService = membershipTierBenefitService;
+            _roomService = roomService;
         }
 
         [HttpGet("banner")]
@@ -320,16 +323,23 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("membership")]
-        public async Task<ActionResult<ResponseGetMembershipsDto>> GetMemberships(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ActionResult<ResponseGetUsersDto>> GetMemberships(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
-            var response = await _userService.GetMembershipsAsync(pageIndex, pageSize, textSearch, status);
+            var response = await _userService.GetUsersAsync(pageIndex, pageSize, textSearch, status, Constants.RoleUserName);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("membership/{id}")]
-        public async Task<ActionResult<ResponseGetMembershipDto>> GetMembership(Guid id)
+        public async Task<ActionResult<ResponseGetUserDto>> GetMembership(Guid id)
         {
-            var response = await _userService.GetMembershipAsync(id);
+            var response = await _userService.GetUserAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("membership/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateMembershipTier(RequestUpdateMembershipTierOfMemberDto request, Guid id)
+        {
+            var response = await _userService.UpdateMembershipTierAsync(request, id);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -400,6 +410,76 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<BaseResponseDto>> DeleteMembershipTierBenefit(Guid id)
         {
             var response = await _membershipTierBenefitService.SoftDeleteMembershipTierBenefitAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("admin-account")]
+        public async Task<ActionResult<ResponseGetUsersDto>> GetAdminAccounts(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _userService.GetUsersAsync(pageIndex, pageSize, textSearch, status, Constants.RoleAdminName);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("admin-account/{id}")]
+        public async Task<ActionResult<ResponseGetUserDto>> GetAdminAccount(Guid id)
+        {
+            var response = await _userService.GetUserAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("admin-account/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateAdminAccount(RequestUpdateAdminAccountDto request, Guid id)
+        {
+            var response = await _userService.UpdateAdminAccount(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("admin-account")]
+        public async Task<ActionResult<BaseResponseDto>> UploadAdminAccount(RequestUploadAdminAccountDto request)
+        {
+            var response = await _userService.UploadAdminAccount(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("admin-account/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteAdminAccount(Guid id)
+        {
+            var response = await _userService.SoftDeleteAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("room")]
+        public async Task<ActionResult<ResponseGetRoomsDto>> GetRooms(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? branchId, Guid? roomCategoryId)
+        {
+            var response = await _roomService.GetRoomsAsync(pageIndex, pageSize, textSearch, status, branchId, roomCategoryId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("room/{id}")]
+        public async Task<ActionResult<ResponseGetRoomDto>> GetRoom(Guid id)
+        {
+            var response = await _roomService.GetRoomAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("room")]
+        public async Task<ActionResult<BaseResponseDto>> UploadRoom(RequestUploadRoomDto request)
+        {
+            var response = await _roomService.UploadRoomAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("room/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateRoom(RequestUpdateRoomDto request, Guid id)
+        {
+            var response = await _roomService.UpdateRoomAsync(request, id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("room/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteRoom(Guid id)
+        {
+            var response = await _roomService.SoftDeleteRoomAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

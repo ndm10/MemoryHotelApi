@@ -58,38 +58,21 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
                         IsDeleted = false,
-                        RoleId = Guid.Parse("f0263e28-97d6-48eb-9b7a-ebd9b383a7e7"),
+                        RoleId = Guid.Parse("7008780d-3eda-4b99-b2ec-508a8ddee157"),
+                        MembershipTierId = Guid.Parse("43a5de42-ca6d-4ed5-a55a-b0c262b1a077"),
                         FullName = "User",
                         IsVerified = true,
                         IsActive = true,
-                    },
-                    new User
-                    {
-                        Id = Guid.NewGuid(),
-                        Password = "$2a$12$4UzizvZsV3N560sv3.VX9Otmjqx9VYCn7LzCxeZZm0s4N01/y92Ni",
-                        Email = "ducyb782001@gmail.com",
-                        Phone = "0123456789",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false,
-                        RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                        FullName = "Nguyễn Đình Trung Đức",
-                        IsVerified = true,
-                        IsActive = true,
-                    },
-                    new User
-                    {
-                        Id = Guid.NewGuid(),
-                        Password = "$2a$12$4UzizvZsV3N560sv3.VX9Otmjqx9VYCn7LzCxeZZm0s4N01/y92Ni",
-                        Email = "ndminh1010@gmail.com",
-                        Phone = "0123456789",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow,
-                        IsDeleted = false,
-                        RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                        FullName = "Minh Nguyễn",
-                        IsVerified = true,
-                        IsActive = true,
+                        IsDeletedAllowed = true,
+                        Role = new Role
+                        {
+                            Name = "User",
+                            Description = "User role",
+                            CreatedDate = DateTime.UtcNow,
+                            UpdatedDate = DateTime.UtcNow,
+                            IsDeleted = false,
+                            IsActive = true
+                        }
                     },
                     new User
                     {
@@ -100,10 +83,20 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
                         IsDeleted = false,
-                        RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
+                        RoleId = Guid.Parse("2fffac03-dd8e-4d8f-bf3a-79b47a13f7d4"),
                         FullName = "Nguyễn Ngọc Quang",
                         IsVerified = true,
                         IsActive = true,
+                        IsDeletedAllowed = false,
+                        Role = new Role
+                        {
+                            Name = "Admin",
+                            Description = "Admin role",
+                            CreatedDate = DateTime.UtcNow,
+                            UpdatedDate = DateTime.UtcNow,
+                            IsDeleted = false,
+                            IsActive = true
+                        }
                     },
                     new User
                     {
@@ -114,11 +107,20 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
                         IsDeleted = false,
-                        RoleId = Guid.Parse("b1860226-3a78-4b5e-a332-fae52b3b7e4d"),
-                        MembershipTierId = Guid.Parse("f52d021b-1e79-4827-a06e-ffbb66935e38"),
+                        RoleId = Guid.Parse("2fffac03-dd8e-4d8f-bf3a-79b47a13f7d4"),
                         FullName = "Admin",
                         IsVerified = true,
                         IsActive = true,
+                        IsDeletedAllowed = false,
+                        Role = new Role
+                        {
+                            Name = "Admin",
+                            Description = "Admin role",
+                            CreatedDate = DateTime.UtcNow,
+                            UpdatedDate = DateTime.UtcNow,
+                            IsDeleted = false,
+                            IsActive = true
+                        },
                     }
                 };
                 _context.Users.AddRange(users);
@@ -167,6 +169,22 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                     }
                 };
                 _context.Cities.AddRange(cities);
+            }
+
+            // Seed data for MembershipTier
+            if (!await _context.MembershipTiers.AnyAsync())
+            {
+                var membershipTiers = new List<MembershipTier>
+                {
+                    new MembershipTier
+                    {
+                        Icon = "43a5de42-ca6d-4ed5-a55a-b0c262b1a077",
+                        Name = "Thành viên Mới",
+                        Description = "Đây là hạng thành viên mặc định, không thể xóa hạng thành viên này!",
+                        IsDeleteAllowed = false,
+                    },
+                };
+                _context.MembershipTiers.AddRange(membershipTiers);
             }
 
             await _context.SaveChangesAsync();

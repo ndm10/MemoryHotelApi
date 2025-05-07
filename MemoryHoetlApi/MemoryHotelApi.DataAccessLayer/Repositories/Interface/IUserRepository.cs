@@ -6,5 +6,6 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories.Interface
     {
         Task<User?> FindUserByRefreshToken(Guid userId, string refreshToken);
         Task<User?> FindUserByEmail(string email);
+        Task<User?> GetUserProfileAsync(string userId);
     }
 }

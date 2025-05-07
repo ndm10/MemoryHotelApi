@@ -13,6 +13,13 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
         {
         }
 
+        public async Task<MembershipTier?> FindMembershipTierByIsDeleteAllowedAsync()
+        {
+            return await _context.MembershipTiers
+                .Where(x => x.IsDeleteAllowed == false)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<MembershipTier?> GetMembershipTierByIdAsync(Guid id)
         {
             var query = _context.MembershipTiers

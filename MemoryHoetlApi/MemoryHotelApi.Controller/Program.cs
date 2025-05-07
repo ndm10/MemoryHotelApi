@@ -1,22 +1,22 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+using MemoryHotelApi.BusinessLogicLayer.Mapping;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
-using MemoryHotelApi.Controller.Middlewares;
 using MemoryHotelApi.DataAccessLayer.Contexts;
 using MemoryHotelApi.DataAccessLayer.SeedData;
+using MemoryHotelApi.DataAccessLayer.UnitOfWork;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using MemoryHotelApi.BusinessLogicLayer.Mapping;
-using MemoryHotelApi.DataAccessLayer.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +45,11 @@ builder.Services.AddControllers()
             StatusCode = StatusCodes.Status400BadRequest
         };
     });
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
 
 // Register IMemoryCache
 builder.Services.AddMemoryCache();
@@ -114,7 +119,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 // Register the password hasher
-builder.Services.AddScoped<PasswordHasher>();
+builder.Services.AddScoped<BcryptUtility>();
 
 // Register the jwt utility
 builder.Services.AddScoped<JwtUtility>();
@@ -139,6 +144,7 @@ builder.Services.AddScoped<IConvenienceService, ConvenienceService>();
 builder.Services.AddScoped<IRoomCategoryService, RoomCategoryService>();
 builder.Services.AddScoped<IMembershipTierService, MembershipTierService>();
 builder.Services.AddScoped<IMembershipTierBenefitService, MembershipTierBenefitService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -148,15 +154,20 @@ builder.Services.AddScoped<DataSeeder>();
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowUrl", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://memory-hotel.vercel.app/", "https://cms-memory-hotel.vercel.app/")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "https://cms-memory-hotel.vercel.app", "https://memory-hotel.vercel.app")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 using (var scope = app.Services.CreateScope())
 {
@@ -168,13 +179,13 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
-app.UseHttpsRedirection();
+// app.UseExceptionMiddleware();
 
-app.UseExceptionMiddleware();
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
-app.UseCors("AllowUrl");
+app.UseHttpsRedirection();
 
 // Serve static files
 // Create the Images directory if it doesn't exist

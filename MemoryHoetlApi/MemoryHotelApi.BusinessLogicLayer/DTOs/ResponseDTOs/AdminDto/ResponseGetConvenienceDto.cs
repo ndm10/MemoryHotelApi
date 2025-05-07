@@ -4,6 +4,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
     public class ResponseGetConvenienceDto : BaseResponseDto
     {
-        public GetConvenienceDto? Data { get; set; }
+        public ConvenienceDto? Data { get; set; }
     }
 }

@@ -7,5 +7,6 @@
         public string? Description { get; set; }
         public ICollection<Branch> BranchesWithGeneralConvenience { get; set; } = new List<Branch>();
         public ICollection<Branch> BranchesWithHighlightedConvenience { get; set; } = new List<Branch>();
+        public ICollection<Room> Rooms { get; set; } = new List<Room>();
     }
 }

@@ -10,7 +10,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class ImageService : GenericService<Image>, IImageService
     {
-        private readonly HashSet<string> _allowedExtensions = new HashSet<string> { ".png", ".jpg", ".jpeg" };
+        private readonly HashSet<string> _allowedExtensions = new HashSet<string> { ".png", ".jpg", ".jpeg", ".webp"};
 
         public ImageService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
         {
@@ -79,13 +79,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     Message = $"Invalid file extension for {imageDto.FileName}. Only {string.Join(", ", _allowedExtensions)} are allowed."
                 };
             }
-            else if (!IsValidImageHeader(imageDto.FileContent, fileExtension))
-            {
-                return new ResponseImageUploadDto()
-                {
-                    Message = $"File {imageDto.FileName} is not a valid image based on header."
-                };
-            }
+            //else if (!IsValidImageHeader(imageDto.FileContent, fileExtension))
+            //{
+            //    return new ResponseImageUploadDto()
+            //    {
+            //        Message = $"File {imageDto.FileName} is not a valid image based on header."
+            //    };
+            //}
 
             return null;
         }

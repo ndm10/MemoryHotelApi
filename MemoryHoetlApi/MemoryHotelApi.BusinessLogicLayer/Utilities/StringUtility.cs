@@ -84,5 +84,20 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             input = Regex.Replace(input, @"\s+", " ");
             return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
+
+        public string GenerateRandomString()
+        {
+            // Generate a random string with special characters for password
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+            const int length = 10; // Length of the random string
+            var random = new Random();
+            var randomString = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                randomString[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(randomString);
+        }
     }
 }

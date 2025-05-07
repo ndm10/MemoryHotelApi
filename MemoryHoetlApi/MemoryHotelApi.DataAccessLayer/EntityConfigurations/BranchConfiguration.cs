@@ -15,10 +15,6 @@ namespace MemoryHotelApi.DataAccessLayer.EntityConfigurations
 
         public void Configure(EntityTypeBuilder<Branch> builder)
         {
-            // Branch - Image relationship
-            builder.HasMany(br => br.Images)
-                .WithMany(img => img.Branches);
-
             // Convenience - Branch relationship
             builder.HasMany(br => br.GeneralConveniences)
                 .WithMany(a => a.BranchesWithGeneralConvenience)

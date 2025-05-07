@@ -7,6 +7,7 @@
         public string? Description { get; set; }
         public Guid? CityId { get; set; }
         public int? Order { get; set; }
+        public string? Slug { get; set; }
         public List<string>? ImageUrls { get; set; }
         public bool? IsActive { get; set; }
     }

@@ -4,6 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
@@ -56,6 +57,21 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 IsSuccess = true,
             };
 
+        }
+
+        public async Task<ResponseGetCitiesExploreDto> GetCitiesExploreAsync()
+        {
+            // Get all the cities from the database
+            var predicate = PredicateBuilder.New<City>(x => !x.IsDeleted && x.IsActive);
+
+            var cities = await _unitOfWork.CityRepository!.GetAllCities(predicate);
+
+            // Map the cities to the response DTO
+            return new ResponseGetCitiesExploreDto
+            {
+                StatusCode = 200,
+                Data = _mapper.Map<List<CityExploreDto>>(cities),
+            };
         }
 
         public async Task<ResponseGetCityDto> GetCity(Guid id)

@@ -51,7 +51,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 // Mapping to DTO and sort order
-                Data = _mapper.Map<List<GetConvenienceDto>>(conveniences.OrderBy(x => x.Order)),
+                Data = _mapper.Map<List<ConvenienceDto>>(conveniences.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
                 TotalRecord = conveniences.Count()
             };
@@ -74,7 +74,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Map the convenience to the response DTO
-            var convenienceDto = _mapper.Map<GetConvenienceDto>(convenience);
+            var convenienceDto = _mapper.Map<ConvenienceDto>(convenience);
 
             return new ResponseGetConvenienceDto
             {

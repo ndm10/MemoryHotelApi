@@ -10,11 +10,17 @@ namespace MemoryHotelApi.Controller.Controllers
     {
         private readonly IBannerService _bannerService;
         private readonly IBranchService _branchService;
+        private readonly ITourService _tourService;
+        private readonly ICityService _cityService;
+        private readonly IStoryService _storyService;
 
-        public ExploreController(IBannerService bannerService, IBranchService branchService)
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
+            _tourService = tourService;
+            _cityService = cityService;
+            _storyService = storyService;
         }
 
         [HttpGet("banner")]
@@ -35,6 +41,27 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetBranchExploreDto>> GetBranch(Guid id)
         {
             var response = await _branchService.GetBranchExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("city")]
+        public async Task<ActionResult<ResponseGetCitiesExploreDto>> GetCities()
+        {
+            var response = await _cityService.GetCitiesExploreAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("tour/{id}")]
+        public async Task<ActionResult<ResponseGetTourExploreDto>> GetTour(Guid id)
+        {
+            var response = await _tourService.GetTourExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("story")]
+        public async Task<ActionResult<ResponseGetStoriesExploreDto>> GetStories()
+        {
+            var response = await _storyService.GetStoriesExploreAsync();
             return StatusCode(response.StatusCode, response);
         }
     }

@@ -127,7 +127,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Format the name of room category
                 request.Name = _stringUtility.UpperFirstLetter(request.Name);
                 // Check if the name exist or not
-                var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => x.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase) && x.Id != id);
+                var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => x.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase) && x.Id != id && !x.IsDeleted);
                 if (roomCategories.Any())
                 {
                     return new BaseResponseDto
@@ -161,7 +161,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             request.Name = _stringUtility.UpperFirstLetter(request.Name);
 
             // Check if the name exist or not
-            var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => x.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase));
+            var roomCategories = await _unitOfWork.RoomCategoryRepository!.GetAllAsync(x => x.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase) && !x.IsDeleted);
 
             if (roomCategories.Any())
             {

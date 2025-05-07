@@ -17,6 +17,11 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             var entry = await _context.Images.AddAsync(image);
         }
 
+        public async Task<Image?> GetImageByUrlAsync(string imageUrl)
+        {
+            return await _context.Images.FirstOrDefaultAsync(x => x.Url == imageUrl && !x.IsDeleted);
+        }
+
         public async Task<List<Image>> GetImagesWithCondition(Expression<Func<Image, bool>> predicate)
         {
             var query = _context.Set<Image>().AsQueryable();

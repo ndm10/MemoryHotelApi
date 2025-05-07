@@ -30,6 +30,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
 
         public string? Slug { get; set; }
 
+        [Required(ErrorMessage = "Vui lòng nhập hotel code của link đặt phòng")]
+        public string HotelCode { get; set; } = null!;
+
         public List<string> ImageUrls { get; set; } = new List<string>();
 
         public List<Guid> GeneralConvenienceIDs { get; set; } = new List<Guid>();

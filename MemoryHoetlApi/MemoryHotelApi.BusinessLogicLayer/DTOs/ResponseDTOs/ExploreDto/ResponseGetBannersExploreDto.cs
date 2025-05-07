@@ -10,6 +10,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 
     public class GetBannersExploreDto
     {
+        public Guid Id { get; set; }
         public string? ImageUrl { get; set; }
         public string? Link { get; set; }
         public string? Description { get; set; }

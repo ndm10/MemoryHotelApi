@@ -27,19 +27,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<ResponseGetBranchDto> GetBranchAsync(Guid id)
         {
-            var includes = new string[]
-            {
-                nameof(Branch.Images),
-                nameof(Branch.GeneralConveniences),
-                nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores),
-                nameof(Branch.RoomCategories)
-            };
+            var predicate = PredicateBuilder.New<Branch>(x => !x.IsDeleted);
 
             // Find the branch by id
-            var branch = await _unitOfWork.BranchRepository!.GetByIdIncludeAsync(id, includes);
+            var branch = await _unitOfWork.BranchRepository!.GetBranchByIdAsync(id, predicate);
 
-            if (branch == null || branch.IsDeleted)
+            if (branch == null)
             {
                 return new ResponseGetBranchDto
                 {
@@ -52,21 +45,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 IsSuccess = true,
-                Data = _mapper.Map<GetBranchDto>(branch)
+                Data = _mapper.Map<BranchDto>(branch)
             };
         }
 
         public async Task<ResponseGetBranchesDto> GetBranchesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
-            var includes = new string[]
-            {
-                nameof(Branch.Images),
-                nameof(Branch.GeneralConveniences),
-                nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores),
-                nameof(Branch.RoomCategories)
-            };
-
             // Default values for pagination
             var pageIndexValue = pageIndex ?? Constants.PageIndexDefault;
             var pageSizeValue = pageSize ?? Constants.PageSizeDefault;
@@ -86,7 +70,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Get all the branches from the database
-            var branches = await _unitOfWork.BranchRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate, includes);
+            var branches = await _unitOfWork.BranchRepository!.GetBranchPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)branches.Count() / pageSizeValue);
@@ -94,7 +78,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 // Mapping to DTO and sort order
-                Data = _mapper.Map<List<GetBranchDto>>(branches.OrderBy(x => x.Order)),
+                Data = _mapper.Map<List<BranchDto>>(branches.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
                 TotalRecord = branches.Count()
             };
@@ -102,17 +86,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<ResponseGetBranchesExploreDto> GetBranchesExploreAsync()
         {
-            var includes = new string[]
-            {
-                nameof(Branch.Images),
-                nameof(Branch.GeneralConveniences),
-                nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores),
-                nameof(Branch.RoomCategories)
-            };
+            // Create a predicate for filtering
+            var predicate = PredicateBuilder.New<Branch>(x => !x.IsDeleted && x.IsActive);
 
             // Get all the branches from the database
-            var branches = await _unitOfWork.BranchRepository!.GetAllAsync((x => !x.IsDeleted && x.IsActive), includes);
+            var branches = await _unitOfWork.BranchRepository!.GetAllBranchesAsync();
 
             // Map the branches to the DTO and return
             return new ResponseGetBranchesExploreDto
@@ -125,17 +103,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<ResponseGetBranchExploreDto> GetBranchExploreAsync(Guid id)
         {
-            var includes = new string[]
-            {
-                nameof(Branch.Images),
-                nameof(Branch.GeneralConveniences),
-                nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores),
-                nameof(Branch.RoomCategories)
-            };
+            // Create a predicate for filtering
+            var predicate = PredicateBuilder.New<Branch>(x => !x.IsDeleted && x.IsActive);
 
             // Find the branch by id
-            var branch = await _unitOfWork.BranchRepository!.GetByIdIncludeAsync(id, includes);
+            var branch = await _unitOfWork.BranchRepository!.GetBranchByIdAsync(id, predicate);
+
             if (branch == null || branch.IsDeleted)
             {
                 return new ResponseGetBranchExploreDto
@@ -184,17 +157,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<BaseResponseDto> UpdateBranchAsync(RequestUpdateBranchDto request, Guid id)
         {
-            var includes = new string[]
-            {
-                nameof(Branch.Images),
-                nameof(Branch.GeneralConveniences),
-                nameof(Branch.HighlightedConveniences),
-                nameof(Branch.LocationExplores),
-                nameof(Branch.RoomCategories)
-            };
+            var predicate = PredicateBuilder.New<Branch>(x => !x.IsDeleted);
 
             // Find the branch by id
-            var branch = await _unitOfWork.BranchRepository!.GetByIdIncludeAsync(id, includes);
+            var branch = await _unitOfWork.BranchRepository!.GetBranchByIdAsync(id, predicate);
 
             // Check if the branch exists
             if (branch == null || branch.IsDeleted)
@@ -245,6 +211,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check images exist in the database
             if (request.ImageUrls != null && request.ImageUrls.Count > 0)
             {
+                branch.BranchImages.Clear();
                 var images = await _unitOfWork.ImageRepository!.GetImagesWithCondition(x => request.ImageUrls.Contains(x.Url));
                 if (images is null || images.Count == 0)
                 {
@@ -257,7 +224,23 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
                 }
 
-                branch.Images = images.ToList();
+                // Create list of images
+                var branchImages = new List<BranchImage>();
+                var order = 1;
+                foreach (var image in images)
+                {
+                    var branchImage = new BranchImage
+                    {
+                        BranchId = branch.Id,
+                        ImageId = image.Id,
+                        Image = image,
+                        Branch = branch,
+                        Order = order
+                    };
+
+                    branch.BranchImages.Add(branchImage);
+                    order++;
+                }
             }
 
             // Update the LocationExplore
@@ -302,8 +285,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             branch.Order = request.Order ?? branch.Order;
             branch.Slug = request.Slug ?? branch.Slug;
             branch.IsActive = request.IsActive ?? branch.IsActive;
+            branch.HotelCode = request.HotelCode?.Trim() ?? branch.HotelCode;
 
             // Update the branch in the database
+            _unitOfWork.BranchRepository.Update(branch);
             await _unitOfWork.SaveChangesAsync();
 
             return new BaseResponseDto
@@ -371,10 +356,21 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
+            var order = 1;
             // Add images to branch
             foreach (var image in images)
             {
-                branch.Images.Add(image);
+                var branchImage = new BranchImage
+                {
+                    BranchId = branch.Id,
+                    ImageId = image.Id,
+                    Image = image,
+                    Branch = branch,
+                    Order = order
+                };
+
+                branch.BranchImages.Add(branchImage);
+                order++;
             }
 
             // Add conveniences to branch

@@ -1,6 +1,10 @@
-﻿using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AccountDto;
+﻿using AutoMapper;
+using LinqKit;
+using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services
@@ -8,10 +12,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public AccountService(IUnitOfWork unitOfWork)
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<ResponseChangePasswordDto> ChangePassword(RequestChangePasswordDto request)
@@ -55,6 +61,52 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 IsSuccess = true,
                 Message = "Đổi mật khẩu thành công!"
             };
+        }
+
+        public async Task<ResponseGetProfileDto> GetProfile(string userId)
+        {
+            // Get user by userId
+            var user = await _unitOfWork.UserRepository!.GetUserProfileAsync(userId);
+
+            if (user == null)
+            {
+                return new ResponseGetProfileDto
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Có lỗi khi xác thực tài khoản!"
+                };
+            }
+
+            var response = _mapper.Map<ResponseGetProfileDto>(user);
+
+            if (response.MembershipTier != null)
+            {
+                var predicate = PredicateBuilder.New<MembershipTier>(x => x.IsDeleted == false && x.IsActive == true && x.Order >= user.MembershipTier!.Order);
+
+                var includes = new string[]
+                {
+                nameof(MembershipTier.Benefits),
+                };
+
+                // Find next membership tier by the order property
+                var membershipTiers = await _unitOfWork.MembershipTierRepository!.GetAllAsync(predicate, includes);
+
+
+                if (membershipTiers == null)
+                {
+                    response.NextMembershipTier = null;
+                }
+                else
+                {
+                    response.NextMembershipTier = _mapper.Map<MembershipTierDtoCommon>(membershipTiers.OrderBy(x => x.Order).FirstOrDefault(x => x.Id != user.MembershipTier!.Id));
+                }
+            }
+
+            // Map user to ResponseGetProfileDto
+            response.StatusCode = 200;
+            response.IsSuccess = true;
+            return response;
         }
 
         public async Task<ResponseUpdateProfileDto> UpdateProfile(RequestUpdateProfileDto request)

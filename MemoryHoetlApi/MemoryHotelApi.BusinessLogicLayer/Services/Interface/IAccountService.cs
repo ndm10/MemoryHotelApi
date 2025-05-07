@@ -7,5 +7,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
     {
         Task<ResponseUpdateProfileDto> UpdateProfile(RequestUpdateProfileDto request);
         Task<ResponseChangePasswordDto> ChangePassword(RequestChangePasswordDto request);
+        Task<ResponseGetProfileDto> GetProfile(string userId);
     }
 }

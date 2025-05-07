@@ -4,6 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
@@ -54,6 +55,19 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 TotalPage = totalPages,
                 TotalRecord = stories.Count(),
                 IsSuccess = true,
+            };
+        }
+
+        public async Task<ResponseGetStoriesExploreDto> GetStoriesExploreAsync()
+        {
+            // Get all the banners from the database
+            var stories = await _unitOfWork.IStoryRepository!.GetAllStories(x => !x.IsDeleted && x.IsActive);
+
+            // Map the banners to the response DTO
+            return new ResponseGetStoriesExploreDto
+            {
+                StatusCode = 200,
+                Data = _mapper.Map<List<StoryExploreDto>>(stories)
             };
         }
 

@@ -19,6 +19,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
         public string? Description { get; set; }
         public int? Order { get; set; }
         public string? Slug { get; set; }
+        public string? HotelCode { get; set; }
         public List<string>? Images { get; set; }
         public List<GetConvenienceDtoCommon>? GeneralConveniences { get; set; }
         public List<GetConvenienceDtoCommon>? HighlightedConveniences { get; set; }

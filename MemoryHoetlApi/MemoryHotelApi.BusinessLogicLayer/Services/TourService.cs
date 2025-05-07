@@ -4,7 +4,9 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 
@@ -14,10 +16,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public TourService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly StringUtility _stringUtility;
+
+        public TourService(IUnitOfWork unitOfWork, IMapper mapper, StringUtility stringUtility)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _stringUtility = stringUtility;
         }
 
         public async Task<ResponseGetTourDto> GetTourAsync(Guid id)
@@ -41,6 +46,34 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Return response
             return new ResponseGetTourDto
+            {
+                StatusCode = 200,
+                Data = tourDto,
+                IsSuccess = true,
+            };
+        }
+
+        public async Task<ResponseGetTourExploreDto> GetTourExploreAsync(Guid id)
+        {
+            // Find tour by id
+            var tour = await _unitOfWork.TourRepository!.GetTourByIdAsync(id);
+
+            // If tour is valid
+            if (tour is null || tour.IsDeleted || !tour.IsActive)
+            {
+                return new ResponseGetTourExploreDto
+                {
+                    StatusCode = 404,
+                    Message = "Không tìm thấy tour này",
+                    IsSuccess = false,
+                };
+            }
+
+            // Map tour to DTO
+            var tourDto = _mapper.Map<TourExploreDto>(tour);
+
+            // Return response
+            return new ResponseGetTourExploreDto
             {
                 StatusCode = 200,
                 Data = tourDto,
@@ -145,6 +178,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             tour.CityId = request.CityId ?? tour.CityId;
             tour.IsActive = request.IsActive ?? tour.IsActive;
             tour.Order = request.Order ?? tour.Order;
+            tour.Slug = request.Slug ?? tour.Slug;
 
             // Find the image by url
             if (request.ImageUrls != null)
@@ -190,6 +224,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // If Order is null, set it to the maximum value in the database
                 maxOrder = maxOrder + 1;
                 request.Order = maxOrder;
+            }
+
+            // Check if Slug is null or empty
+            if(string.IsNullOrEmpty(request.Slug))
+            {
+                // If Slug is null, set it to the Title
+                request.Slug = _stringUtility.GenerateSlug(request.Title);
             }
 
             // Mapping data to tour entity

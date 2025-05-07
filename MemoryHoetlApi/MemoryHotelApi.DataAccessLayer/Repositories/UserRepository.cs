@@ -24,5 +24,14 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
 
             return user;
         }
+
+        public async Task<User?> GetUserProfileAsync(string userId)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .Include(u => u.MembershipTier)
+                .ThenInclude(m => m.Benefits)
+                .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        }
     }
 }

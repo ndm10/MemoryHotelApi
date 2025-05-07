@@ -19,6 +19,28 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [Authorize]
+        [HttpGet("profile")]
+        public async Task<ActionResult<ResponseGetProfileDto>> GetProfile()
+        {
+            // Get the user ID from the JWT token
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return BadRequest(new ResponseGetProfileDto
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Có lỗi xảy ra trong quá trình xác thực tài khoản!"
+                });
+            }
+
+            // Get profile
+            var response = await _accountService.GetProfile(userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [Authorize]
         [HttpPut("update-profile")]
         public async Task<ActionResult<ResponseUpdateProfileDto>> UpdateProfile(RequestUpdateProfileDto request)
         {

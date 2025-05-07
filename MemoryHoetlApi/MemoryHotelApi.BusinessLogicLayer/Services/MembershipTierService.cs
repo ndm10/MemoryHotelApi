@@ -100,6 +100,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
+            if(membershipTier.IsDeleteAllowed == false)
+            {
+                return new ResponseGetMembershipTierDto
+                {
+                    StatusCode = 400,
+                    Message = "Không thể xóa hạng thành viên này!",
+                    IsSuccess = false
+                };
+            }
+
             // Update the membership tier to soft delete it
             membershipTier.IsDeleted = true;
             await _unitOfWork.SaveChangesAsync();
@@ -251,6 +261,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
                 membershipTier.Benefits.Add(membershipTierMembershipTierBenefit);
             }
+
+            // Set the default values
+            membershipTier.IsDeleteAllowed = true;
 
             // Add the membership tier to the database
             await _unitOfWork.MembershipTierRepository!.AddAsync(membershipTier);

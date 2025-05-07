@@ -13,7 +13,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             _emailSettings = emailSettings.Value;
         }
 
-        public async Task SendOtpRegisterAsync(string toEmail, string otp)
+        public async Task SendEmailCreateAdminAsync(string toEmail, string otp)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
@@ -59,6 +59,36 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
                         <p>This OTP is valid for <strong>5 minutes</strong>. Enter it on the password reset page to create a new password.</p>
                         <p>Stay secure!</p>
                         <p>Best regards,<br>The Memory Hotel Team</p>"
+            };
+            message.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public async Task SendOtpRegisterAsync(string toEmail, string password)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = "Memory Hotel: You are created an account by Memory Hotel admin!";
+
+            var bodyBuilder = new BodyBuilder
+            {
+                // Notify the user that the account is created by admin with the password
+                HtmlBody = $@"
+                    <h2>Memory Hotel - Account Created</h2>
+                    <p>Dear Customer,</p>
+                    <p>Your account has been created by the Memory Hotel admin. Please find your login credentials below:</p>
+                    <p><strong>Email:</strong> {toEmail}</p>
+                    <p><strong>Password:</strong> {password}</p>
+                    <p>We recommend changing your password after your first login.</p>
+                    <p>Best regards,<br>The Memory Hotel Team</p>"
             };
             message.Body = bodyBuilder.ToMessageBody();
 

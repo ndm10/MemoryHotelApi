@@ -62,9 +62,19 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(Guid id, string[]? includes = null)
         {
-            return await _context.Set<T>().FindAsync(id);
+            var query = _context.Set<T>().AsQueryable();
+
+            if(includes != null)
+            {
+                foreach(var inc in includes)
+                {
+                    query = query.Include(inc);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<T?> GetByIdIncludeAsync(Guid id, string[] includes)
