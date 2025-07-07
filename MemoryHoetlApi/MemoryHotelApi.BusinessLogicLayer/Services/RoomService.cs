@@ -89,13 +89,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)rooms.Count() / pageSizeValue);
 
+            // Count the total records
+            var totalRecords = await _unitOfWork.RoomRepository!.CountEntities(predicate);
+
             // Map to response DTO
             return new ResponseGetRoomsDto
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<RoomDto>>(rooms),
                 TotalPage = totalPages,
-                TotalRecord = rooms.Count(),
+                TotalRecord = totalRecords,
             };
         }
 

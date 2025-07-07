@@ -74,13 +74,17 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)branches.Count() / pageSizeValue);
+
+            // Count the total records
+            var totalRecords = await _unitOfWork.BranchRepository!.CountEntities(predicate);
+
             return new ResponseGetBranchesDto
             {
                 StatusCode = 200,
                 // Mapping to DTO and sort order
                 Data = _mapper.Map<List<BranchDto>>(branches.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
-                TotalRecord = branches.Count()
+                TotalRecord = totalRecords
             };
         }
 

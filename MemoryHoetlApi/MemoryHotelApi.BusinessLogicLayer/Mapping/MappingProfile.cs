@@ -2,9 +2,11 @@
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.BlogWriterDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.BlogWriterDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.DataAccessLayer.Entities;
 
@@ -20,6 +22,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, ResponseGetProfileDto>();
             CreateMap<RequestUploadAdminAccountDto, User>();
+            CreateMap<User, UserExploreDto>();
             #endregion
 
             #region BannerMapping
@@ -113,6 +116,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<RequestUploadRoomDto, Room>();
             CreateMap<Room, RoomExploreDto>().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
             CreateMap<Room, RoomDto>().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.Images.Select(img => img.Url).ToList()));
+            #endregion
+
+            #region RoomMapping
+            CreateMap<Blog, AdminBlogDto>().ForMember(dest => dest.Hashtag, otp => otp.MapFrom(src => src.BlogHashtags.Select(bht => bht.Hashtag.Name).ToList()));
+            CreateMap<Blog, BlogDto>().ForMember(dest => dest.Hashtag, otp => otp.MapFrom(src => src.BlogHashtags.Select(bht => bht.Hashtag.Name).ToList()));
+            CreateMap<RequestCreateBlogDto, Blog>();
+            CreateMap<Blog, BlogExploreDto>().ForMember(dest => dest.Hashtag, otp => otp.MapFrom(src => src.BlogHashtags.Select(bht => bht.Hashtag.Name).ToList()));
             #endregion
         }
     }

@@ -98,7 +98,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 //});
 builder.Services.AddDbContext<MemoryHotelApiDbContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 0))));
 
 // Add authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -145,6 +145,7 @@ builder.Services.AddScoped<IRoomCategoryService, RoomCategoryService>();
 builder.Services.AddScoped<IMembershipTierService, MembershipTierService>();
 builder.Services.AddScoped<IMembershipTierBenefitService, MembershipTierBenefitService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IBlogWriterService, BlogWriterService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -156,13 +157,16 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "https://cms-memory-hotel.vercel.app", "https://memory-hotel.vercel.app")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
@@ -180,12 +184,8 @@ app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
 // app.UseExceptionMiddleware();
-
-app.UseCors("AllowAll");
-
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseHttpsRedirection();
 
 // Serve static files
 // Create the Images directory if it doesn't exist
@@ -205,6 +205,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
+
 
 app.MapControllers();
 

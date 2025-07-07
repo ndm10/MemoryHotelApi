@@ -19,14 +19,25 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;
 
-            string slug = input.ToLowerInvariant();
+            // Step 1: Remove emojis/icons
+            string slug = Regex.Replace(input, @"\p{So}|\p{Cs}|\p{Cn}", "");
 
+            // Step 2: Convert to lowercase
+            slug = slug.ToLowerInvariant();
+
+            // Step 3: Remove Vietnamese diacritics (assuming you have this method)
             slug = RemoveVietnameseDiacritics(slug);
 
+            // Step 4: Remove special characters (keep letters, digits, spaces, hyphens)
             slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+
+            // Step 5: Replace multiple spaces with a single hyphen
             slug = Regex.Replace(slug, @"\s+", "-");
+
+            // Step 6: Replace multiple hyphens with a single hyphen
             slug = Regex.Replace(slug, @"-+", "-");
 
+            // Step 7: Trim leading/trailing hyphens
             slug = slug.Trim('-');
 
             return slug;
@@ -98,6 +109,28 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             }
 
             return new string(randomString);
+        }
+
+        public string FormatHashtagName(string hashtag)
+        {
+            // Check if the hashtag is null or empty
+            if (string.IsNullOrWhiteSpace(hashtag))
+                return string.Empty;
+
+            // Trim whitespace
+            hashtag = hashtag.Trim();
+
+            // Replace multiple spaces with a single space
+            hashtag = Regex.Replace(hashtag, @"\s+", " ");
+
+            // Upper only the first letter of hashtag
+            if (hashtag.Length > 0)
+            {
+                hashtag = char.ToUpper(hashtag[0]) + hashtag.Substring(1).ToLower();
+            }
+
+            // Return the formatted hashtag
+            return hashtag;
         }
     }
 }

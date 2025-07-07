@@ -1,4 +1,5 @@
-﻿using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
+﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +14,16 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ITourService _tourService;
         private readonly ICityService _cityService;
         private readonly IStoryService _storyService;
+        private readonly IBlogWriterService _blogWriterService;
 
-        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService)
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
             _tourService = tourService;
             _cityService = cityService;
             _storyService = storyService;
+            _blogWriterService = blogWriterService;
         }
 
         [HttpGet("banner")]
@@ -62,6 +65,20 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetStoriesExploreDto>> GetStories()
         {
             var response = await _storyService.GetStoriesExploreAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("blog")]
+        public async Task<ActionResult<GenericResponsePagination<BlogExploreDto>>> GetBlogs(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _blogWriterService.GetBlogsExploreAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("blog/{id}")]
+        public async Task<ActionResult<ResponseGetBlogExploreDto>> GetBlog(Guid id)
+        {
+            var response = await _blogWriterService.GetBlogExploreAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

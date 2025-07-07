@@ -20,6 +20,13 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             await _context.AddAsync(entity);
         }
 
+        public Task<int> CountEntities(Expression<Func<T, bool>>? predicate = null)
+        {
+            return predicate == null
+                ? _context.Set<T>().CountAsync()
+                : _context.Set<T>().CountAsync(predicate);
+        }
+
         public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null, string[]? include = null)
         {
             var query = _context.Set<T>().AsQueryable();
@@ -29,7 +36,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 query = query.Where(predicate);
             }
 
-            if(include != null)
+            if (include != null)
             {
                 foreach (var inc in include)
                 {
@@ -37,7 +44,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 }
             }
 
-            query = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+            query = query.OrderBy(x => x.Order).Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
             return await query.ToListAsync();
         }
@@ -62,16 +69,21 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id, string[]? includes = null)
+        public async Task<T?> GetByIdAsync(Guid id, string[]? includes = null, Expression<Func<T, bool>>? predicate = null)
         {
             var query = _context.Set<T>().AsQueryable();
 
-            if(includes != null)
+            if (includes != null)
             {
-                foreach(var inc in includes)
+                foreach (var inc in includes)
                 {
                     query = query.Include(inc);
                 }
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
             }
 
             return await query.FirstOrDefaultAsync(x => x.Id == id);
@@ -86,6 +98,26 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             }
 
             return await query.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<int> GetMaxOrder()
+        {
+            return _context.Set<T>().MaxAsync(x => x.Order);
+        }
+
+        public Task<T?> GetWithCondition(Expression<Func<T, bool>> predicate, string[]? include = null)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            if (include != null)
+            {
+                foreach (var inc in include)
+                {
+                    query = query.Include(inc);
+                }
+            }
+
+            return query.FirstOrDefaultAsync(predicate);
         }
 
         public void Update(T entity)

@@ -78,12 +78,15 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Map the results to the DTO and sort them
             var sortedBenefits = membershipTierBenefits.OrderBy(x => x.Order).ToList();
 
+            // Count the total records
+            var totalRecords = await _unitOfWork.MembershipTierBenefitRepository!.CountEntities(predicate);
+
             return new ResponseGetMembershipTierBenefitsDto
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<MembershipTierBenefitDto>>(sortedBenefits),
                 TotalPage = totalPages,
-                TotalRecord = membershipTierBenefits.Count()
+                TotalRecord = totalRecords
             };
         }
 

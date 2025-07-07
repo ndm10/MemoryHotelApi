@@ -71,7 +71,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)membershipTiers.Count() / pageSizeValue);
-            var totalRecords = membershipTiers.Count();
+            var totalRecords = await _unitOfWork.MembershipTierRepository.CountEntities(predicate);
 
             // Map the membership tiers to the response DTO
             var membershipTierDtos = _mapper.Map<List<MembershipTierDto>>(membershipTiers.OrderBy(x => x.Order));

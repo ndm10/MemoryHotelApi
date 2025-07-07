@@ -20,6 +20,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IMembershipTierRepository? MembershipTierRepository { get; }
         IMembershipTierBenefitRepository? MembershipTierBenefitRepository { get; }
         IRoomRepository? RoomRepository { get; }
+        IBlogRepository? BlogRepository { get; }
+        IHashtagRepository? HashtagRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }

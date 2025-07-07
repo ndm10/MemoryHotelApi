@@ -110,12 +110,15 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var tours = await _unitOfWork.TourRepository!.GetTourPaginationAsync(pageIndexValue, pageSizeValue, predicate);
             var toursDto = _mapper.Map<List<GetTourDto>>(tours.OrderBy(x => x.Order));
 
+            // Count the total records
+            var totalRecords = await _unitOfWork.TourRepository!.CountEntities(predicate);
+
             return new ResponseGetToursDto
             {
                 StatusCode = 200,
                 Data = toursDto,
                 IsSuccess = true,
-                TotalCount = tours.Count,
+                TotalRecord = totalRecords,
                 TotalPage = (int)Math.Ceiling((double)tours.Count / pageSizeValue),
             };
 

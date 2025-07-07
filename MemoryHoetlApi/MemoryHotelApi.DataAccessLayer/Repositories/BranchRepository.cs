@@ -20,17 +20,10 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Include(b => b.BranchImages)
+                .ThenInclude(bi => bi.Image)
                 .Include(b => b.GeneralConveniences)
                 .Include(b => b.HighlightedConveniences)
-                .Include(b => b.LocationExplores)
-                .Include(b => b.RoomCategories)
-                .ThenInclude(rc => rc.Rooms.Where(r => !r.IsDeleted && r.RoomCategory.Branches.Any(br => br.Id == r.BranchId)))
-                .ThenInclude(r => r.Conveniences)
-                .Include(b => b.RoomCategories)
-                .ThenInclude(rct => rct.Rooms)
-                .ThenInclude(rm => rm.Images)
-                .Include(x => x.BranchImages.OrderBy(bm => bm.Order))
-                .ThenInclude(x => x.Image);
+                .Include(b => b.LocationExplores);
 
             return await query.ToListAsync();
         }
@@ -39,20 +32,25 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
         {
             var branch = await _context.Branches
                 .Where(predicate)
+                .AsNoTracking()
                 .AsSplitQuery()
-                .Include(b => b.BranchImages)
+                .Include(b => b.BranchImages.OrderBy(bm => bm.Order))
+                .ThenInclude(bi => bi.Image)
                 .Include(b => b.GeneralConveniences)
                 .Include(b => b.HighlightedConveniences)
                 .Include(b => b.LocationExplores)
-                .Include(b => b.RoomCategories)
-                .ThenInclude(rc => rc.Rooms.Where(r => !r.IsDeleted && r.RoomCategory.Branches.Any(br => br.Id == r.BranchId)))
+                .Include(b => b.RoomCategories.OrderBy(rc => rc.Order))
+                .ThenInclude(rc => rc.Rooms.Where(r => !r.IsDeleted && r.BranchId == id))
                 .ThenInclude(r => r.Conveniences)
-                .Include(b => b.RoomCategories)
-                .ThenInclude(rct => rct.Rooms)
+                .Include(b => b.RoomCategories.OrderBy(rc => rc.Order))
+                .ThenInclude(rc => rc.Rooms.Where(r => !r.IsDeleted && r.BranchId == id))
                 .ThenInclude(rm => rm.Images)
-                .Include(x => x.BranchImages.OrderBy(bm => bm.Order))
-                .ThenInclude(x => x.Image)
                 .FirstOrDefaultAsync(b => b.Id == id && !b.IsDeleted && b.IsActive);
+
+            if (branch != null)
+                branch.RoomCategories = branch.RoomCategories
+                .Where(rc => rc.Rooms.Any(r => !r.IsDeleted && r.BranchId == id))
+                .ToList();
 
             return branch;
         }

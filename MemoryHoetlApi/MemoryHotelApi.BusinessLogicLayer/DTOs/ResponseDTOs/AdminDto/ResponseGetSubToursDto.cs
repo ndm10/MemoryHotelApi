@@ -5,7 +5,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
     public class ResponseGetSubToursDto : BaseResponseDto
     {
         public List<GetSubTourDto>? Data { get; set; }
-        public int TotalCount { get; set; }
+        public int TotalRecord { get; set; }
         public int TotalPages { get; set; }
     }
 

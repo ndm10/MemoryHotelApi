@@ -13,7 +13,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             _emailSettings = emailSettings.Value;
         }
 
-        public async Task SendEmailCreateAdminAsync(string toEmail, string otp)
+        public async Task SendOtpRegisterAsync(string toEmail, string otp)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
@@ -71,7 +71,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             }
         }
 
-        public async Task SendOtpRegisterAsync(string toEmail, string password)
+        public async Task SendEmailCreateAdminAsync(string toEmail, string password)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
@@ -92,6 +92,36 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             };
             message.Body = bodyBuilder.ToMessageBody();
 
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public async Task SendEmailForBlogNotification(List<string> toEmails, string blogTitle, string bogSlugAndId)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
+            foreach (var email in toEmails)
+            {
+                message.To.Add(new MailboxAddress("", email));
+            }
+            message.Subject = "Memory Hotel: New Blog Post Notification";
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = $@"
+                    <h2>New Blog Post Alert!</h2>
+                    <p>Dear Customer,</p>
+                    <p>We are excited to announce a new blog post titled <strong>{blogTitle}</strong> has been published on our Memory Hotel blog.</p>
+                    <p>You can read the full article by clicking the link below:</p>
+                    <p><a href='https://www.vietnammemorytravel.com/blogs/{bogSlugAndId}'>Read the Blog Post</a></p>
+                    <p>Thank you for being a part of our community!</p>
+                    <p>Best regards,<br>The Memory Hotel Team"
+            };
+            message.Body = bodyBuilder.ToMessageBody();
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);

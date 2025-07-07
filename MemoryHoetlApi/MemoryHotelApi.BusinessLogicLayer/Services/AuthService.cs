@@ -135,9 +135,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     user.Password = string.Empty;
                     user.MembershipTierId = membershipTier.Id;
                     user.MembershipTier = membershipTier;
+                    user.IsDeletedAllowed = true;
                     await userRepository.AddAsync(user);
                 }
-                else
+                else if(existingUser != null && existingUser.IsVerified)
                 {
                     existingUser.FullName = request.FullName;
                     existingUser.Phone = request.Phone;

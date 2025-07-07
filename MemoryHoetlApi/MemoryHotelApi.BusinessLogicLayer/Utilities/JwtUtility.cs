@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Utilities
 {
@@ -16,7 +17,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role!.Name),
+                new Claim(ClaimTypes.Role, Regex.Replace(user.Role!.Name, "\\s+", "")),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));

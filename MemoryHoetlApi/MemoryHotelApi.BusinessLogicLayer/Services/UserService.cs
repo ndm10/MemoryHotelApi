@@ -86,7 +86,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)memberships.Count() / pageSizeValue);
-            var totalRecord = memberships.Count();
+            var totalRecords = await _unitOfWork.UserRepository.CountEntities(predicate);
 
             return new ResponseGetUsersDto
             {
@@ -94,7 +94,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Mapping to DTO and sort order
                 Data = _mapper.Map<List<UserDto>>(memberships.OrderBy(x => x.FullName)),
                 TotalPage = totalPages,
-                TotalRecord = totalRecord
+                TotalRecord = totalRecords
             };
         }
 

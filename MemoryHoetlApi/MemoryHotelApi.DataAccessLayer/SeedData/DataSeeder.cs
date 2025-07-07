@@ -40,6 +40,16 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         UpdatedDate = DateTime.UtcNow,
                         IsDeleted = false,
                         IsActive = true
+                    },
+                    new Role
+                    {
+                        Id = Guid.Parse("62867520-5b42-45c9-a8fa-d5da2c7d6e15"),
+                        Name = "Blog Writer",
+                        Description = "Blog Writer role",
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        IsActive = true
                     }
                 };
                 _context.Roles.AddRange(roles);
@@ -116,6 +126,30 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                         {
                             Name = "Admin",
                             Description = "Admin role",
+                            CreatedDate = DateTime.UtcNow,
+                            UpdatedDate = DateTime.UtcNow,
+                            IsDeleted = false,
+                            IsActive = true
+                        },
+                    },
+                    new User
+                    {
+                        Id = Guid.NewGuid(),
+                        Password = "$2a$12$4UzizvZsV3N560sv3.VX9Otmjqx9VYCn7LzCxeZZm0s4N01/y92Ni",
+                        Email = "blogwriter@gmail.com",
+                        Phone = "0123456789",
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        RoleId = Guid.Parse("62867520-5b42-45c9-a8fa-d5da2c7d6e15"),
+                        FullName = "Blog Writer",
+                        IsVerified = true,
+                        IsActive = true,
+                        IsDeletedAllowed = false,
+                        Role = new Role
+                        {
+                            Name = "Blog Writer",
+                            Description = "Blog Writer role",
                             CreatedDate = DateTime.UtcNow,
                             UpdatedDate = DateTime.UtcNow,
                             IsDeleted = false,

@@ -47,13 +47,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)cities.Count() / pageSizeValue);
 
+            // Count the total records
+            var totalRecords = await _unitOfWork.CityRepository!.CountEntities(predicate);
+
             // Map the cities to the response DTO
             return new ResponseGetCitiesDto
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<GetCityDto>>(cities.OrderBy(x => x.Order)),
                 TotalPage = totalPages,
-                TotalRecord = cities.Count(),
+                TotalRecord = totalRecords,
                 IsSuccess = true,
             };
 

@@ -9,7 +9,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Image> Images {  get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -23,6 +23,9 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<MembershipTier> MembershipTiers { get; set; }
         public DbSet<MembershipTierMembershipTierBenefit> MembershipTierMembershipTierBenefits { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Hashtag> Hashtags { get; set; }
+        public DbSet<BlogHashTag> BlogHashtags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,7 +57,6 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
 
                 if (entry.State == EntityState.Added)
                 {
-                    entity.Id = Guid.NewGuid();
                     entity.CreatedDate = now;
                     entity.IsDeleted = false;
                     entity.IsActive = true;

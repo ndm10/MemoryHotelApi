@@ -71,13 +71,31 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)banners.Count() / pageSizeValue);
 
+            // Create a predicate to filter banners
+            var predicate = PredicateBuilder.New<Banner>(x => !x.IsDeleted);
+
+            // Check if textSearch is provided and add it to the predicate
+            if (!string.IsNullOrEmpty(textSearch))
+            {
+                predicate = predicate.And(x => x.Description != null && x.Description.Contains(textSearch));
+            }
+
+            // Check if status is provided and add it to the predicate
+            if (status.HasValue)
+            {
+                predicate = predicate.And(x => x.IsActive == status.Value);
+            }
+
+            // Count the total records
+            var totalRecords = await _unitOfWork.BannerRepository.CountEntities(predicate);
+
             // Map the banners to the response DTO
             return new ResponseGetBannersDto
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<GetBannerDto>>(banners),
                 TotalPage = totalPages,
-                TotalRecord = banners.Count(),
+                TotalRecord = totalRecords,
                 IsSuccess = true,
                 Message = "Lấy danh sách banner thành công.",
             };

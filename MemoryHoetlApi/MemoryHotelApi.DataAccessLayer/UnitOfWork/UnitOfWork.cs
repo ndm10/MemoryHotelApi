@@ -23,6 +23,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private IMembershipTierRepository _membershipTierRepository = null!;
         private IMembershipTierBenefitRepository _membershipTierBenefitRepository = null!;
         private IRoomRepository _roomRepository = null!;
+        private IBlogRepository? _blogRepository = null!;
+        private IHashtagRepository? _hashtagRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -139,6 +141,22 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _roomRepository ??= new RoomRepository(_context);
+            }
+        }
+
+        public IBlogRepository? BlogRepository
+        {
+            get
+            {
+                return _blogRepository ??= new BlogRepository(_context);
+            }
+        }
+
+        public IHashtagRepository? HashtagRepository
+        {
+            get
+            {
+                return _hashtagRepository ??= new HashtagRepository(_context);
             }
         }
 
