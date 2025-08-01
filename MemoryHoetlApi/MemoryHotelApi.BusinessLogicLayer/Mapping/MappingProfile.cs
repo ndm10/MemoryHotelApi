@@ -126,8 +126,14 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region FoodCategoryMapping
-            CreateMap<FoodCategory, AdminFoodCategoryDto>().ReverseMap();
+            CreateMap<FoodCategory, AdminFoodCategoryDto>();
+            CreateMap<FoodCategory, FoodCategoryDtoCommon>();
             CreateMap<RequestUploadFoodCategoryDto, FoodCategory>();
+            #endregion
+
+            #region SubFoodCategoryMapping
+            CreateMap<SubFoodCategory, AdminSubFoodCategoryDto>();
+            CreateMap<RequestUploadSubFoodCategoryDto, SubFoodCategory>();
             #endregion
         }
     }

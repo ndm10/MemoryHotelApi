@@ -45,7 +45,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var stories = await _unitOfWork.IStoryRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Count the total records
-            var totalRecords = await _unitOfWork.IStoryRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.IStoryRepository!.CountEntitiesAsync(predicate);
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -173,7 +173,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            var maxOrder = await _unitOfWork.IStoryRepository!.GetMaxOrder();
+            var maxOrder = await _unitOfWork.IStoryRepository!.GetMaxOrderAsync();
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || !request.Order.HasValue || request.Order == 0)

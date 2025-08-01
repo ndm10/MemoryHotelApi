@@ -30,7 +30,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If order is null, then get the max order from the database and add 1 to it
             if (!blogDto.Order.HasValue)
             {
-                var maxOrder = await _unitOfWork.BlogRepository!.GetMaxOrder();
+                var maxOrder = await _unitOfWork.BlogRepository!.GetMaxOrderAsync();
                 blogDto.Order = maxOrder + 1;
             }
 
@@ -70,7 +70,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     var hashtagFormater = _stringUtility.FormatHashtagName(hashtag);
 
                     // Check if the hashtag already exists in the database
-                    var existingHashtag = await _unitOfWork.HashtagRepository!.GetWithCondition(x => x.Name == hashtagFormater);
+                    var existingHashtag = await _unitOfWork.HashtagRepository!.GetEntityWithConditionAsync(x => x.Name == hashtagFormater);
 
                     // If the hashtag does not exist, create a new Hashtag entity
                     if (existingHashtag == null)
@@ -248,7 +248,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Count the total number of records
-            var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.BlogRepository!.CountEntitiesAsync(predicate);
 
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -285,7 +285,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Count the total number of records
-            var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.BlogRepository!.CountEntitiesAsync(predicate);
 
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -327,7 +327,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Count the total number of records
-            var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.BlogRepository!.CountEntitiesAsync(predicate);
 
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -375,7 +375,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     // Format name to remove special characters and extra spaces
                     var hashtagFormater = _stringUtility.FormatHashtagName(hashtag);
                     // Check if the hashtag already exists in the database
-                    var existingHashtag = await _unitOfWork.HashtagRepository!.GetWithCondition(x => x.Name == hashtagFormater);
+                    var existingHashtag = await _unitOfWork.HashtagRepository!.GetEntityWithConditionAsync(x => x.Name == hashtagFormater);
                     // If the hashtag does not exist, create a new Hashtag entity
                     if (existingHashtag == null)
                     {

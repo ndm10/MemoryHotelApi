@@ -20,7 +20,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             await _context.AddAsync(entity);
         }
 
-        public async Task<int> CountEntities(Expression<Func<T, bool>>? predicate = null)
+        public async Task<int> CountEntitiesAsync(Expression<Func<T, bool>>? predicate = null)
         {
             return predicate == null
                 ? await _context.Set<T>().CountAsync()
@@ -100,12 +100,15 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<int> GetMaxOrder()
+        public async Task<int> GetMaxOrderAsync()
         {
-            return await _context.Set<T>().Where(x => !x.IsDeleted).MaxAsync(x => x.Order);
+            if (await _context.Set<T>().AnyAsync(x => !x.IsDeleted))
+                return await _context.Set<T>().Where(x => !x.IsDeleted).MaxAsync(x => x.Order);
+            else
+                return 0;
         }
 
-        public async Task<T?> GetWithCondition(Expression<Func<T, bool>> predicate, string[]? include = null)
+        public async Task<T?> GetEntityWithConditionAsync(Expression<Func<T, bool>> predicate, string[]? include = null)
         {
             var query = _context.Set<T>().AsQueryable();
 

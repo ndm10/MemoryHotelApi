@@ -1,4 +1,5 @@
-﻿using MemoryHotelApi.DataAccessLayer.Entities;
+﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
@@ -6,9 +7,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
-        public Guid CategoryId { get; set; }
+        public Guid FoodCategoryId { get; set; }
         public string? Description { get; set; }
-        public FoodCategory Category { get; set; } = new FoodCategory();
+        public FoodCategoryDtoCommon FoodCategory { get; set; } = new FoodCategoryDtoCommon();
         public bool IsActive { get; set; }
         public int Order { get; set; }
         public DateTime CreatedDate { get; set; }

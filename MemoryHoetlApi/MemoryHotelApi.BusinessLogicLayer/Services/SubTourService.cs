@@ -87,7 +87,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var subTours = await _unitOfWork.SubTourRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate, includes);
 
             // Get the total count of subTours
-            var totalRecords = await _unitOfWork.SubTourRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.SubTourRepository!.CountEntitiesAsync(predicate);
 
             return new ResponseGetSubToursDto
             {

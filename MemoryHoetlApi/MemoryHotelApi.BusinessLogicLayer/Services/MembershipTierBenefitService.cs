@@ -76,7 +76,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var sortedBenefits = membershipTierBenefits.OrderBy(x => x.Order).ToList();
 
             // Count the total records
-            var totalRecords = await _unitOfWork.MembershipTierBenefitRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.MembershipTierBenefitRepository!.CountEntitiesAsync(predicate);
 
             // Calculate the total number of pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);

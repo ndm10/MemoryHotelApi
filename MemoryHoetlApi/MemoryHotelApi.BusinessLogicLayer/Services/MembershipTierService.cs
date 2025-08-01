@@ -70,7 +70,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var membershipTiers = await _unitOfWork.MembershipTierRepository!.GetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Get the total records count
-            var totalRecords = await _unitOfWork.MembershipTierRepository.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.MembershipTierRepository.CountEntitiesAsync(predicate);
 
             // Calculate the total number of pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);

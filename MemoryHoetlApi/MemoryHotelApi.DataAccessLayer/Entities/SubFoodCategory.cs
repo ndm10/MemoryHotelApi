@@ -3,8 +3,9 @@
     public class SubFoodCategory : BaseEntity
     {
         public string Name { get; set; } = null!;
-        public Guid CategoryId { get; set; }
+        public Guid FoodCategoryId { get; set; }
         public string? Description { get; set; }
-        public FoodCategory Category { get; set; } = new FoodCategory();
+        public FoodCategory FoodCategory { get; set; } = new FoodCategory();
+        public ICollection<Food> Foods { get; set; } = new List<Food>();
     }
 }

@@ -574,5 +574,42 @@ namespace MemoryHotelApi.Controller.Controllers
             var response = await _foodCategoryService.SoftDeleteFoodCategoryAsync(id);
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("sub-food-category")]
+        public async Task<ActionResult<ResponseAdminGetSubFoodCategoriesDto>> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _subFoodCategoryService.GetSubFoodCategoriesAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("sub-food-category/{id}")]
+        public async Task<ActionResult<ResponseAdminGetSubFoodCategoryDto>> GetSubFoodCategoryAsync(Guid id)
+        {
+            var response = await _subFoodCategoryService.GetSubFoodCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("sub-food-category")]
+        public async Task<ActionResult<BaseResponseDto>> UploadSubFoodCategoryAsync([FromBody] RequestUploadSubFoodCategoryDto request)
+        {
+            var response = await _subFoodCategoryService.UploadSubFoodCategoryAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("sub-food-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateSubFoodCategoryAsync(Guid id, [FromBody] RequestUpdateSubFoodCategoryDto request)
+        {
+            var response = await _subFoodCategoryService.UpdateSubFoodCategoryAsync(id, request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("sub-food-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteSubFoodCategoryAsync(Guid id)
+        {
+            var response = await _subFoodCategoryService.SoftDeleteSubFoodCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+
     }
 }

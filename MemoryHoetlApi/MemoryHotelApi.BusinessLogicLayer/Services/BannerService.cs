@@ -84,7 +84,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Count the total records
-            var totalRecords = await _unitOfWork.BannerRepository.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.BannerRepository.CountEntitiesAsync(predicate);
             
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -175,7 +175,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            var maxOrder = await _unitOfWork.BannerRepository!.GetMaxOrder();
+            var maxOrder = await _unitOfWork.BannerRepository!.GetMaxOrderAsync();
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || request.Order == null || request.Order == 0)

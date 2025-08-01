@@ -132,5 +132,27 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             // Return the formatted hashtag
             return hashtag;
         }
+
+        public string FomartStringNameCategory(string categoryName)
+        {
+            // Check if the category name is null or empty
+            if (string.IsNullOrWhiteSpace(categoryName))
+                return string.Empty;
+
+            // Trim whitespace
+            categoryName = categoryName.Trim();
+
+            // Replace multiple spaces with a single space
+            categoryName = Regex.Replace(categoryName, @"\s+", " ");
+
+            //// Upper only the first letter of the name
+            //if (categoryName.Length > 0)
+            //{
+            //    categoryName = char.ToUpper(categoryName[0]) + categoryName.Substring(1).ToLower();
+            //}
+
+            // Return the formatted category name
+            return categoryName;
+        }
     }
 }

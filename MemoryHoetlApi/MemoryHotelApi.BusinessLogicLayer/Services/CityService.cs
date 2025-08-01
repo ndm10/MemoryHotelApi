@@ -45,7 +45,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var cities = await _unitOfWork.CityRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
             // Count the total records
-            var totalRecords = await _unitOfWork.CityRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.CityRepository!.CountEntitiesAsync(predicate);
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);

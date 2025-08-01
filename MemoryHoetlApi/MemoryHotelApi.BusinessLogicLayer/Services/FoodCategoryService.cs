@@ -5,6 +5,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 
@@ -12,8 +13,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class FoodCategoryService : GenericService<FoodCategory>, IFoodCategoryService
     {
-        public FoodCategoryService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
+        private readonly StringUtility _stringUtility;
+
+        public FoodCategoryService(IMapper mapper, IUnitOfWork unitOfWork, StringUtility stringUtility) : base(mapper, unitOfWork)
         {
+            _stringUtility = stringUtility;
         }
 
         public async Task<ResponseAdminGetFoodCategoriesDto> GetFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
@@ -45,7 +49,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var foodCategories = await _unitOfWork.FoodCategoryRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate, includes);
 
             // Count the total records
-            var totalRecords = await _unitOfWork.FoodCategoryRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.FoodCategoryRepository!.CountEntitiesAsync(predicate);
 
             // Calculate the total page
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
@@ -87,7 +91,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Map the food category to the response DTO
             var foodCategoryDto = _mapper.Map<AdminFoodCategoryDto>(foodCategory);
-            
+
             return new ResponseAdminGetFoodCategoryDto
             {
                 StatusCode = 200,
@@ -100,8 +104,14 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<BaseResponseDto> SoftDeleteFoodCategoryAsync(Guid id)
         {
+            // Include the sub food categories
+            var includes = new string[]
+            {
+                nameof(FoodCategory.SubFoodCategories)
+            };
+
             // Find the food category by ID
-            var foodCategory = await _unitOfWork.FoodCategoryRepository!.GetByIdAsync(id, predicate: x => !x.IsDeleted);
+            var foodCategory = await _unitOfWork.FoodCategoryRepository!.GetByIdAsync(id, includes, x => !x.IsDeleted);
 
             // If food category is not found or is already deleted
             if (foodCategory == null || foodCategory.IsDeleted)
@@ -111,6 +121,17 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     StatusCode = 404,
                     IsSuccess = false,
                     Message = "Food category not found or has already been deleted."
+                };
+            }
+
+            // if the food category has sub food categories, return an error response
+            if (foodCategory.SubFoodCategories != null && foodCategory.SubFoodCategories.Any(x => !x.IsDeleted))
+            {
+                return new BaseResponseDto
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Cannot delete food category with existing sub food categories."
                 };
             }
 
@@ -145,8 +166,31 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
+            // If the name is provided, format it and update the food category name
+            if (!string.IsNullOrEmpty(request.Name))
+            {
+                request.Name = _stringUtility.FomartStringNameCategory(request.Name);
+
+                // Check if the name already exists in the database
+                var existingFoodCategory = await _unitOfWork.FoodCategoryRepository!.GetEntityWithConditionAsync(
+                    x => x.Name.Equals(request.Name) && x.Id != id && !x.IsDeleted);
+
+                // If the name already exists, return an error response
+                if (existingFoodCategory != null)
+                {
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 400,
+                        IsSuccess = false,
+                        Message = "Food category name already exists."
+                    };
+                }
+
+                // Update the food category name
+                foodCategory.Name = request.Name;
+            }
+
             // Update the food category properties
-            foodCategory.Name = request.Name ?? foodCategory.Name;
             foodCategory.IsActive = request.IsActive ?? foodCategory.IsActive;
             foodCategory.Order = request.Order ?? foodCategory.Order;
             foodCategory.Description = request.Description ?? foodCategory.Description;
@@ -166,8 +210,26 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<BaseResponseDto> UploadFoodCategoryAsync(RequestUploadFoodCategoryDto request)
         {
+            // Format the name of the food category
+            request.Name = _stringUtility.FomartStringNameCategory(request.Name);
+
+            // Check if the name is existing in the database
+            var existingFoodCategory = await _unitOfWork.FoodCategoryRepository!.GetEntityWithConditionAsync(
+                x => x.Name.Equals(request.Name) && !x.IsDeleted);
+
+            // If the name already exists, return an error response
+            if (existingFoodCategory != null)
+            {
+                return new BaseResponseDto
+                {
+                    StatusCode = 400,
+                    IsSuccess = false,
+                    Message = "Food category name already exists."
+                };
+            }
+
             // Get all food categories that are not deleted
-            var maxOrder = await _unitOfWork.FoodCategoryRepository!.GetMaxOrder();
+            var maxOrder = await _unitOfWork.FoodCategoryRepository!.GetMaxOrderAsync();
 
             // Check if the Order is null or not
             if (!request.Order.HasValue || request.Order == null || request.Order == 0)

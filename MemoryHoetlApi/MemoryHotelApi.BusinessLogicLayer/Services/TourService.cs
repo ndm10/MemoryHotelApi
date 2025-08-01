@@ -111,7 +111,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var toursDto = _mapper.Map<List<GetTourDto>>(tours.OrderBy(x => x.Order));
 
             // Count the total records
-            var totalRecords = await _unitOfWork.TourRepository!.CountEntities(predicate);
+            var totalRecords = await _unitOfWork.TourRepository!.CountEntitiesAsync(predicate);
 
             return new ResponseGetToursDto
             {
