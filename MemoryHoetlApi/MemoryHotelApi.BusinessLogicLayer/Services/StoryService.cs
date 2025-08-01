@@ -44,11 +44,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the banners from the database
             var stories = await _unitOfWork.IStoryRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)stories.Count() / pageSizeValue);
-
             // Count the total records
             var totalRecords = await _unitOfWork.IStoryRepository!.CountEntities(predicate);
+
+            // Calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             // Map the banners to the response DTO
             return new ResponseGetStoriesDto

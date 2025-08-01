@@ -124,6 +124,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<RequestCreateBlogDto, Blog>();
             CreateMap<Blog, BlogExploreDto>().ForMember(dest => dest.Hashtag, otp => otp.MapFrom(src => src.BlogHashtags.Select(bht => bht.Hashtag.Name).ToList()));
             #endregion
+
+            #region FoodCategoryMapping
+            CreateMap<FoodCategory, AdminFoodCategoryDto>().ReverseMap();
+            CreateMap<RequestUploadFoodCategoryDto, FoodCategory>();
+            #endregion
         }
     }
 }

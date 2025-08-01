@@ -44,11 +44,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the conveniences from the database
             var conveniences = await _unitOfWork.ConvenienceRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)conveniences.Count() / pageSizeValue);
-
             // Count the total records
             var totalRecords = await _unitOfWork.ConvenienceRepository!.CountEntities(predicate);
+
+            // Calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new ResponseGetConveniencesDto
             {

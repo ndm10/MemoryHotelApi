@@ -86,11 +86,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             var rooms = await _unitOfWork.RoomRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate, includes);
 
-            // calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)rooms.Count() / pageSizeValue);
-
             // Count the total records
             var totalRecords = await _unitOfWork.RoomRepository!.CountEntities(predicate);
+
+            // calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             // Map to response DTO
             return new ResponseGetRoomsDto

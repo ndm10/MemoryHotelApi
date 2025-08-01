@@ -47,11 +47,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the branches from the database
             var branches = await _unitOfWork.RoomCategoryRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)branches.Count() / pageSizeValue);
-
             // Count the total records
             var totalRecords = await _unitOfWork.RoomCategoryRepository!.CountEntities(predicate);
+
+            // Calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new ResponseGetRoomCategoriesDto
             {

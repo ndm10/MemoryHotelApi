@@ -247,11 +247,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the blogs from the database
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate total pages
-            var totalPages = (int)Math.Ceiling((decimal)blogs.Count() / pageSizeValue);
-
             // Count the total number of records
             var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+
+            // Calculate total pages
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new GenericResponsePagination<AdminBlogDto>
             {
@@ -284,11 +284,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the blogs from the database
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate total pages
-            var totalPages = (int)Math.Ceiling((decimal)blogs.Count() / pageSizeValue);
-
             // Count the total number of records
             var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+
+            // Calculate total pages
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new GenericResponsePagination<BlogDto>
             {
@@ -326,11 +326,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the blogs from the database
             var blogs = await _unitOfWork.BlogRepository!.GetBlogsPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate total pages
-            var totalPages = (int)Math.Ceiling((decimal)blogs.Count() / pageSizeValue);
-
             // Count the total number of records
             var totalRecords = await _unitOfWork.BlogRepository!.CountEntities(predicate);
+
+            // Calculate total pages
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new GenericResponsePagination<BlogExploreDto>
             {

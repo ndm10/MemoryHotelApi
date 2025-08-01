@@ -85,8 +85,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var memberships = await _unitOfWork.UserRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate, includes);
 
             // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)memberships.Count() / pageSizeValue);
             var totalRecords = await _unitOfWork.UserRepository.CountEntities(predicate);
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new ResponseGetUsersDto
             {

@@ -20,11 +20,11 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             await _context.AddAsync(entity);
         }
 
-        public Task<int> CountEntities(Expression<Func<T, bool>>? predicate = null)
+        public async Task<int> CountEntities(Expression<Func<T, bool>>? predicate = null)
         {
             return predicate == null
-                ? _context.Set<T>().CountAsync()
-                : _context.Set<T>().CountAsync(predicate);
+                ? await _context.Set<T>().CountAsync()
+                : await _context.Set<T>().CountAsync(predicate);
         }
 
         public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null, string[]? include = null)
@@ -100,12 +100,12 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
             return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<int> GetMaxOrder()
+        public async Task<int> GetMaxOrder()
         {
-            return _context.Set<T>().MaxAsync(x => x.Order);
+            return await _context.Set<T>().Where(x => !x.IsDeleted).MaxAsync(x => x.Order);
         }
 
-        public Task<T?> GetWithCondition(Expression<Func<T, bool>> predicate, string[]? include = null)
+        public async Task<T?> GetWithCondition(Expression<Func<T, bool>> predicate, string[]? include = null)
         {
             var query = _context.Set<T>().AsQueryable();
 
@@ -117,7 +117,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 }
             }
 
-            return query.FirstOrDefaultAsync(predicate);
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
         public void Update(T entity)

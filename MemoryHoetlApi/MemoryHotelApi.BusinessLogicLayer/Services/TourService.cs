@@ -119,7 +119,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 Data = toursDto,
                 IsSuccess = true,
                 TotalRecord = totalRecords,
-                TotalPage = (int)Math.Ceiling((double)tours.Count / pageSizeValue),
+                TotalPage = (int)Math.Ceiling((double)totalRecords / pageSizeValue),
             };
 
         }

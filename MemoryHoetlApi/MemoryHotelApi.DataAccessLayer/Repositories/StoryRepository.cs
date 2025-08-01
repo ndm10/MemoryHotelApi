@@ -23,13 +23,5 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
 
             return await query.OrderBy(x => x.Order).ToListAsync();
         }
-
-        public async Task<int> GetMaxOrder()
-        {
-            var query = _context.Stories.Where(b => !b.IsDeleted)
-                .Select(b => b.Order);
-
-            return await query.AnyAsync() ? await query.MaxAsync() : 0;
-        }
     }
 }

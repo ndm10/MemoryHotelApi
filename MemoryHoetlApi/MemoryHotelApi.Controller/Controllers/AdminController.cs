@@ -30,8 +30,10 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IMembershipTierBenefitService _membershipTierBenefitService;
         private readonly IRoomService _roomService;
         private readonly IBlogWriterService _blogWriterService;
+        private readonly ISubFoodCategoryService _subFoodCategoryService;
+        private readonly IFoodCategoryService _foodCategoryService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService, ISubFoodCategoryService subFoodCategoryService, IFoodCategoryService foodCategoryService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -46,6 +48,8 @@ namespace MemoryHotelApi.Controller.Controllers
             _membershipTierBenefitService = membershipTierBenefitService;
             _roomService = roomService;
             _blogWriterService = blogWriterService;
+            _subFoodCategoryService = subFoodCategoryService;
+            _foodCategoryService = foodCategoryService;
         }
 
         [HttpGet("banner")]
@@ -533,6 +537,41 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<BaseResponseDto>> DeleteBlogAsync(Guid id)
         {
             var response = await _blogWriterService.DeleteBlogAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food-category")]
+        public async Task<ActionResult<ResponseAdminGetFoodCategoriesDto>> GetFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _foodCategoryService.GetFoodCategoriesAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food-category/{id}")]
+        public async Task<ActionResult<ResponseAdminGetFoodCategoryDto>> GetFoodCategoryAsync(Guid id)
+        {
+            var response = await _foodCategoryService.GetFoodCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("food-category")]
+        public async Task<ActionResult<BaseResponseDto>> UploadFoodCategoryAsync([FromBody] RequestUploadFoodCategoryDto request)
+        {
+            var response = await _foodCategoryService.UploadFoodCategoryAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("food-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateFoodCategoryAsync(Guid id, [FromBody] RequestUpdateFoodCategoryDto request)
+        {
+            var response = await _foodCategoryService.UpdateFoodCategoryAsync(id, request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("food-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteFoodCategoryAsync(Guid id)
+        {
+            var response = await _foodCategoryService.SoftDeleteFoodCategoryAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

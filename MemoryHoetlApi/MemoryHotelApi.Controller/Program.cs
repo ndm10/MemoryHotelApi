@@ -146,6 +146,8 @@ builder.Services.AddScoped<IMembershipTierService, MembershipTierService>();
 builder.Services.AddScoped<IMembershipTierBenefitService, MembershipTierBenefitService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IBlogWriterService, BlogWriterService>();
+builder.Services.AddScoped<IFoodCategoryService, FoodCategoryService>();
+builder.Services.AddScoped<ISubFoodCategoryService, SubFoodCategoryService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

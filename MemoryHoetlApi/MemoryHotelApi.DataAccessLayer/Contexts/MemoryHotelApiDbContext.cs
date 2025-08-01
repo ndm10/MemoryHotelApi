@@ -26,6 +26,8 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<BlogHashTag> BlogHashtags { get; set; }
+        public DbSet<FoodCategory> FoodCategories { get; set; }
+        public DbSet<SubFoodCategory> SubFoodCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

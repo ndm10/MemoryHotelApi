@@ -95,7 +95,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 Data = _mapper.Map<List<GetSubTourDto>>(subTours.OrderBy(x => x.Order)),
                 IsSuccess = true,
                 TotalRecord = totalRecords,
-                TotalPages = (int)Math.Ceiling((double)subTours.Count / pageSizeValue)
+                TotalPages = (int)Math.Ceiling((double)totalRecords / pageSizeValue)
             };
         }
 

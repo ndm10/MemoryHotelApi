@@ -221,6 +221,49 @@ namespace MemoryHotelApi.DataAccessLayer.SeedData
                 _context.MembershipTiers.AddRange(membershipTiers);
             }
 
+            // Seed data for Category and SubCategory
+            if (!await _context.FoodCategories.AnyAsync())
+            {
+                var categories = new List<FoodCategory>
+                {
+                    new FoodCategory
+                    {
+                        Id = Guid.Parse("24009f22-039d-4fa1-af88-e4217213facf"),
+                        Name = "Đồ ăn (Food)",
+                        Icon = "https://cms-vietnammemory.com/Images/e39a8cb4-a254-4db1-8c1c-c31cc48ee0bc.png",
+                        Order  = 1,
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        IsActive = true
+                    },
+                    new FoodCategory
+                    {
+                        Id = Guid.Parse("f7898700-5949-4c2f-8c2b-305c6adb584b"),
+                        Name = "Đồ uống (Beverage)",
+                        Icon = "https://cms-vietnammemory.com/Images/0394aaf6-0a39-4acf-a3e4-f0f2d1d8d4b5.png",
+                        Order  = 2,
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        IsActive = true
+                    },
+                    new FoodCategory
+                    {
+                        Id = Guid.Parse("81da9a5c-8b95-4c43-9ae5-9aa6b3c2bf83"),
+                        Name = "Combo",
+                        Icon = "https://cms-vietnammemory.com/Images/ae3b7616-877a-4027-9913-489b0fcff621.png",
+                        Order  = 3,
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = DateTime.UtcNow,
+                        IsDeleted = false,
+                        IsActive = true
+                    }
+                };
+
+                _context.FoodCategories.AddRange(categories);
+            }
+
             await _context.SaveChangesAsync();
         }
     }

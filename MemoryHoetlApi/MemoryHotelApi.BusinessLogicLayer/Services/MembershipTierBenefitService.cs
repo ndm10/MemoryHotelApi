@@ -72,14 +72,14 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the membership tier benefits from the database
             var membershipTierBenefits = await _unitOfWork.MembershipTierBenefitRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate the total number of pages
-            var totalPages = (int)Math.Ceiling((decimal)membershipTierBenefits.Count() / pageSizeValue);
-
             // Map the results to the DTO and sort them
             var sortedBenefits = membershipTierBenefits.OrderBy(x => x.Order).ToList();
 
             // Count the total records
             var totalRecords = await _unitOfWork.MembershipTierBenefitRepository!.CountEntities(predicate);
+
+            // Calculate the total number of pages
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             return new ResponseGetMembershipTierBenefitsDto
             {

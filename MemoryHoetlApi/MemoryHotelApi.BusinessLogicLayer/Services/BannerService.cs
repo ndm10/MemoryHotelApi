@@ -68,9 +68,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the banners from the database
             var banners = await _unitOfWork.BannerRepository!.GetPagination(pageIndexValue, pageSizeValue, textSearch, status);
 
-            // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)banners.Count() / pageSizeValue);
-
             // Create a predicate to filter banners
             var predicate = PredicateBuilder.New<Banner>(x => !x.IsDeleted);
 
@@ -88,6 +85,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Count the total records
             var totalRecords = await _unitOfWork.BannerRepository.CountEntities(predicate);
+            
+            // Calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             // Map the banners to the response DTO
             return new ResponseGetBannersDto

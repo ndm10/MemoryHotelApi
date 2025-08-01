@@ -44,11 +44,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Get all the cities from the database
             var cities = await _unitOfWork.CityRepository!.GenericGetPaginationAsync(pageIndexValue, pageSizeValue, predicate);
 
-            // Calculate the total page
-            var totalPages = (int)Math.Ceiling((decimal)cities.Count() / pageSizeValue);
-
             // Count the total records
             var totalRecords = await _unitOfWork.CityRepository!.CountEntities(predicate);
+
+            // Calculate the total page
+            var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
             // Map the cities to the response DTO
             return new ResponseGetCitiesDto

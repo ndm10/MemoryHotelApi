@@ -22,6 +22,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IRoomRepository? RoomRepository { get; }
         IBlogRepository? BlogRepository { get; }
         IHashtagRepository? HashtagRepository { get; }
+        IFoodCategoryRepository? FoodCategoryRepository { get; }
+        ISubFoodCategoryRepository? SubFoodCategoryRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }
