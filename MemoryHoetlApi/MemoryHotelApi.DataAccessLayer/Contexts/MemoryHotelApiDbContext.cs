@@ -1,6 +1,7 @@
 ﻿using MemoryHotelApi.DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 
 namespace MemoryHotelApi.DataAccessLayer.Contexts
@@ -36,6 +37,18 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         {
             // modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MemoryHotelApiDbContext).Assembly);
+
+            // Apply soft delete filter to all entities implementing BaseEntity
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var parameter = Expression.Parameter(entityType.ClrType, "e");
+                    var property = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+                    var filter = Expression.Lambda(Expression.Not(property), parameter);
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(filter);
+                }
+            }
         }
 
         public override int SaveChanges()

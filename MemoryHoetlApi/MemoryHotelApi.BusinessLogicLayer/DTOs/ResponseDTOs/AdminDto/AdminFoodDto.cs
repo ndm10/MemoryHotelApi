@@ -1,14 +1,18 @@
-﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+﻿using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class AdminSubFoodCategoryDto
+    public class AdminFoodDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
-        public Guid FoodCategoryId { get; set; }
+        public decimal Price { get; set; }
+        public string Image { get; set; } = null!;
+        public bool IsBestSeller { get; set; }
+        public int WaitingTimeInMinute { get; set; }
         public string? Description { get; set; }
-        public FoodCategoryDtoCommon FoodCategory { get; set; } = new FoodCategoryDtoCommon();
+        public Guid SubFoodCategoryId { get; set; }
+        public AdminSubFoodCategoryDto SubFoodCategory { get; set; } = null!;
         public bool IsActive { get; set; }
         public int Order { get; set; }
         public DateTime CreatedDate { get; set; }

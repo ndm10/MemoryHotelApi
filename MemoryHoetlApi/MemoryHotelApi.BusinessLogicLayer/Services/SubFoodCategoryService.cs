@@ -4,6 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
 using MemoryHotelApi.DataAccessLayer.Entities;
@@ -68,6 +69,38 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         }
 
+        public async Task<ResponseGetSubFoodCategoriesExploreDto> GetSubFoodCategoriesExploreAsync(Guid? foodCategoryId)
+        {
+            // Create a predicate to filter out deleted items
+            var predicate = PredicateBuilder.New<SubFoodCategory>(x => !x.IsDeleted && x.IsActive);
+
+            // Check if foodCategoryId is provided and filter accordingly
+            if (foodCategoryId.HasValue && foodCategoryId != Guid.Empty)
+            {
+                predicate = predicate.And(x => x.FoodCategoryId == foodCategoryId);
+            }
+
+            // Include the food category and food
+            var includes = new string[]
+            {
+                nameof(SubFoodCategory.FoodCategory),
+                nameof(SubFoodCategory.Foods)
+            };
+
+            // Get all the sub food categories from the database
+            var subFoodCategories = await _unitOfWork.SubFoodCategoryRepository!.GetAllAsync(predicate, includes);
+
+            // Map the sub food categories to the response DTO
+            var subFoodCategoriesDto = _mapper.Map<List<ExploreSubFoodCategoryDto>>(subFoodCategories.OrderBy(x => x.Order));
+
+            // Return the response DTO
+            return new ResponseGetSubFoodCategoriesExploreDto
+            {
+                StatusCode = 200,
+                Data = subFoodCategoriesDto,
+            };
+        }
+
         public async Task<ResponseAdminGetSubFoodCategoryDto> GetSubFoodCategoryAsync(Guid id)
         {
             // Get the sub food category by id
@@ -91,6 +124,39 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var subFoodCategoryDto = _mapper.Map<AdminSubFoodCategoryDto>(subFoodCategory);
 
             return new ResponseAdminGetSubFoodCategoryDto
+            {
+                StatusCode = 200,
+                Data = subFoodCategoryDto
+            };
+        }
+
+        public async Task<ResponseGetSubFoodCategoryExploreDto> GetSubFoodCategoryExploreAsync(Guid id)
+        {
+            // Include the food in the response
+            var includes = new string[]
+            {
+                nameof(SubFoodCategory.Foods),
+                nameof(SubFoodCategory.FoodCategory)
+            };
+
+            // Get the sub food category by id
+            var subFoodCategory = await _unitOfWork.SubFoodCategoryRepository!.GetByIdAsync(id, includes, x => !x.IsDeleted && x.IsActive);
+
+            // If sub food category is not found or is deleted
+            if (subFoodCategory == null)
+            {
+                return new ResponseGetSubFoodCategoryExploreDto
+                {
+                    StatusCode = 404,
+                    Message = "Sub food category not found or has been deleted."
+                };
+            }
+
+            // Map the sub food category to the response DTO
+            var subFoodCategoryDto = _mapper.Map<ExploreSubFoodCategoryDto>(subFoodCategory);
+
+            // Return the response DTO
+            return new ResponseGetSubFoodCategoryExploreDto
             {
                 StatusCode = 200,
                 Data = subFoodCategoryDto
@@ -167,7 +233,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If the name is provided, format it and update the sub food category name
             if (!string.IsNullOrEmpty(request.Name))
             {
-                request.Name = _stringUtility.FomartStringNameCategory(request.Name);
+                request.Name = _stringUtility.FomartStringName(request.Name);
 
                 // Check if the name already exists in the database
                 var existingSubFoodCategory = await _unitOfWork.SubFoodCategoryRepository!.GetEntityWithConditionAsync(
@@ -244,7 +310,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Format the name
-            request.Name = _stringUtility.FomartStringNameCategory(request.Name);
+            request.Name = _stringUtility.FomartStringName(request.Name);
 
             // Check if the name is exists in the database
             var existingSubFoodCategory = await _unitOfWork.SubFoodCategoryRepository!.GetEntityWithConditionAsync(

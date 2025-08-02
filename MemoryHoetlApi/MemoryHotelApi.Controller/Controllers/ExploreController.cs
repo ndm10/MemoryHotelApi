@@ -15,8 +15,12 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ICityService _cityService;
         private readonly IStoryService _storyService;
         private readonly IBlogWriterService _blogWriterService;
+        private readonly IFoodCategoryService _foodCategoryService;
+        private readonly ISubFoodCategoryService _subFoodCategoryService;
+        private readonly IFoodService _foodService;
 
-        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService)
+
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
@@ -24,6 +28,9 @@ namespace MemoryHotelApi.Controller.Controllers
             _cityService = cityService;
             _storyService = storyService;
             _blogWriterService = blogWriterService;
+            _foodCategoryService = foodCategoryService;
+            _subFoodCategoryService = subFoodCategoryService;
+            _foodService = foodService;
         }
 
         [HttpGet("banner")]
@@ -79,6 +86,48 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetBlogExploreDto>> GetBlog(Guid id)
         {
             var response = await _blogWriterService.GetBlogExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food-category")]
+        public async Task<ActionResult<ResponseGetFoodCategoriesExploreDto>> GetFoodCategories()
+        {
+            var response = await _foodCategoryService.GetFoodCategoriesExploreAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food-category/{id}")]
+        public async Task<ActionResult<ResponseGetSubFoodCategoriesExploreDto>> GetSubFoodCategories(Guid id)
+        {
+            var response = await _foodCategoryService.GetFoodCategoryExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("sub-food-category")]
+        public async Task<ActionResult<ResponseGetSubFoodCategoriesExploreDto>> GetSubFoodCategories(Guid? foodCategoryId)
+        {
+            var response = await _subFoodCategoryService.GetSubFoodCategoriesExploreAsync(foodCategoryId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("sub-food-category/{id}")]
+        public async Task<ActionResult<ResponseGetSubFoodCategoryExploreDto>> GetFoodsBySubFoodCategory(Guid id)
+        {
+            var response = await _subFoodCategoryService.GetSubFoodCategoryExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food")]
+        public async Task<ActionResult<ResponseGetFoodsExploreDto>> GetFoods(string? textSearch, Guid? subFoodCategoryId)
+        {
+            var response = await _foodService.GetFoodsExploreAsync(textSearch, subFoodCategoryId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("food/{id}")]
+        public async Task<ActionResult<ResponseGetFoodExploreDto>> GetFood(Guid id)
+        {
+            var response = await _foodService.GetFoodExploreAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

@@ -133,7 +133,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Utilities
             return hashtag;
         }
 
-        public string FomartStringNameCategory(string categoryName)
+        public string FomartStringName(string categoryName)
         {
             // Check if the category name is null or empty
             if (string.IsNullOrWhiteSpace(categoryName))

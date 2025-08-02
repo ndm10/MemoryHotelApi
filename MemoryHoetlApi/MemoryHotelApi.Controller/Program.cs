@@ -148,6 +148,7 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IBlogWriterService, BlogWriterService>();
 builder.Services.AddScoped<IFoodCategoryService, FoodCategoryService>();
 builder.Services.AddScoped<ISubFoodCategoryService, SubFoodCategoryService>();
+builder.Services.AddScoped<IFoodService, FoodService>();
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

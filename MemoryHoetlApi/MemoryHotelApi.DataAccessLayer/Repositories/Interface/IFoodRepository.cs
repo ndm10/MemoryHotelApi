@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.DataAccessLayer.Repositories.Interface
 {
-    internal interface IFoodRepository
+    public interface IFoodRepository : IGenericRepository<Food>
     {
     }
 }
