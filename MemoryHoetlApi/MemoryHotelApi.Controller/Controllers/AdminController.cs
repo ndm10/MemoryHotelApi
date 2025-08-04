@@ -6,6 +6,7 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.BlogWriterDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
+using MemoryHotelApi.DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -578,9 +579,9 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("sub-food-category")]
-        public async Task<ActionResult<ResponseAdminGetSubFoodCategoriesDto>> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ActionResult<ResponseAdminGetSubFoodCategoriesDto>> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? foodCategoryId)
         {
-            var response = await _subFoodCategoryService.GetSubFoodCategoriesAsync(pageIndex, pageSize, textSearch, status);
+            var response = await _subFoodCategoryService.GetSubFoodCategoriesAsync(pageIndex, pageSize, textSearch, status, foodCategoryId);
             return StatusCode(response.StatusCode, response);
         }
 

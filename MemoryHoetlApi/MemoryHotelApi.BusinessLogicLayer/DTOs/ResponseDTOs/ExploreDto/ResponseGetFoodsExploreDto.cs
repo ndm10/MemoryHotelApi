@@ -2,8 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
-    public class ResponseGetFoodsExploreDto : BaseResponseDto
+    public class ResponseGetFoodsExploreDto : GenericResponsePagination<ExploreFoodDto>
     {
-        public List<ExploreFoodDto>? Data { get; set; }
     }
 }

@@ -92,7 +92,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             if (!string.IsNullOrEmpty(textSearch))
             {
                 // Add the search condition to the predicate
-                predicate = predicate.And(x => x.Title.Contains(textSearch, StringComparison.OrdinalIgnoreCase) || x.SubTitle.Contains(textSearch, StringComparison.OrdinalIgnoreCase));
+                predicate = predicate.And(x => x.Title.Contains(textSearch) || x.SubTitle.Contains(textSearch));
             }
 
             // Check if status has value

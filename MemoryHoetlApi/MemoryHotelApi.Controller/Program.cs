@@ -4,6 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Mapping;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
+using MemoryHotelApi.Controller.Middlewares;
 using MemoryHotelApi.DataAccessLayer.Contexts;
 using MemoryHotelApi.DataAccessLayer.SeedData;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork;
@@ -98,7 +99,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 //});
 builder.Services.AddDbContext<MemoryHotelApiDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 0))));
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 
 // Add authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -186,7 +190,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
-// app.UseExceptionMiddleware();
+app.UseExceptionMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 

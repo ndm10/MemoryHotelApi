@@ -11,7 +11,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
         Task<ResponseAdminGetFoodDto> GetFoodAsync(Guid id);
         Task<ResponseGetFoodExploreDto> GetFoodExploreAsync(Guid id);
         Task<ResponseAdminGetFoodsDto> GetFoodsAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? subFoodCategoryId);
-        Task<ResponseGetFoodsExploreDto> GetFoodsExploreAsync(string? textSearch, Guid? subFoodCategoryId);
+        Task<ResponseGetFoodsExploreDto> GetFoodsExploreAsync(int? pageIndex, int? pageSize, string? textSearch, Guid? foodCategoryId, Guid? subFoodCategoryId);
         Task<BaseResponseDto> SoftDeleteFoodAsync(Guid id);
         Task<BaseResponseDto> UpdateFoodAsync(Guid id, RequestUpdateFoodDto request);
         Task<BaseResponseDto> UploadFoodAsync(RequestUploadFoodDto request);

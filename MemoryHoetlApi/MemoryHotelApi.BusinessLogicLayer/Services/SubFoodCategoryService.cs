@@ -21,7 +21,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             _stringUtility = stringUtility;
         }
 
-        public async Task<ResponseAdminGetSubFoodCategoriesDto> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ResponseAdminGetSubFoodCategoriesDto> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? foodCategoryId)
         {
             // Initialize the default value of pageIndex and pageSize
             pageIndex ??= Constants.PageIndexDefault;
@@ -33,13 +33,19 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is provided and filter accordingly
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => x.Name != null && x.Name.Contains(textSearch, StringComparison.OrdinalIgnoreCase));
+                predicate = predicate.And(x => x.Name != null && x.Name.Contains(textSearch));
             }
 
             // Check if status is provided and filter accordingly
             if (status.HasValue)
             {
                 predicate = predicate.And(x => x.IsActive == status);
+            }
+
+            // Check if subFoodCategoryId is provided
+            if(foodCategoryId.HasValue && foodCategoryId != Guid.Empty)
+            {
+                predicate = predicate.And(x => x.FoodCategoryId == foodCategoryId);
             }
 
             var includes = new[]
@@ -57,12 +63,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSize.Value);
 
             // Map the sub food categories to the response DTO
-            var subFoodCategoryDtos = _mapper.Map<List<AdminSubFoodCategoryDto>>(subFoodCategories.OrderBy(x => x.Order));
+            var subFoodCategoriesDto = _mapper.Map<List<AdminSubFoodCategoryDto>>(subFoodCategories.OrderBy(x => x.Order));
 
             return new ResponseAdminGetSubFoodCategoriesDto
             {
                 StatusCode = 200,
-                Data = subFoodCategoryDtos,
+                Data = subFoodCategoriesDto,
                 TotalPage = totalPages,
                 TotalRecord = totalRecords
             };

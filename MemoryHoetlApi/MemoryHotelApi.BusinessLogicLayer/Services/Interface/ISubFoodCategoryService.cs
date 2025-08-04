@@ -8,7 +8,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
 {
     public interface ISubFoodCategoryService : IGenericService<SubFoodCategory>
     {
-        Task<ResponseAdminGetSubFoodCategoriesDto> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status);
+        Task<ResponseAdminGetSubFoodCategoriesDto> GetSubFoodCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? foodCategoryId);
         Task<ResponseGetSubFoodCategoriesExploreDto> GetSubFoodCategoriesExploreAsync(Guid? foodCategoryId);
         Task<ResponseAdminGetSubFoodCategoryDto> GetSubFoodCategoryAsync(Guid id);
         Task<ResponseGetSubFoodCategoryExploreDto> GetSubFoodCategoryExploreAsync(Guid id);

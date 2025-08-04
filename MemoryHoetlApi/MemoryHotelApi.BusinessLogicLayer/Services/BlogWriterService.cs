@@ -235,7 +235,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is null or empty
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch, StringComparison.OrdinalIgnoreCase)));
+                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch)));
             }
 
             // Check if status is null or empty
@@ -272,7 +272,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is null or empty
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch, StringComparison.OrdinalIgnoreCase)));
+                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch)));
             }
 
             // Check if status is null or empty
@@ -309,7 +309,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is null or empty
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch, StringComparison.OrdinalIgnoreCase)));
+                predicate = predicate.And(x => (x.Title != null && x.Title.Contains(textSearch)));
             }
 
             // Check if status is null or empty

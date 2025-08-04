@@ -118,9 +118,9 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("food")]
-        public async Task<ActionResult<ResponseGetFoodsExploreDto>> GetFoods(string? textSearch, Guid? subFoodCategoryId)
+        public async Task<ActionResult<ResponseGetFoodsExploreDto>> GetFoods(int? pageIndex, int? pageSize, string? textSearch, Guid? foodCategoryId, Guid? subFoodCategoryId)
         {
-            var response = await _foodService.GetFoodsExploreAsync(textSearch, subFoodCategoryId);
+            var response = await _foodService.GetFoodsExploreAsync(pageIndex, pageSize, textSearch, foodCategoryId, subFoodCategoryId);
             return StatusCode(response.StatusCode, response);
         }
 
