@@ -91,7 +91,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Apply text search if provided
             if (!string.IsNullOrWhiteSpace(textSearch))
             {
-                predicate = predicate.And(x => x.Name.Contains(textSearch) || x.Description.Contains(textSearch));
+                predicate = predicate.And(x => x.Name.Contains(textSearch) || (x.Description != null && x.Description.Contains(textSearch)));
             }
 
             // Apply status filter if provided
@@ -134,7 +134,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         }
 
-        public async Task<ResponseGetFoodsExploreDto> GetFoodsExploreAsync(string? textSearch, Guid? subFoodCategoryId)
+        public async Task<ResponseGetFoodsExploreDto> GetFoodsExploreAsync(int? pageIndex, int? pageSize, string? textSearch, Guid? foodCategoryId, Guid? subFoodCategoryId)
         {
             // Create the predicate for filtering
             var predicate = PredicateBuilder.New<Food>(x => !x.IsDeleted && x.IsActive);
@@ -142,27 +142,77 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Apply text search if provided
             if (!string.IsNullOrWhiteSpace(textSearch))
             {
-                predicate = predicate.And(x => x.Name.Contains(textSearch) || x.Description.Contains(textSearch));
+                predicate = predicate.And(x => x.Name.Contains(textSearch) || (x.Description != null && x.Description.Contains(textSearch)));
             }
 
-            // Apply subFoodCategoryId filter if provided
-            if (subFoodCategoryId.HasValue)
+            // Apply foodCategoryId filter if provided
+            if (foodCategoryId.HasValue)
             {
-                predicate = predicate.And(x => x.SubFoodCategoryId == subFoodCategoryId.Value);
+                predicate = predicate.And(x => x.SubFoodCategory.FoodCategoryId == foodCategoryId.Value);
+
+                // If subFoodCategoryId is provided, continue filter by subFoodCategoryId
+                if (subFoodCategoryId.HasValue)
+                {
+                    // Check if the subFoodCategoryId belong to the foodCategoryId, then apply the filter
+                    var isSubFoodCategoryBelongToFoodCategory = await _unitOfWork.FoodCategoryRepository!.IsIncludeSubFoodCategoryAsync(foodCategoryId.Value, subFoodCategoryId.Value);
+
+                    // If the subFoodCategoryId does not belong to the foodCategoryId, return conflict response
+                    if (!isSubFoodCategoryBelongToFoodCategory)
+                    {
+                        return new ResponseGetFoodsExploreDto
+                        {
+                            StatusCode = 409,
+                            Message = "SubFoodCategory does not belong to the FoodCategory."
+                        };
+                    }
+
+                    predicate = predicate.And(x => x.SubFoodCategoryId == subFoodCategoryId.Value);
+                }
+            }
+            else
+            {
+                // If foodCategoryId is not provided, check if subFoodCategoryId is provided
+                if (subFoodCategoryId.HasValue)
+                {
+                    predicate = predicate.And(x => x.SubFoodCategoryId == subFoodCategoryId.Value);
+                }
             }
 
-            // Get all the foods from the database
-            var foods = await _unitOfWork.FoodRepository!.GetAllAsync(predicate);
+            var foods = new List<Food>();
+            var totalRecords = 0;
+            var totalPages = 0;
+
+            // Check if pageIndex and pageSize are provided
+            // If not, get all foods, other wise apply pagination
+            if (pageIndex.HasValue || pageSize.HasValue)
+            {
+                // If pageIndex or pageSize is not provided, set it to default values
+                pageIndex ??= Constants.PageIndexDefault;
+                pageSize ??= Constants.PageSizeDefault;
+
+                // Get the foods with pagination from the database
+                foods = await _unitOfWork.FoodRepository!.GenericGetPaginationAsync(pageIndex.Value, pageSize.Value, predicate, null);
+
+                // Calculate the total records and total pages
+                totalRecords = await _unitOfWork.FoodRepository!.CountEntitiesAsync(predicate);
+                totalPages = (int)Math.Ceiling((decimal)totalRecords / Constants.PageSizeDefault);
+            }
+            else
+            {
+                // Get all the foods from the database
+                foods = (await _unitOfWork.FoodRepository!.GetAllAsync(predicate)).ToList();
+            }
 
             // Map the foods to the response DTO
-            var foodDtos = _mapper.Map<List<ExploreFoodDto>>(foods.OrderBy(x => x.Order));
+            var foodsDto = _mapper.Map<List<ExploreFoodDto>>(foods.OrderBy(x => x.Order));
 
             return new ResponseGetFoodsExploreDto
             {
                 StatusCode = 200,
-                IsSuccess = true,
                 Message = "Foods retrieved successfully.",
-                Data = foodDtos
+                Data = foodsDto,
+                TotalPage = totalPages,
+                TotalRecord = totalRecords
             };
         }
 

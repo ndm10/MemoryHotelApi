@@ -65,9 +65,9 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is null or empty
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => x.Email.Contains(textSearch, StringComparison.OrdinalIgnoreCase)
-                                            || x.FullName.Contains(textSearch, StringComparison.OrdinalIgnoreCase)
-                                            || x.Phone.Contains(textSearch, StringComparison.OrdinalIgnoreCase));
+                predicate = predicate.And(x => x.Email.Contains(textSearch)
+                                            || x.FullName.Contains(textSearch)
+                                            || x.Phone.Contains(textSearch));
             }
 
             // Check if status is null or empty

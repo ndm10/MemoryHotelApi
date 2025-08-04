@@ -6,5 +6,6 @@
         public List<T>? Data { get; set; }
         public int? TotalPage { get; set; }
         public int? TotalRecord { get; set; }
+        public string? Message { get; set; }
     }
 }

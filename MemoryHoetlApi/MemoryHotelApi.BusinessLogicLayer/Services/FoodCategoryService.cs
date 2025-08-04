@@ -33,7 +33,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if textSearch is provided and filter accordingly
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicate = predicate.And(x => x.Name != null && x.Name.Contains(textSearch, StringComparison.OrdinalIgnoreCase));
+                predicate = predicate.And(x => x.Name != null && x.Name.Contains(textSearch));
             }
             // Check if status is provided and filter accordingly
             if (status.HasValue)

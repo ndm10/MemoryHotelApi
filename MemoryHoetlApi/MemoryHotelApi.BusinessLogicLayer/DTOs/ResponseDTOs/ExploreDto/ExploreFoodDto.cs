@@ -12,5 +12,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
         public int? WaitingTimeInMinute { get; set; }
         public string? Description { get; set; }
         public int? Order { get; set; }
+        public Guid SubFoodCategoryId { get; set; }
     }
 }
