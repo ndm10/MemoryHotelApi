@@ -138,7 +138,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     user.IsDeletedAllowed = true;
                     await userRepository.AddAsync(user);
                 }
-                else if(existingUser != null && existingUser.IsVerified)
+                else if (existingUser != null && existingUser.IsVerified)
                 {
                     existingUser.FullName = request.FullName;
                     existingUser.Phone = request.Phone;
@@ -481,19 +481,40 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         private async Task<ResponseLoginDto> CreateTokenAsync(User user)
         {
-            var response = new ResponseLoginDto
+            // Check if user is Receptionist or not
+            if (user.Role?.Name == Constants.RoleReceptionistName || user.Role?.Name == Constants.RoleAdminName)
             {
-                StatusCode = 200,
-                IsSuccess = true,
-                Token = _jwtUtility.GenerateToken(user),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
-                UserId = user.Id,
-                FullName = user.FullName,
-                Phone = user.Phone,
-                ExpiredTimeToken = DateTime.UtcNow.AddDays(Constants.TokenExpiredTime),
-                ExpiredTimeRefreshToken = DateTime.UtcNow.AddDays(7)
-            };
-            return response;
+                return new ResponseLoginDto
+                {
+                    StatusCode = 200,
+                    IsSuccess = true,
+                    Token = _jwtUtility.GenerateToken(user),
+                    RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                    UserId = user.Id,
+                    FullName = user.FullName,
+                    Phone = user.Phone,
+                    ExpiredTimeToken = DateTime.UtcNow.AddDays(Constants.TokenExpiredTime),
+                    ExpiredTimeRefreshToken = DateTime.UtcNow.AddDays(7),
+                    Role = user.Role.Name,
+                    BranchId = user.BranchReceptionists?.FirstOrDefault()?.BranchId ?? Guid.Empty
+                };
+            }
+            else
+            {
+
+                return new ResponseLoginDto
+                {
+                    StatusCode = 200,
+                    IsSuccess = true,
+                    Token = _jwtUtility.GenerateToken(user),
+                    RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                    UserId = user.Id,
+                    FullName = user.FullName,
+                    Phone = user.Phone,
+                    ExpiredTimeToken = DateTime.UtcNow.AddDays(Constants.TokenExpiredTime),
+                    ExpiredTimeRefreshToken = DateTime.UtcNow.AddDays(7)
+                };
+            }
         }
     }
 }

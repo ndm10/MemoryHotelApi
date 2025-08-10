@@ -32,6 +32,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<Food> Foods { get; set; }
         public DbSet<FoodOrderHistory> FoodOrderHistories { get; set; }
         public DbSet<FoodOrderHistoryDetail> FoodOrderHistoryDetails { get; set; }
+        public DbSet<BranchReceptionist> BranchReceptionists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,7 +72,7 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
             foreach (var entry in entries)
             {
                 var entity = (BaseEntity)entry.Entity;
-                var now = DateTime.UtcNow; // Use UTC for consistency
+                var now = DateTime.Now; // Use UTC for consistency
 
                 if (entry.State == EntityState.Added)
                 {

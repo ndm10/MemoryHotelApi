@@ -101,7 +101,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 IsSuccess = true,
-                Data = _mapper.Map<List<GetBranchesExploreDto>>(branches.OrderBy(x => x.Order))
+                Data = _mapper.Map<List<GetBranchExploreDto>>(branches.OrderBy(x => x.Order))
             };
         }
 
@@ -126,7 +126,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 IsSuccess = true,
-                Data = _mapper.Map<GetBranchesExploreDto>(branch)
+                Data = _mapper.Map<GetBranchExploreDto>(branch)
             };
         }
 
@@ -290,6 +290,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             branch.Slug = request.Slug ?? branch.Slug;
             branch.IsActive = request.IsActive ?? branch.IsActive;
             branch.HotelCode = request.HotelCode?.Trim() ?? branch.HotelCode;
+            branch.HotLine = request.HotLine?.Trim() ?? branch.HotLine;
 
             // Update the branch in the database
             _unitOfWork.BranchRepository.Update(branch);

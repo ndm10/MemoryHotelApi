@@ -26,5 +26,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public List<ConvenienceDto>? HighlightedConveniences { get; set; }
         public ICollection<ResponseGetLocationExploreDtoCommon>? LocationExplores { get; set; }
         public ICollection<RoomCategoryDto>? RoomCategories { get; set; }
+        public string? HotLine { get; set; }
     }
 }

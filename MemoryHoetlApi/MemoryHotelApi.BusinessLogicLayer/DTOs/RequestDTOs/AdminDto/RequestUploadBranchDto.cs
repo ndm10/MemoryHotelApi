@@ -42,6 +42,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public List<UploadLocationExploreDto> LocationExplores { get; set; } = new List<UploadLocationExploreDto>();
 
         public List<Guid> RoomCategoryIDs { get; set; } = new List<Guid>();
+
+        public string? HotLine { get; set; } = null!;
     }
 
     public class UploadLocationExploreDto

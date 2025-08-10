@@ -16,8 +16,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.Receptionist
 
         public List<FoodItems> Items { get; set; } = new List<FoodItems>();
         public string? Note { get; set; }
-        public string Status { get; set; } = "Pending";
-        public DateTime OrderAt { get; set; }
+        public string Status { get; set; } = null!;
     }
 
     public class FoodItems

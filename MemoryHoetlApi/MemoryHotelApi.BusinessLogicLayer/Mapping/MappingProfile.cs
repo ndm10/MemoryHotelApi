@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryHotelApi.BusinessLogicLayer.Common.Enums;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto;
@@ -8,6 +9,7 @@ using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.BlogWriterDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist;
 using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Mapping
@@ -79,7 +81,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #region LocationExploreMapping
             CreateMap<LocationExplore, UploadLocationExploreDto>().ReverseMap();
             CreateMap<LocationExplore, ResponseGetLocationExploreDtoCommon>().ReverseMap();
-            CreateMap<GetBranchesExploreDto, Branch>().ReverseMap().ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.BranchImages.Select(img => img.Image.Url).ToList()));
+            CreateMap<GetBranchExploreDto, Branch>().ReverseMap()
+                .ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.BranchImages.Select(img => img.Image.Url).ToList()));
             #endregion
 
             #region RoomCategoryMapping
@@ -143,6 +146,15 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<Food, AdminFoodDto>();
             CreateMap<RequestUploadFoodDto, Food>();
             CreateMap<Food, ExploreFoodDto>();
+            #endregion
+
+            #region FoodOrderHistoryMapping
+            CreateMap<FoodOrderHistory, FoodOrderHistoryDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(FoodOrderStatus), src.Status)));
+            #endregion
+
+            #region FoodOrderHistoryDetailMapping
+            CreateMap<FoodOrderHistoryDetail, FoodOrderHistoryDetailDto>();
             #endregion
         }
     }

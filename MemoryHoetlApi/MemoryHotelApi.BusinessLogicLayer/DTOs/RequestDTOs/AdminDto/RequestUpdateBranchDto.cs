@@ -24,5 +24,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public List<Guid>? HighlightedConvenienceIDs { get; set; }
         public List<UploadLocationExploreDto>? LocationExplores { get; set; }
         public List<Guid>? RoomCategoryIDs { get; set; }
+        public string? HotLine { get; set; }
     }
 }

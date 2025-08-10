@@ -20,7 +20,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
 
         public async Task<User?> FindUserByEmail(string email)
         {
-            var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.Include(u => u.Role).Include(x => x.BranchReceptionists).FirstOrDefaultAsync(u => u.Email == email);
 
             return user;
         }
