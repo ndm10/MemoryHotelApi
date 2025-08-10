@@ -28,6 +28,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private IFoodCategoryRepository? _foodCategoryRepository = null!;
         private ISubFoodCategoryRepository? _subFoodCategoryRepository = null!;
         private IFoodRepository? _foodRepository = null!;
+        private IFoodOrderHistoryRepository _foodOrderHistoryRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -184,6 +185,14 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _foodRepository ??= new FoodRepository(_context);
+            }
+        }
+
+        public IFoodOrderHistoryRepository FoodOrderHistoryRepository
+        {
+            get
+            {
+                return _foodOrderHistoryRepository ??= new FoodOrderHistoryRepository(_context);
             }
         }
 

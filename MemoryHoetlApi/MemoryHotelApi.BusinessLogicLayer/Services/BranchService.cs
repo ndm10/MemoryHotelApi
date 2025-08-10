@@ -290,6 +290,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             branch.Slug = request.Slug ?? branch.Slug;
             branch.IsActive = request.IsActive ?? branch.IsActive;
             branch.HotelCode = request.HotelCode?.Trim() ?? branch.HotelCode;
+            branch.HotLine = request.HotLine?.Trim() ?? branch.HotLine;
 
             // Update the branch in the database
             _unitOfWork.BranchRepository.Update(branch);

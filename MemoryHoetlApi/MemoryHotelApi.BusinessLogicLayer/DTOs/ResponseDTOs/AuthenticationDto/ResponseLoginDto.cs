@@ -11,5 +11,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto
         public Guid UserId { get; set; }
         public string? FullName { get; set; }
         public string? Phone { get; set; }
+        public string? Role { get; set; }
+        public Guid? BranchId { get; set; }
     }
 }

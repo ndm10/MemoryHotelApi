@@ -25,6 +25,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IFoodCategoryRepository? FoodCategoryRepository { get; }
         ISubFoodCategoryRepository? SubFoodCategoryRepository { get; }
         IFoodRepository? FoodRepository { get; }
+        IFoodOrderHistoryRepository FoodOrderHistoryRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }
