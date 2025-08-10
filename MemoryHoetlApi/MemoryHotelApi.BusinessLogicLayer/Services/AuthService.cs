@@ -482,7 +482,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         private async Task<ResponseLoginDto> CreateTokenAsync(User user)
         {
             // Check if user is Receptionist or not
-            if (user.Role?.Name == Constants.RoleReceptionistName)
+            if (user.Role?.Name == Constants.RoleReceptionistName || user.Role?.Name == Constants.RoleAdminName)
             {
                 return new ResponseLoginDto
                 {

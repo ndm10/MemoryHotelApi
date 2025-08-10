@@ -81,7 +81,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #region LocationExploreMapping
             CreateMap<LocationExplore, UploadLocationExploreDto>().ReverseMap();
             CreateMap<LocationExplore, ResponseGetLocationExploreDtoCommon>().ReverseMap();
-            CreateMap<GetBranchesExploreDto, Branch>().ReverseMap()
+            CreateMap<GetBranchExploreDto, Branch>().ReverseMap()
                 .ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.BranchImages.Select(img => img.Image.Url).ToList()));
             #endregion
 

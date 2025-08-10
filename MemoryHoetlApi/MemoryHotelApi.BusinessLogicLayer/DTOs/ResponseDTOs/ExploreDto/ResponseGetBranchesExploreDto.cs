@@ -4,10 +4,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
     public class ResponseGetBranchesExploreDto : BaseResponseDto
     {
-        public List<GetBranchesExploreDto>? Data { get; set; }
+        public List<GetBranchExploreDto>? Data { get; set; }
     }
 
-    public class GetBranchesExploreDto
+    public class GetBranchExploreDto
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }

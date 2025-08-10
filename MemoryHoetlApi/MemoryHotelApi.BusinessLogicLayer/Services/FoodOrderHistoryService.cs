@@ -54,11 +54,13 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check if the user is allowed to create an order in this branch
             var includes = new[]
             {
-                nameof(User.BranchReceptionists)
+                nameof(User.BranchReceptionists),
+                nameof(User.Role)
             };
             var user = await _unitOfWork.UserRepository!.GetByIdAsync(userId, includes);
 
-            if (user == null || !user.BranchReceptionists.Any(br => br.BranchId == request.BranchId))
+            // If user is Admin, allow to create order in any branch
+            if (user == null || (user.Role.Name != Constants.RoleAdminName && !user.BranchReceptionists.Any(br => br.BranchId == request.BranchId)))
             {
                 return new BaseResponseDto
                 {
@@ -88,6 +90,22 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             foodOrderHistory.Room = request.Room;
             foodOrderHistory.CustomerPhone = request.CustomerPhone;
             foodOrderHistory.Note = request.Note;
+
+            // Generate order code base on the last order code in the branch
+            var lastOrder = await _unitOfWork.FoodOrderHistoryRepository!
+                .GetLastOrderByBranchIdAsync(request.BranchId);
+
+            // If there is no last order, set the order code to "ORDER-01"
+            if (lastOrder == null)
+            {
+                foodOrderHistory.OrderCode = "ORDER-01";
+            }
+            else
+            {
+                // Extract the number from the last order code and increment it
+                var lastOrderNumber = int.Parse(lastOrder.OrderCode.Split('-')[1]);
+                foodOrderHistory.OrderCode = $"ORDER-{lastOrderNumber + 1:D2}";
+            }
 
             // Check if all food is exists in the database and available
             foreach (var item in request.Items)
@@ -132,30 +150,45 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Check the receptionist belong to which branch
             var includes = new[]
             {
-                nameof(User.BranchReceptionists)
+                nameof(User.BranchReceptionists),
+                nameof(User.Role)
             };
 
-            var receptionist = await _unitOfWork.UserRepository!.GetByIdAsync(receptionistId, includes);
+            var user = await _unitOfWork.UserRepository!.GetByIdAsync(receptionistId, includes);
 
-            if (receptionist == null)
+            if (user == null)
             {
                 return new ResponseGetFoodOrderHistoriesDto
                 {
                     StatusCode = 404,
-                    Message = "Receptionist not found"
+                    Message = "User not found"
                 };
             }
 
-            var branchId = receptionist.BranchReceptionists
-                .Select(br => br.BranchId)
-                .FirstOrDefault();
-
             // Create predicates for filtering
-            var predicates = PredicateBuilder.New<FoodOrderHistory>(x => !x.IsDeleted && x.BranchId == branchId);
+            var predicates = PredicateBuilder.New<FoodOrderHistory>(x => !x.IsDeleted);
+
+            // If user is not Admin, filter by branch
+            if (user.Role.Name != Constants.RoleAdminName)
+            {
+                var branchId = user.BranchReceptionists
+                    .Select(br => br.BranchId)
+                    .FirstOrDefault();
+
+                if (branchId == Guid.Empty)
+                {
+                    return new ResponseGetFoodOrderHistoriesDto
+                    {
+                        StatusCode = 403,
+                        Message = "You are not allowed to view orders in this branch"
+                    };
+                }
+                predicates = predicates.And(x => x.BranchId == branchId);
+            }
 
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicates = predicates.And(x => x.CustomerPhone.Contains(textSearch) || x.Room.Contains(textSearch) || (x.Note != null && x.Note.Contains(textSearch)));
+                predicates = predicates.And(x => x.CustomerPhone.Contains(textSearch) || x.Room.Contains(textSearch) || (x.Note != null && x.Note.Contains(textSearch) || x.OrderCode.Contains(textSearch) || x.Items.Any(i => i.Name.Contains(textSearch) || (!string.IsNullOrEmpty(i.Description) && i.Description.Contains(textSearch)))));
             }
 
             if (!string.IsNullOrEmpty(orderStatus))
@@ -181,7 +214,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Include the order details
             includes = new[]
             {
-                nameof(FoodOrderHistory.Items)
+                nameof(FoodOrderHistory.Items),
+                nameof(FoodOrderHistory.Branch)
             };
 
             // Get the order history according to the branch of the receptionist
@@ -217,7 +251,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
         public async Task<ResponseGetFoodOrderHistoryDto> GetFoodOrderHistoryAsync(string userId, Guid id)
         {
             // Get the order by ID
-            var order = await _unitOfWork.FoodOrderHistoryRepository!.GetByIdAsync(id, new[] { nameof(FoodOrderHistory.Items) });
+            var order = await _unitOfWork.FoodOrderHistoryRepository!.GetByIdAsync(id, new[] { nameof(FoodOrderHistory.Items), nameof(FoodOrderHistory.Branch) });
             if (order == null)
             {
                 return new ResponseGetFoodOrderHistoryDto
@@ -228,7 +262,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Get the user by ID
-            var user = await _unitOfWork.UserRepository!.GetByIdAsync(Guid.Parse(userId), new[] { nameof(User.BranchReceptionists) });
+            var user = await _unitOfWork.UserRepository!.GetByIdAsync(Guid.Parse(userId),
+                new[] {
+                    nameof(User.BranchReceptionists),
+                    nameof(User.Role)
+                      });
             if (user == null)
             {
                 return new ResponseGetFoodOrderHistoryDto
@@ -238,18 +276,22 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            // Check if the user is allowed to view the order
-            var branchId = user.BranchReceptionists
-                .Select(br => br.BranchId)
-                .FirstOrDefault();
-
-            if (branchId != order.BranchId)
+            // Check if the user is Admin and allowed to view the order
+            if (user.Role.Name != Constants.RoleAdminName)
             {
-                return new ResponseGetFoodOrderHistoryDto
+                // Check if the user is allowed to view the order in the branch
+                var branchId = user.BranchReceptionists
+                    .Select(br => br.BranchId)
+                    .FirstOrDefault();
+
+                if (branchId != order.BranchId)
                 {
-                    StatusCode = 403,
-                    Message = "You are not allowed to view this order"
-                };
+                    return new ResponseGetFoodOrderHistoryDto
+                    {
+                        StatusCode = 403,
+                        Message = "You are not allowed to view this order"
+                    };
+                }
             }
 
             // Map the order to the DTO
@@ -280,7 +322,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Include the BranchReceptionists to check if the user is allowed to update the order
             var includes = new[]
             {
-                nameof(User.BranchReceptionists)
+                nameof(User.BranchReceptionists),
+                nameof(User.Role)
             };
 
             // Get the user by ID
@@ -295,19 +338,21 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 };
             }
 
-            // Check the branchId of the receptionist
-            var branchId = user.BranchReceptionists
-                .Select(br => br.BranchId)
-                .FirstOrDefault();
-
-            // Check if the receptionist has permission to update the order
-            if (branchId != order.BranchId)
+            // Check if user is Admin and allowed to update the order
+            if (user.Role.Name != Constants.RoleAdminName)
             {
-                return new BaseResponseDto
+                // Check if the user is allowed to update the order in the branch
+                var branchId = user.BranchReceptionists
+                    .Select(br => br.BranchId)
+                    .FirstOrDefault();
+                if (branchId != order.BranchId)
                 {
-                    StatusCode = 403,
-                    Message = "You are not allowed to update this order"
-                };
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 403,
+                        Message = "You are not allowed to update this order"
+                    };
+                }
             }
 
             // Update the status of the order

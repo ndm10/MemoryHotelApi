@@ -101,7 +101,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 IsSuccess = true,
-                Data = _mapper.Map<List<GetBranchesExploreDto>>(branches.OrderBy(x => x.Order))
+                Data = _mapper.Map<List<GetBranchExploreDto>>(branches.OrderBy(x => x.Order))
             };
         }
 
@@ -126,7 +126,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             {
                 StatusCode = 200,
                 IsSuccess = true,
-                Data = _mapper.Map<GetBranchesExploreDto>(branch)
+                Data = _mapper.Map<GetBranchExploreDto>(branch)
             };
         }
 

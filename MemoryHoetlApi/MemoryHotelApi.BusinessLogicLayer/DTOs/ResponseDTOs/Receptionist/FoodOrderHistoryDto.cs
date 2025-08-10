@@ -1,4 +1,5 @@
-﻿using MemoryHotelApi.DataAccessLayer.Entities;
+﻿using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
+using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist
 {
@@ -13,6 +14,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public decimal TotalBill { get; set; }
+        public string? OrderCode { get; set; }
+        public GetBranchExploreDto? Branch { get; set; }
     }
 
     public class FoodOrderHistoryDetailDto
