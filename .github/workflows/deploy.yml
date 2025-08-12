@@ -35,6 +35,13 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Add Server to Known Hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SERVER_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+      env:
+        SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
+
     - name: Deploy to server
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
