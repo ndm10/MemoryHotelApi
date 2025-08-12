@@ -35,6 +35,13 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Add Server to Known Hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SERVER_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+      env:
+        SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
+
     - name: Deploy to server
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
@@ -42,9 +49,9 @@ jobs:
         SSH_PORT: ${{ secrets.SSH_PORT }}
         CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
       run: |
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} "mkdir -p /tmp/MemoryHotelApi"
-        scp -P ${{ env.SSH_PORT }} -r ./publish/* ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }}:/tmp/MemoryHotelApi/
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} "mkdir -p /tmp/MemoryHotelApi"
+        scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P ${{ env.SSH_PORT }} -r ./publish/* ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }}:/tmp/MemoryHotelApi/
+        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} << 'EOF'
           # Backup database and application
           sudo cp -r /var/www/MemoryHotelApi /var/www/MemoryHotelApi_backup_$(date +%Y-%m-%d_%H-%M-%S)
           mysqldump -u memoryhotel -p'taikhoanDb@1234' MemoryHotel > /tmp/backup_$(date +%Y-%m-%d_%H-%M-%S).sql
