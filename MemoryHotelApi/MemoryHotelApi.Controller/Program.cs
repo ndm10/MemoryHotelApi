@@ -4,7 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Mapping;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
-// using MemoryHotelApi.Controller.Middlewares;
+using MemoryHotelApi.Controller.Middlewares;
 using MemoryHotelApi.DataAccessLayer.Contexts;
 using MemoryHotelApi.DataAccessLayer.SeedData;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork;
@@ -230,7 +230,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
-//app.UseExceptionMiddleware();
+app.UseExceptionMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
