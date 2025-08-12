@@ -43,37 +43,19 @@ jobs:
         SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
 
     - name: Deploy to server
-      working-directory: ./MemoryHotelApi
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
         SSH_PORT: ${{ secrets.SSH_PORT }}
-        CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
       run: |
-        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} "mkdir -p /tmp/MemoryHotelApi"
-        scp -P ${{ env.SSH_PORT }} -r ./publish/* ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }}:/tmp/MemoryHotelApi/
         ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} << 'EOF'
-          # Backup database and application
-          sudo cp -r /var/www/MemoryHotelApi /var/www/MemoryHotelApi_backup_$(date +%Y-%m-%d_%H-%M-%S)
-          mysqldump -u memoryhotel -p'taikhoanDb@1234' MemoryHotel > /tmp/backup_$(date +%Y-%m-%d_%H-%M-%S).sql
-          
-          # Stop service
-          sudo systemctl stop MemoryHotelApi
-          
-          # Kill any process on port 5000
-          sudo ss -tulnp | grep :5000 | awk '{print $6}' | cut -d',' -f2 | cut -d'=' -f2 | xargs -r kill -9
-          
-          # Move files
-          sudo rm -rf /var/www/MemoryHotelApi/*
-          sudo mv /tmp/MemoryHotelApi/* /var/www/MemoryHotelApi/
-          sudo chown -R www-data:www-data /var/www/MemoryHotelApi
-          sudo chmod -R 755 /var/www/MemoryHotelApi
-          
+          # Load environment variables
+          source /etc/memoryhotel/memoryhotel.env
+
           # Run migrations
-          export ConnectionStrings__DefaultConnection="$CONNECTION_STRING"
           cd /var/www/MemoryHotelApi
-          sudo -u www-data dotnet ef database update || true
-          
+          sudo -u www-data dotnet ef database update
+
           # Restart service
           sudo systemctl restart MemoryHotelApi
           sudo systemctl status MemoryHotelApi
