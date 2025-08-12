@@ -230,7 +230,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MemoryHotelApi v1"));
 
-app.UseExceptionMiddleware();
+//app.UseExceptionMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
