@@ -1,0 +1,69 @@
+name: Deploy MemoryHotelApi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish --configuration Release --no-build --no-restore -o ./publish
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to server
+      env:
+        SERVER_HOST: ${{ secrets.SSH_HOST }}
+        SERVER_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+        CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+      run: |
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SSH_HOST }} "mkdir -p /tmp/MemoryHotelApi"
+        scp -P ${{ env.SSH_PORT }} -r ./publish/* ${{ env.SERVER_USERNAME }}@${{ env.SSH_HOST }}:/tmp/MemoryHotelApi/
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
+          # Backup database and application
+          sudo cp -r /var/www/MemoryHotelApi /var/www/MemoryHotelApi_backup_$(date +%Y-%m-%d_%H-%M-%S)
+          mysqldump -u memoryhotel -p'taikhoanDb@1234' MemoryHotel > /tmp/backup_$(date +%Y-%m-%d_%H-%M-%S).sql
+          
+          # Stop service
+          sudo systemctl stop MemoryHotelApi
+          
+          # Kill any process on port 5000
+          sudo ss -tulnp | grep :5000 | awk '{print $6}' | cut -d',' -f2 | cut -d'=' -f2 | xargs -r kill -9
+          
+          # Move files
+          sudo rm -rf /var/www/MemoryHotelApi/*
+          sudo mv /tmp/MemoryHotelApi/* /var/www/MemoryHotelApi/
+          sudo chown -R www-data:www-data /var/www/MemoryHotelApi
+          sudo chmod -R 755 /var/www/MemoryHotelApi
+          
+          # Run migrations
+          export ConnectionStrings__DefaultConnection="$CONNECTION_STRING"
+          cd /var/www/MemoryHotelApi
+          sudo -u www-data dotnet ef database update || true
+          
+          # Restart service
+          sudo systemctl restart MemoryHotelApi
+          sudo systemctl status MemoryHotelApi
+        EOF

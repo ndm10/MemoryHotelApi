@@ -93,6 +93,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
+#region Configure Db connection
 // Register the DbContext on the service container
 //builder.Services.AddDbContext<MemoryHotelApiDbContext>(options =>
 //{
@@ -101,10 +102,29 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddDbContext<MemoryHotelApiDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+    }
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 0)));
 });
+#endregion
 
-// Add authentication
+#region Configure JWT settings
+// Configure JWT settings
+var jwtSettings = new
+{
+    Key = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("Jwt__Key"),
+    Issuer = builder.Configuration["Jwt:Issuer"] ?? Environment.GetEnvironmentVariable("Jwt__Issuer"),
+    Audience = builder.Configuration["Jwt:Audience"] ?? Environment.GetEnvironmentVariable("Jwt__Audience"),
+};
+
+if (string.IsNullOrEmpty(jwtSettings.Key) || string.IsNullOrEmpty(jwtSettings.Issuer) || string.IsNullOrEmpty(jwtSettings.Audience))
+{
+    throw new InvalidOperationException("JWT settings are not configured properly.");
+}
+
+// Register JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -113,11 +133,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
     };
 });
+#endregion
+
+#region Configure Email settings
+var emailSettings = new EmailSettings
+{
+    SmtpServer = builder.Configuration["EmailSettings:SmtpServer"] ?? Environment.GetEnvironmentVariable("EmailSettings__SmtpServer") ?? throw new InvalidOperationException("EmailSettings:SmtpServer is not configured."),
+    SmtpPort = int.TryParse(builder.Configuration["EmailSettings:SmtpPort"] ?? Environment.GetEnvironmentVariable("EmailSettings__SmtpPort"), out var port) ? port : throw new InvalidOperationException("EmailSettings:SmtpPort is not configured or invalid."),
+    SenderName = builder.Configuration["EmailSettings:SenderName"] ?? Environment.GetEnvironmentVariable("EmailSettings__SenderName") ?? throw new InvalidOperationException("EmailSettings:SenderName is not configured."),
+    SenderEmail = builder.Configuration["EmailSettings:SenderEmail"] ?? Environment.GetEnvironmentVariable("EmailSettings__SenderEmail") ?? throw new InvalidOperationException("EmailSettings:SenderEmail is not configured."),
+    Username = builder.Configuration["EmailSettings:Username"] ?? Environment.GetEnvironmentVariable("EmailSettings__Username") ?? throw new InvalidOperationException("EmailSettings:Username is not configured."),
+    Password = builder.Configuration["EmailSettings:Password"] ?? Environment.GetEnvironmentVariable("EmailSettings__Password") ?? throw new InvalidOperationException("EmailSettings:Password is not configured.")
+};
+builder.Services.AddSingleton(emailSettings);
+builder.Services.AddScoped<EmailSender>();
+#endregion
 
 // Register the mapping profile
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
@@ -125,14 +160,11 @@ builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 // Register the password hasher
 builder.Services.AddScoped<BcryptUtility>();
 
-// Register the jwt utility
+// Register the utilities
 builder.Services.AddScoped<JwtUtility>();
-
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<EmailSender>();
-
 builder.Services.AddScoped<StringUtility>();
 
+#region Register service classes
 // Register the services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -154,6 +186,7 @@ builder.Services.AddScoped<IFoodCategoryService, FoodCategoryService>();
 builder.Services.AddScoped<ISubFoodCategoryService, SubFoodCategoryService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IFoodOrderHistoryService, FoodOrderHistoryService>();
+#endregion
 
 // Register the Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
