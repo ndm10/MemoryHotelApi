@@ -154,6 +154,12 @@ builder.Services.AddSingleton(emailSettings);
 builder.Services.AddScoped<EmailSender>();
 #endregion
 
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+});
+
 // Register the mapping profile
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
