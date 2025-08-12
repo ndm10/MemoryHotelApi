@@ -43,6 +43,7 @@ jobs:
         SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
 
     - name: Deploy to server
+      working-directory: ./MemoryHotelApi
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
