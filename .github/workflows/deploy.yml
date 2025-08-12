@@ -43,19 +43,42 @@ jobs:
         SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
 
     - name: Deploy to server
+      working-directory: ./MemoryHotelApi
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
         SSH_PORT: ${{ secrets.SSH_PORT }}
       run: |
         ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} << 'EOF'
-          # Load environment variables
-          source /etc/memoryhotel/memoryhotel.env
+          # Stop service
+          sudo systemctl stop MemoryHotelApi
+
+          # Kill any process on port 5000
+          sudo ss -tulnp | grep :5000 | awk '{print $6}' | cut -d',' -f2 | cut -d'=' -f2 | xargs -r kill -9
+          
+          # Ensure the destination directory exists
+          sudo mkdir -p /var/www/MemoryHotelApi
+
+          # Backup Images folder
+          sudo mv /var/www/MemoryHotelApi/Images /tmp/Images_backup || true
+          
+          # Remove old application files
+          sudo rm -rf /var/www/MemoryHotelApi/*
+
+          # Move new files
+          sudo mv /tmp/MemoryHotelApi/* /var/www/MemoryHotelApi/
+
+          # Restore Images folder
+          sudo mv /tmp/Images_backup /var/www/MemoryHotelApi/ || true
+
+          # Correct permissions
+          sudo chown -R www-data:www-data /var/www/MemoryHotelApi
+          sudo chmod -R 755 /var/www/MemoryHotelApi
 
           # Run migrations
           cd /var/www/MemoryHotelApi
           sudo -u www-data dotnet ef database update
-
+          
           # Restart service
           sudo systemctl restart MemoryHotelApi
           sudo systemctl status MemoryHotelApi
