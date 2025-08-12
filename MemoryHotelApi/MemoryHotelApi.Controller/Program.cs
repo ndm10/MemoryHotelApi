@@ -4,7 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Mapping;
 using MemoryHotelApi.BusinessLogicLayer.Services;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.BusinessLogicLayer.Utilities;
-using MemoryHotelApi.Controller.Middlewares;
+// using MemoryHotelApi.Controller.Middlewares;
 using MemoryHotelApi.DataAccessLayer.Contexts;
 using MemoryHotelApi.DataAccessLayer.SeedData;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork;
