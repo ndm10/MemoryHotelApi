@@ -19,15 +19,15 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore MemoryHotelApi.sln
       working-directory: ./MemoryHotelApi
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build MemoryHotelApi.sln --configuration Release --no-restore
       working-directory: ./MemoryHotelApi
 
     - name: Publish
-      run: dotnet publish --configuration Release --no-build --no-restore -o ./publish
+      run: dotnet publish MemoryHotelApi.Controller/MemoryHotelApi.Controller.csproj --configuration Release --no-build --no-restore -o ./publish
       working-directory: ./MemoryHotelApi
 
     - name: Setup SSH
@@ -43,19 +43,21 @@ jobs:
         SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
 
     - name: Deploy to server
-      working-directory: ./MemoryHotelApi
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
         SSH_PORT: ${{ secrets.SSH_PORT }}
         CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
         ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} "mkdir -p /tmp/MemoryHotelApi"
-        scp -P ${{ env.SSH_PORT }} -r ./publish/* ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }}:/tmp/MemoryHotelApi/
+        ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} "if [ -d /var/www/MemoryHotelApi/Images ]; then sudo mv /var/www/MemoryHotelApi/Images /tmp/MemoryHotelApi_Images_backup; fi"
+        scp -P ${{ env.SSH_PORT }} -r ./MemoryHotelApi/publish/* ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }}:/tmp/MemoryHotelApi/
         ssh -p ${{ env.SSH_PORT }} ${{ env.SERVER_USERNAME }}@${{ env.SERVER_HOST }} << 'EOF'
           # Backup database and application
           sudo cp -r /var/www/MemoryHotelApi /var/www/MemoryHotelApi_backup_$(date +%Y-%m-%d_%H-%M-%S)
-          mysqldump -u memoryhotel -p'taikhoanDb@1234' MemoryHotel > /tmp/backup_$(date +%Y-%m-%d_%H-%M-%S).sql
+          mysqldump -u $DB_USERNAME -p'$DB_PASSWORD' MemoryHotel > /tmp/backup_$(date +%Y-%m-%d_%H-%M-%S).sql
           
           # Stop service
           sudo systemctl stop MemoryHotelApi
@@ -66,6 +68,12 @@ jobs:
           # Move files
           sudo rm -rf /var/www/MemoryHotelApi/*
           sudo mv /tmp/MemoryHotelApi/* /var/www/MemoryHotelApi/
+          
+          # Restore Images folder
+          if [ -d /tmp/MemoryHotelApi_Images_backup ]; then
+            sudo mv /tmp/MemoryHotelApi_Images_backup /var/www/MemoryHotelApi/Images
+          fi
+          
           sudo chown -R www-data:www-data /var/www/MemoryHotelApi
           sudo chmod -R 755 /var/www/MemoryHotelApi
           
