@@ -4,6 +4,7 @@ using MemoryHotelApi.DataAccessLayer.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemoryHotelApi.DataAccessLayer.Migrations
 {
     [DbContext(typeof(MemoryHotelApiDbContext))]
-    partial class MemoryHotelApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250822113027_Update_FoodOrderHistory_Table")]
+    partial class Update_FoodOrderHistory_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,9 +538,6 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.Property<string>("OrderCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ReceptionistName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Room")
