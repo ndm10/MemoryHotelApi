@@ -188,7 +188,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             if (!string.IsNullOrEmpty(textSearch))
             {
-                predicates = predicates.And(x => x.CustomerPhone.Contains(textSearch) || x.Room.Contains(textSearch) || (x.Note != null && x.Note.Contains(textSearch) || x.OrderCode.Contains(textSearch) || x.Items.Any(i => i.Name.Contains(textSearch) || (!string.IsNullOrEmpty(i.Description) && i.Description.Contains(textSearch)))));
+                predicates = predicates.And(x => (!string.IsNullOrEmpty(x.CustomerPhone) && x.CustomerPhone.Contains(textSearch)) || x.Room.Contains(textSearch) || (x.Note != null && x.Note.Contains(textSearch)) || x.OrderCode.Contains(textSearch) || x.CustomerName.Contains(textSearch) || (!string.IsNullOrEmpty(x.ReceptionistName) && x.ReceptionistName.Contains(textSearch)) || x.Items.Any(i => i.Name.Contains(textSearch) || (!string.IsNullOrEmpty(i.Description) && i.Description.Contains(textSearch))));
             }
 
             if (!string.IsNullOrEmpty(orderStatus))

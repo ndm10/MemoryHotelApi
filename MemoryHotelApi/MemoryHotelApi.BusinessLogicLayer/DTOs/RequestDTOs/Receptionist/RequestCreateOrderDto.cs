@@ -11,9 +11,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.Receptionist
         [Required(ErrorMessage = "Please enter room number")]
         public string Room { get; set; } = null!;
 
-        [Required(ErrorMessage = "Please enter customer phone")]
-        public string CustomerPhone { get; set; } = null!;
+        [Required(ErrorMessage = "Please enter customer name")]
+        public string CustomerName { get; set; } = null!;
 
+        public string? CustomerPhone { get; set; }
+        public string? ReceptionistName { get; set; }
         public List<FoodItems> Items { get; set; } = new List<FoodItems>();
         public string? Note { get; set; }
         public string Status { get; set; } = null!;
