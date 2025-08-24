@@ -8,6 +8,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist
         public Guid Id { get; set; }
         public string Room { get; set; } = null!;
         public string CustomerPhone { get; set; } = null!;
+        public string? CustomerName { get; set; }
+        public string? ReceptionistName { get; set; }
         public string? Note { get; set; } = null!;
         public string Status { get; set; } = null!;
         public List<FoodOrderHistoryDetailDto>? Items { get; set; }
