@@ -90,6 +90,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             foodOrderHistory.Room = request.Room;
             foodOrderHistory.CustomerPhone = request.CustomerPhone;
             foodOrderHistory.Note = request.Note;
+            foodOrderHistory.CustomerName = request.CustomerName;
+            foodOrderHistory.ReceptionistName = request.ReceptionistName;
 
             // Generate order code base on the last order code in the branch
             var lastOrder = await _unitOfWork.FoodOrderHistoryRepository!
