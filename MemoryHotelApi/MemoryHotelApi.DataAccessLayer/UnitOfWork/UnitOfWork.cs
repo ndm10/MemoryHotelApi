@@ -29,6 +29,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private ISubFoodCategoryRepository? _subFoodCategoryRepository = null!;
         private IFoodRepository? _foodRepository = null!;
         private IFoodOrderHistoryRepository _foodOrderHistoryRepository = null!;
+        private IGroupChatZaloRepository? _groupChatZaloRepository = null!;
+        private IZaloOaAuthenticationTokenRepository _zaloOaAuthenticationTokenRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -193,6 +195,20 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _foodOrderHistoryRepository ??= new FoodOrderHistoryRepository(_context);
+            }
+        }
+
+        public IGroupChatZaloRepository GroupChatZaloRepository{
+            get
+            {
+                return _groupChatZaloRepository ??= new GroupChatZaloRepository(_context);
+            }
+        }
+
+        public IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository{
+            get
+            {
+                return _zaloOaAuthenticationTokenRepository ??= new ZaloOaAuthenticationTokenRepository(_context);
             }
         }
 

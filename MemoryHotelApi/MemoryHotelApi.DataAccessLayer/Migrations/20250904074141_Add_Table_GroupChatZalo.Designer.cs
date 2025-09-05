@@ -4,6 +4,7 @@ using MemoryHotelApi.DataAccessLayer.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemoryHotelApi.DataAccessLayer.Migrations
 {
     [DbContext(typeof(MemoryHotelApiDbContext))]
-    partial class MemoryHotelApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250904074141_Add_Table_GroupChatZalo")]
+    partial class Add_Table_GroupChatZalo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

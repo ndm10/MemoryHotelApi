@@ -33,6 +33,8 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<FoodOrderHistory> FoodOrderHistories { get; set; }
         public DbSet<FoodOrderHistoryDetail> FoodOrderHistoryDetails { get; set; }
         public DbSet<BranchReceptionist> BranchReceptionists { get; set; }
+        public DbSet<ZaloOaAuthenticationToken> ZaloOaAuthenticationTokens { get; set; }
+        public DbSet<GroupChatZalo> GroupChatZalos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

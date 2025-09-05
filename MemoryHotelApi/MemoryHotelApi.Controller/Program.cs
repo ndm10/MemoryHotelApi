@@ -192,6 +192,8 @@ builder.Services.AddScoped<IFoodCategoryService, FoodCategoryService>();
 builder.Services.AddScoped<ISubFoodCategoryService, SubFoodCategoryService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IFoodOrderHistoryService, FoodOrderHistoryService>();
+
+builder.Services.AddHttpClient<IZaloService, ZaloService>();
 #endregion
 
 // Register the Unit of Work

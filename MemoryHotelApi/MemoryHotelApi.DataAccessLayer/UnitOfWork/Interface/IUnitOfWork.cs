@@ -26,6 +26,8 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         ISubFoodCategoryRepository? SubFoodCategoryRepository { get; }
         IFoodRepository? FoodRepository { get; }
         IFoodOrderHistoryRepository FoodOrderHistoryRepository { get; }
+        IGroupChatZaloRepository GroupChatZaloRepository { get; }
+        IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }

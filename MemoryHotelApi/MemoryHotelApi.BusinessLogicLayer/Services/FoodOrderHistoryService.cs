@@ -4,18 +4,26 @@ using MemoryHotelApi.BusinessLogicLayer.Common;
 using MemoryHotelApi.BusinessLogicLayer.Common.Enums;
 using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.Receptionist;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.ZaloDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ZaloDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using System;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace MemoryHotelApi.BusinessLogicLayer.Services
 {
     public class FoodOrderHistoryService : GenericService<FoodOrderHistory>, IFoodOrderHistoryService
     {
-        public FoodOrderHistoryService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
+        private readonly IZaloService _zaloService;
+
+        public FoodOrderHistoryService(IMapper mapper, IUnitOfWork unitOfWork, IZaloService zaloService) : base(mapper, unitOfWork)
         {
+            _zaloService = zaloService;
         }
 
         public async Task<BaseResponseDto> CreateOrderAsync(RequestCreateOrderDto request, Guid userId)
@@ -87,6 +95,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             foodOrderHistory.Id = Guid.NewGuid();
             foodOrderHistory.BranchId = request.BranchId;
+            foodOrderHistory.Branch = branch;
             foodOrderHistory.Room = request.Room;
             foodOrderHistory.CustomerPhone = request.CustomerPhone;
             foodOrderHistory.Note = request.Note;
@@ -134,6 +143,18 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     Quantity = item.quantity,
                     TotalPrice = food.Price * item.quantity,
                 });
+            }
+
+            // Send message to Zalo group chat
+            var responseSendZaloMessage = await _zaloService.SendMessageToZaloGroupChatAsync(foodOrderHistory);
+
+            if (responseSendZaloMessage.Error != 0)
+            {
+                return new BaseResponseDto
+                {
+                    StatusCode = 500,
+                    Message = "Failed to send message to Zalo group chat"
+                };
             }
 
             // Add the order to the database
@@ -309,8 +330,15 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<BaseResponseDto> UpdateOrderAsync(Guid id, RequestUpdateOrderDto request, Guid guid)
         {
+            // Include the BranchReceptionists to check if the user is allowed to update the order
+            var includes = new[]
+            {
+                nameof(FoodOrderHistory.Branch),
+                nameof(FoodOrderHistory.Items),
+            };
+
             // Get the order by ID
-            var order = await _unitOfWork.FoodOrderHistoryRepository!.GetByIdAsync(id);
+            var order = await _unitOfWork.FoodOrderHistoryRepository!.GetByIdAsync(id, includes);
 
             if (order == null)
             {
@@ -322,10 +350,10 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Include the BranchReceptionists to check if the user is allowed to update the order
-            var includes = new[]
+            includes = new[]
             {
                 nameof(User.BranchReceptionists),
-                nameof(User.Role)
+                nameof(User.Role),
             };
 
             // Get the user by ID
@@ -357,6 +385,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 }
             }
 
+            // If the status request update is the same as the current status, do nothing
+            if(string.Equals(request.Status, ((FoodOrderStatus)order.Status).ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return new BaseResponseDto
+                {
+                    StatusCode = 400,
+                    Message = "Order is already in this status"
+                };
+            }
+
             // Update the status of the order
             if (Enum.TryParse<FoodOrderStatus>(request.Status, ignoreCase: true, out var status))
             {
@@ -365,6 +403,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 // Update the order
                 _unitOfWork.FoodOrderHistoryRepository.Update(order);
                 await _unitOfWork.SaveChangesAsync();
+
+                var responseSendZaloMessage = await _zaloService.SendMessageToZaloGroupChatAsync(order);
+                if (responseSendZaloMessage.Error != 0)
+                {
+                    return new BaseResponseDto
+                    {
+                        StatusCode = 500,
+                        Message = "Failed to send message to Zalo group chat"
+                    };
+                }
 
                 return new BaseResponseDto
                 {

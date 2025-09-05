@@ -4,6 +4,7 @@ using MemoryHotelApi.DataAccessLayer.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemoryHotelApi.DataAccessLayer.Migrations
 {
     [DbContext(typeof(MemoryHotelApiDbContext))]
-    partial class MemoryHotelApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250904070302_Add_Table_ZaloOaAuthenticationToken")]
+    partial class Add_Table_ZaloOaAuthenticationToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -611,41 +614,6 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.HasIndex("FoodOrderHistoryId");
 
                     b.ToTable("FoodOrderHistoryDetails");
-                });
-
-            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.GroupChatZalo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("GroupId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("GroupType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupType");
-
-                    b.ToTable("GroupChatZalos");
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Hashtag", b =>
