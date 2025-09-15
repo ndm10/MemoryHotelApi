@@ -11,6 +11,7 @@ using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using MemoryHotelApi.DataAccessLayer.Entities;
 using MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface;
 using System;
+using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -168,7 +169,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<ResponseGetFoodOrderHistoriesDto> GetFoodOrderHistoriesAsync(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus, Guid receptionistId)
+        public async Task<ResponseGetFoodOrderHistoriesDto> GetFoodOrderHistoriesAsync(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus, Guid receptionistId, Guid? branchId)
         {
             // Check the receptionist belong to which branch
             var includes = new[]
@@ -194,11 +195,11 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // If user is not Admin, filter by branch
             if (user.Role.Name != Constants.RoleAdminName)
             {
-                var branchId = user.BranchReceptionists
+                var branchOfReceptionistId = user.BranchReceptionists
                     .Select(br => br.BranchId)
                     .FirstOrDefault();
 
-                if (branchId == Guid.Empty)
+                if (branchOfReceptionistId == Guid.Empty)
                 {
                     return new ResponseGetFoodOrderHistoriesDto
                     {
@@ -206,6 +207,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                         Message = "You are not allowed to view orders in this branch"
                     };
                 }
+                predicates = predicates.And(x => x.BranchId == branchOfReceptionistId);
+            }
+
+            // If branchId is provided, filter by branchId
+            if (branchId != null && branchId != Guid.Empty)
+            {
                 predicates = predicates.And(x => x.BranchId == branchId);
             }
 
@@ -235,15 +242,19 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             pageSize ??= Constants.PageSizeDefault;
 
             // Include the order details
-            includes = new[]
-            {
+            includes =
+            [
                 nameof(FoodOrderHistory.Items),
                 nameof(FoodOrderHistory.Branch)
-            };
+            ];
+
+            var orderBy = new Func<IQueryable<FoodOrderHistory>, IOrderedQueryable<FoodOrderHistory>>(
+                q => q.OrderByDescending(x => x.CreatedDate)
+            );
 
             // Get the order history according to the branch of the receptionist
             var foodOrderHistories = await _unitOfWork.FoodOrderHistoryRepository!
-                .GenericGetPaginationAsync(pageIndex.Value, pageSize.Value, predicates, includes);
+                .GenericGetPaginationAsync(pageIndex.Value, pageSize.Value, predicates, includes, orderBy);
 
             // Map the order history to the DTO
             var foodOrderHistoriesDto = _mapper.Map<List<FoodOrderHistoryDto>>(foodOrderHistories);

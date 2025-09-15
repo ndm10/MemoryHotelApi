@@ -27,7 +27,7 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 : await _context.Set<T>().CountAsync(predicate);
         }
 
-        public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null, string[]? include = null)
+        public async Task<List<T>> GenericGetPaginationAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? predicate = null, string[]? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
         {
             var query = _context.Set<T>().AsQueryable();
 
@@ -44,7 +44,16 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
                 }
             }
 
-            query = query.OrderBy(x => x.Order).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+            else
+            {
+                query = query.OrderBy(e => e.Order);
+            }
+
+            query = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
 
             return await query.ToListAsync();
         }
