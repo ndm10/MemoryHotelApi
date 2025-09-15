@@ -8,7 +8,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services.Interface
     public interface IFoodOrderHistoryService : IGenericService<FoodOrderHistory>
     {
         Task<BaseResponseDto> CreateOrderAsync(RequestCreateOrderDto request, Guid userId);
-        Task<ResponseGetFoodOrderHistoriesDto> GetFoodOrderHistoriesAsync(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus, Guid receptionistId);
+        Task<ResponseGetFoodOrderHistoriesDto> GetFoodOrderHistoriesAsync(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus, Guid receptionistId, Guid? branchId);
         Task<ResponseGetFoodOrderHistoryDto> GetFoodOrderHistoryAsync(string userId, Guid id);
         Task<BaseResponseDto> UpdateOrderAsync(Guid id, RequestUpdateOrderDto request, Guid guid);
     }

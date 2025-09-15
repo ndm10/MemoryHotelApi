@@ -22,7 +22,7 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("order")]
-        public async Task<ActionResult<ResponseGetFoodOrderHistoriesDto>> GetFoodOrderHistories(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus)
+        public async Task<ActionResult<ResponseGetFoodOrderHistoriesDto>> GetFoodOrderHistories(int? pageIndex, int? pageSize, string? textSearch, string? orderStatus, Guid? branchId)
         {
             // Get the user ID from the JWT token
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -36,7 +36,7 @@ namespace MemoryHotelApi.Controller.Controllers
                 });
             }
 
-            var response = await _foodOrderHistoryService.GetFoodOrderHistoriesAsync(pageIndex, pageSize, textSearch, orderStatus, Guid.Parse(userId));
+            var response = await _foodOrderHistoryService.GetFoodOrderHistoriesAsync(pageIndex, pageSize, textSearch, orderStatus, Guid.Parse(userId), branchId);
             return StatusCode(response.StatusCode, response);
         }
 
