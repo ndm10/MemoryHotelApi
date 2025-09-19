@@ -19,8 +19,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ISubFoodCategoryService _subFoodCategoryService;
         private readonly IFoodService _foodService;
         private readonly IServiceCategoryService _serviceCategoryService;
+        private readonly IServiceService _serviceService;
 
-        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService)
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService, IServiceService serviceService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
@@ -32,6 +33,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _subFoodCategoryService = subFoodCategoryService;
             _foodService = foodService;
             _serviceCategoryService = serviceCategoryService;
+            _serviceService = serviceService;
         }
 
         [HttpGet("banner")]
@@ -143,6 +145,20 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetServiceCategoriesExploreDto>> GetServiceCategories(Guid id)
         {
             var response = await _serviceCategoryService.GetServiceCategoryExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service")]
+        public async Task<ActionResult<ResponseGetServicesExploreDto>> GetServices(int? pageIndex, int? pageSize, string? textSearch, Guid? serviceCategoryId)
+        {
+            var response = await _serviceService.GetServicesExploreAsync(pageIndex, pageSize, textSearch, serviceCategoryId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service/{id}")]
+        public async Task<ActionResult<ResponseGetServiceExploreDto>> GetService(Guid id)
+        {
+            var response = await _serviceService.GetServiceExploreAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

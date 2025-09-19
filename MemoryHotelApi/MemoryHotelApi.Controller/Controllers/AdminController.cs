@@ -35,8 +35,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IFoodCategoryService _foodCategoryService;
         private readonly IFoodService _foodService;
         private readonly IServiceCategoryService _serviceCategoryService;
+        private readonly IServiceService _serviceService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService, ISubFoodCategoryService subFoodCategoryService, IFoodCategoryService foodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService, ISubFoodCategoryService subFoodCategoryService, IFoodCategoryService foodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService, IServiceService serviceService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -55,6 +56,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _foodCategoryService = foodCategoryService;
             _foodService = foodService;
             _serviceCategoryService = serviceCategoryService;
+            _serviceService = serviceService;
         }
 
         [HttpGet("banner")]
@@ -682,6 +684,41 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<BaseResponseDto>> DeleteServiceCategoryAsync(Guid id)
         {
             var response = await _serviceCategoryService.SoftDeleteServiceCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service")]
+        public async Task<ActionResult<ResponseAdminGetServicesDto>> GetServicesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid? serviceCategoryId)
+        {
+            var response = await _serviceService.GetServicesAsync(pageIndex, pageSize, textSearch, status, serviceCategoryId);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service/{id}")]
+        public async Task<ActionResult<ResponseAdminGetServiceDto>> GetServiceAsync(Guid id)
+        {
+            var response = await _serviceService.GetServiceAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("service")]
+        public async Task<ActionResult<BaseResponseDto>> UploadServiceAsync(RequestUploadServiceDto dto)
+        {
+            var response = await _serviceService.UploadServiceAsync(dto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("service/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateServiceAsync(Guid id, RequestUpdateServiceDto dto)
+        {
+            var response = await _serviceService.UpdateServiceAsync(id, dto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("service/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteServiceAsync(Guid id)
+        {
+            var response = await _serviceService.SoftDeleteServiceAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

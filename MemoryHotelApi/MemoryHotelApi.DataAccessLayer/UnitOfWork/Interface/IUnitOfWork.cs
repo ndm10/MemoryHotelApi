@@ -29,6 +29,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IGroupChatZaloRepository GroupChatZaloRepository { get; }
         IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository { get; }
         IServiceCategoryRepository? ServiceCategoryRepository { get; }
+        IServiceRepository? ServiceRepository { get; }
         IMotorcycleRentalHistoryRepository? MotorcycleRentalHistoryRepository { get; }
         IMotorcycleRentalHistoryDetailRepository? MotorcycleRentalHistoryDetailRepository { get; }
         ICarBookingHistoryRepository? CarBookingHistoryRepository { get; }

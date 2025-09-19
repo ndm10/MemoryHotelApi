@@ -32,6 +32,7 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private IGroupChatZaloRepository? _groupChatZaloRepository = null!;
         private IZaloOaAuthenticationTokenRepository _zaloOaAuthenticationTokenRepository = null!;
         private IServiceCategoryRepository? _serviceCategoryRepository = null!;
+        private IServiceRepository? _serviceRepository = null!;
         private IMotorcycleRentalHistoryRepository? _motorcycleRentalHistoryRepository = null!;
         private IMotorcycleRentalHistoryDetailRepository? _motorcycleRentalHistoryDetailRepository = null!;
         private ICarBookingHistoryRepository? _carBookingHistoryRepository = null!;
@@ -256,6 +257,14 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             get
             {
                 return _carBookingHistoryDetailRepository ??= new CarBookingHistoryDetailRepository(_context);
+            }
+        }
+
+        public IServiceRepository? ServiceRepository
+        {
+            get
+            {
+                return _serviceRepository ??= new ServiceRepository(_context);
             }
         }
 
