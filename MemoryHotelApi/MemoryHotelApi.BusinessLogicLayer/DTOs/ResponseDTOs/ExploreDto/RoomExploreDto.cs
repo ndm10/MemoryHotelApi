@@ -11,7 +11,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
         public string? BedType { get; set; }
         public int Capacity { get; set; }
         public decimal PricePerNight { get; set; }
-        public List<GetConvenienceDtoCommon>? Conveniences { get; set; }
+        public List<GetConvenienceCommonDto>? Conveniences { get; set; }
         public List<string>? Images { get; set; }
     }
 }

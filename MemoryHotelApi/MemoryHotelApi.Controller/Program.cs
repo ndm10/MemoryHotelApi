@@ -192,6 +192,11 @@ builder.Services.AddScoped<IFoodCategoryService, FoodCategoryService>();
 builder.Services.AddScoped<ISubFoodCategoryService, SubFoodCategoryService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IFoodOrderHistoryService, FoodOrderHistoryService>();
+builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+builder.Services.AddScoped<IMotorcycleRentalHistoryService, MotorcycleRentalHistoryService>();
+builder.Services.AddScoped<IMotorcycleRentalHistoryDetailService, MotorcycleRentalHistoryDetailService>();
+builder.Services.AddScoped<ICarBookingHistoryService, CarBookingHistoryService>();
+builder.Services.AddScoped<ICarBookingHistoryDetailService, CarBookingHistoryDetailService>();
 
 builder.Services.AddHttpClient<IZaloService, ZaloService>();
 #endregion

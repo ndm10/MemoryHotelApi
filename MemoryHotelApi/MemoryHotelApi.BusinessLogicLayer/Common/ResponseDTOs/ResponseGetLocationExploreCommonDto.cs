@@ -1,9 +1,8 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class ResponseGetCityDtoCommon
+    public class ResponseGetLocationExploreCommonDto
     {
-        public Guid Id { get; set; }
         public string? Name { get; set; }
-        public string? Region { get; set; }
+        public string? Distance { get; set; }
     }
 }

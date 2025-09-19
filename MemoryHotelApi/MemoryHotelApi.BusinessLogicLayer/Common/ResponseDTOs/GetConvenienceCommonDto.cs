@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class GetConvenienceDtoCommon
+    public class GetConvenienceCommonDto
     {
         public Guid Id { get; set; }
         public string Icon { get; set; } = null!;

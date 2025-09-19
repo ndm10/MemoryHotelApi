@@ -339,6 +339,120 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.ToTable("BranchReceptionists");
                 });
 
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("BookingCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerPhone")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PickupLocation")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ReceptionistName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Room")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarBookingHistories");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistoryDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CarBookingHistoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarBookingHistoryId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("CarBookingHistoryDetails");
+                });
+
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.City", b =>
                 {
                     b.Property<Guid>("Id")
@@ -838,6 +952,123 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.ToTable("MembershipTierMembershipTierBenefits");
                 });
 
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerPhone")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReceptionistName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RentalCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Room")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("MotorcycleRentalHistories");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistoryDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BikeRentalHistoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BikeRentalHistoryId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("MotorcycleRentalHistoryDetails");
+                });
+
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -956,6 +1187,88 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RoomCategories");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<Guid>("ServiceCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceCategoryId");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.ServiceCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ServiceCategories");
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Story", b =>
@@ -1421,6 +1734,25 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistoryDetail", b =>
+                {
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistory", "CarBookingHistory")
+                        .WithMany()
+                        .HasForeignKey("CarBookingHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarBookingHistory");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Food", b =>
                 {
                     b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.SubFoodCategory", "SubFoodCategory")
@@ -1492,6 +1824,36 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.Navigation("MembershipTierBenefit");
                 });
 
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistory", b =>
+                {
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistoryDetail", b =>
+                {
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistory", "BikeRentalHistory")
+                        .WithMany()
+                        .HasForeignKey("BikeRentalHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BikeRentalHistory");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Room", b =>
                 {
                     b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.Branch", "Branch")
@@ -1509,6 +1871,17 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("RoomCategory");
+                });
+
+            modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Service", b =>
+                {
+                    b.HasOne("MemoryHotelApi.DataAccessLayer.Entities.ServiceCategory", "ServiceCategory")
+                        .WithMany()
+                        .HasForeignKey("ServiceCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceCategory");
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.SubFoodCategory", b =>

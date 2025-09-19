@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.Receptionist
 {
-    public class ResponseGetFoodOrderHistoriesDto : GenericResponsePagination<FoodOrderHistoryDto>
+    public class ResponseGetFoodOrderHistoriesDto : GenericResponsePaginationDto<FoodOrderHistoryDto>
     {
 
     }

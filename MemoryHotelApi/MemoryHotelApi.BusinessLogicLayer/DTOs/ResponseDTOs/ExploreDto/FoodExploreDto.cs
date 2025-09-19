@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
-    public class ExploreFoodDto
+    public class FoodExploreDto
     {
         public Guid? Id { get; set; }
         public string? Name { get; set; }

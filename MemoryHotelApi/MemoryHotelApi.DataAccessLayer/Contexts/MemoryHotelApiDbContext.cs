@@ -35,6 +35,12 @@ namespace MemoryHotelApi.DataAccessLayer.Contexts
         public DbSet<BranchReceptionist> BranchReceptionists { get; set; }
         public DbSet<ZaloOaAuthenticationToken> ZaloOaAuthenticationTokens { get; set; }
         public DbSet<GroupChatZalo> GroupChatZalos { get; set; }
+        public DbSet<ServiceCategory> ServiceCategories { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<MotorcycleRentalHistory> MotorcycleRentalHistories { get; set; }
+        public DbSet<MotorcycleRentalHistoryDetail> MotorcycleRentalHistoryDetails { get; set; }
+        public DbSet<CarBookingHistory> CarBookingHistories { get; set; }
+        public DbSet<CarBookingHistoryDetail> CarBookingHistoryDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

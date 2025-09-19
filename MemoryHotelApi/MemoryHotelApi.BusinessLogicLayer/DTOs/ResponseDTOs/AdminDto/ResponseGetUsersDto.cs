@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetUsersDto: GenericResponsePagination<UserDto>
+    public class ResponseGetUsersDto: GenericResponsePaginationDto<UserDto>
     {
     }
 
@@ -17,7 +17,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public bool IsActive { get; set; }
         public bool IsDeletedAllowed { get; set; }
         public int Order { get; set; }
-        public MembershipTierDtoCommon? MembershipTier { get; set; }
+        public MembershipTierCommonDto? MembershipTier { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }

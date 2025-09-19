@@ -99,7 +99,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 }
                 else
                 {
-                    response.NextMembershipTier = _mapper.Map<MembershipTierDtoCommon>(membershipTiers.OrderBy(x => x.Order).FirstOrDefault(x => x.Id != user.MembershipTier!.Id));
+                    response.NextMembershipTier = _mapper.Map<MembershipTierCommonDto>(membershipTiers.OrderBy(x => x.Order).FirstOrDefault(x => x.Id != user.MembershipTier!.Id));
                 }
             }
 

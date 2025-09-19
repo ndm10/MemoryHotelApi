@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetRoomsDto : GenericResponsePagination<RoomDto>
+    public class ResponseGetRoomsDto : GenericResponsePaginationDto<RoomDto>
     {
     }
 

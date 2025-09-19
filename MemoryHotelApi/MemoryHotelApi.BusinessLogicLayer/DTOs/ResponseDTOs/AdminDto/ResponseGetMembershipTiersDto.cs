@@ -3,7 +3,7 @@ using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetMembershipTiersDto : GenericResponsePagination<MembershipTierDto>
+    public class ResponseGetMembershipTiersDto : GenericResponsePaginationDto<MembershipTierDto>
     {
     }
 
