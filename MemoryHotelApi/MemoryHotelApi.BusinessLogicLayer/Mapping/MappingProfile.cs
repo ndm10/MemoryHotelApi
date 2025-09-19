@@ -162,6 +162,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<ServiceCategory, ServiceCategoryExploreDto>();
             CreateMap<RequestUploadServiceCategoryDto, ServiceCategory>();
             #endregion
+
+            #region ServiceMapping
+            CreateMap<Service, AdminServiceDto>();
+            CreateMap<RequestUploadServiceDto, Service>();
+            CreateMap<Service, ServiceExploreDto>();
+            #endregion
         }
     }
 }

@@ -10,6 +10,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Vui lòng nhập giá đồ ăn")]
+        [NumberGreaterThan(0, ErrorMessage = "Vui lòng nhập thời gian chờ món (lớn hơn 0 phút)")]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập hình ảnh đồ ăn")]

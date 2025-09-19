@@ -197,6 +197,7 @@ builder.Services.AddScoped<IMotorcycleRentalHistoryService, MotorcycleRentalHist
 builder.Services.AddScoped<IMotorcycleRentalHistoryDetailService, MotorcycleRentalHistoryDetailService>();
 builder.Services.AddScoped<ICarBookingHistoryService, CarBookingHistoryService>();
 builder.Services.AddScoped<ICarBookingHistoryDetailService, CarBookingHistoryDetailService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
 
 builder.Services.AddHttpClient<IZaloService, ZaloService>();
 #endregion
