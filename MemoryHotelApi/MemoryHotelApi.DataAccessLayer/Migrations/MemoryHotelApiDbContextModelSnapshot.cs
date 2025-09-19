@@ -64,7 +64,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("RoomCategoriesId");
 
-                    b.ToTable("BranchRoomCategory");
+                    b.ToTable("BranchRoomCategory", (string)null);
                 });
 
             modelBuilder.Entity("ConvenienceRoom", b =>
@@ -79,7 +79,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("RoomsId");
 
-                    b.ToTable("ConvenienceRoom");
+                    b.ToTable("ConvenienceRoom", (string)null);
                 });
 
             modelBuilder.Entity("ImageRoom", b =>
@@ -94,7 +94,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("RoomsId");
 
-                    b.ToTable("ImageRoom");
+                    b.ToTable("ImageRoom", (string)null);
                 });
 
             modelBuilder.Entity("ImageSubTour", b =>
@@ -109,7 +109,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("SubToursId");
 
-                    b.ToTable("ImageSubTour");
+                    b.ToTable("ImageSubTour", (string)null);
                 });
 
             modelBuilder.Entity("ImageTour", b =>
@@ -124,7 +124,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("ToursId");
 
-                    b.ToTable("ImageTour");
+                    b.ToTable("ImageTour", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Banner", b =>
@@ -160,7 +160,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banners");
+                    b.ToTable("Banners", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Blog", b =>
@@ -220,7 +220,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.BlogHashTag", b =>
@@ -235,7 +235,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("HashtagId");
 
-                    b.ToTable("BlogHashtags");
+                    b.ToTable("BlogHashtags", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Branch", b =>
@@ -303,7 +303,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.BranchImage", b =>
@@ -321,7 +321,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("BranchImage");
+                    b.ToTable("BranchImage", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.BranchReceptionist", b =>
@@ -336,7 +336,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BranchReceptionists");
+                    b.ToTable("BranchReceptionists", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistory", b =>
@@ -394,7 +394,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CarBookingHistories");
+                    b.ToTable("CarBookingHistories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.CarBookingHistoryDetail", b =>
@@ -450,7 +450,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CarBookingHistoryDetails");
+                    b.ToTable("CarBookingHistoryDetails", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.City", b =>
@@ -488,7 +488,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Convenience", b =>
@@ -525,7 +525,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conveniences");
+                    b.ToTable("Conveniences", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Food", b =>
@@ -576,7 +576,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("SubFoodCategoryId");
 
-                    b.ToTable("Foods");
+                    b.ToTable("Foods", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.FoodCategory", b =>
@@ -613,7 +613,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FoodCategories");
+                    b.ToTable("FoodCategories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.FoodOrderHistory", b =>
@@ -668,7 +668,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("FoodOrderHistories");
+                    b.ToTable("FoodOrderHistories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.FoodOrderHistoryDetail", b =>
@@ -724,7 +724,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("FoodOrderHistoryId");
 
-                    b.ToTable("FoodOrderHistoryDetails");
+                    b.ToTable("FoodOrderHistoryDetails", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.GroupChatZalo", b =>
@@ -759,7 +759,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("GroupType");
 
-                    b.ToTable("GroupChatZalos");
+                    b.ToTable("GroupChatZalos", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Hashtag", b =>
@@ -789,7 +789,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hashtags");
+                    b.ToTable("Hashtags", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Image", b =>
@@ -819,7 +819,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.LocationExplore", b =>
@@ -858,7 +858,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("LocationExplores");
+                    b.ToTable("LocationExplores", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MembershipTier", b =>
@@ -898,7 +898,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MembershipTiers");
+                    b.ToTable("MembershipTiers", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MembershipTierBenefit", b =>
@@ -931,7 +931,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MembershipTierBenefits");
+                    b.ToTable("MembershipTierBenefits", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MembershipTierMembershipTierBenefit", b =>
@@ -949,7 +949,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("MembershipTierBenefitId");
 
-                    b.ToTable("MembershipTierMembershipTierBenefits");
+                    b.ToTable("MembershipTierMembershipTierBenefits", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistory", b =>
@@ -1010,7 +1010,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("MotorcycleRentalHistories");
+                    b.ToTable("MotorcycleRentalHistories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.MotorcycleRentalHistoryDetail", b =>
@@ -1066,7 +1066,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("MotorcycleRentalHistoryDetails");
+                    b.ToTable("MotorcycleRentalHistoryDetails", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Role", b =>
@@ -1099,7 +1099,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Room", b =>
@@ -1156,7 +1156,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("RoomCategoryId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.RoomCategory", b =>
@@ -1186,7 +1186,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomCategories");
+                    b.ToTable("RoomCategories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Service", b =>
@@ -1231,7 +1231,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("ServiceCategoryId");
 
-                    b.ToTable("Services");
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.ServiceCategory", b =>
@@ -1268,7 +1268,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceCategories");
+                    b.ToTable("ServiceCategories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Story", b =>
@@ -1304,7 +1304,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stories");
+                    b.ToTable("Stories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.SubFoodCategory", b =>
@@ -1342,7 +1342,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("FoodCategoryId");
 
-                    b.ToTable("SubFoodCategories");
+                    b.ToTable("SubFoodCategories", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.SubTour", b =>
@@ -1399,7 +1399,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("TourId");
 
-                    b.ToTable("SubTours");
+                    b.ToTable("SubTours", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.Tour", b =>
@@ -1446,7 +1446,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Tours");
+                    b.ToTable("Tours", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.User", b =>
@@ -1513,7 +1513,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MemoryHotelApi.DataAccessLayer.Entities.ZaloOaAuthenticationToken", b =>
@@ -1558,7 +1558,7 @@ namespace MemoryHotelApi.DataAccessLayer.Migrations
 
                     b.HasIndex("IsUsed");
 
-                    b.ToTable("ZaloOaAuthenticationTokens");
+                    b.ToTable("ZaloOaAuthenticationTokens", (string)null);
                 });
 
             modelBuilder.Entity("BranchConvenience", b =>

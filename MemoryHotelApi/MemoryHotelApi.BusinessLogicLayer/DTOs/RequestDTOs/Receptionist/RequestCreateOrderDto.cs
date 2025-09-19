@@ -26,6 +26,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.Receptionist
         public Guid Id { get; set; }
 
         [NumberGreaterThan(0, ErrorMessage = "Please enter quantity greater than 0")]
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
     }
 }

@@ -11,6 +11,6 @@
         public string? ReceptionistName { get; set; }
         public string? Note { get; set; }
         public int Status { get; set; }
-        ICollection<CarBookingHistoryDetail> Items { get; set; } = new List<CarBookingHistoryDetail>();
+        public ICollection<CarBookingHistoryDetail> Items { get; set; } = new List<CarBookingHistoryDetail>();
     }
 }

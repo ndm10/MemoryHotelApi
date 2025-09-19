@@ -11,10 +11,10 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
         {
         }
 
-        public async Task<FoodOrderHistory?> GetLastOrderByBranchIdAsync(Guid branchId)
+        public async Task<FoodOrderHistory?> GetLastOrderAsync()
         {
             return await _context.FoodOrderHistories
-                .Where(order => order.BranchId == branchId && !order.IsDeleted)
+                .Where(order => !order.IsDeleted)
                 .OrderByDescending(order => order.CreatedDate)
                 .FirstOrDefaultAsync();
         }

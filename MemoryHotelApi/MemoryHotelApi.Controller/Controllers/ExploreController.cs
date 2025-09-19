@@ -1,4 +1,5 @@
 ﻿using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +21,10 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IFoodService _foodService;
         private readonly IServiceCategoryService _serviceCategoryService;
         private readonly IServiceService _serviceService;
+        private readonly IMotorcycleRentalHistoryService _motorcycleRentalHistoryService;
+        private readonly ICarBookingHistoryService _carBookingHistoryService;
 
-        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService, IServiceService serviceService)
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService, IServiceService serviceService, IMotorcycleRentalHistoryService motorcycleRentalHistoryService, ICarBookingHistoryService carBookingHistoryService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
@@ -34,6 +37,8 @@ namespace MemoryHotelApi.Controller.Controllers
             _foodService = foodService;
             _serviceCategoryService = serviceCategoryService;
             _serviceService = serviceService;
+            _motorcycleRentalHistoryService = motorcycleRentalHistoryService;
+            _carBookingHistoryService = carBookingHistoryService;
         }
 
         [HttpGet("banner")]
@@ -159,6 +164,20 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetServiceExploreDto>> GetService(Guid id)
         {
             var response = await _serviceService.GetServiceExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("car-booking")]
+        public async Task<ActionResult<BaseResponseDto>> CarBooking(RequestCarBookingDto request)
+        {
+            var response = await _carBookingHistoryService.RequestCreateCarBookingAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("motorcycle-rental")]
+        public async Task<ActionResult<BaseResponseDto>> MotorcycleRental(RequestMotorcycleRentalDto request)
+        {
+            var response = await _motorcycleRentalHistoryService.RequestCreateMotorcycleRentalAsync(request);
             return StatusCode(response.StatusCode, response);
         }
     }
