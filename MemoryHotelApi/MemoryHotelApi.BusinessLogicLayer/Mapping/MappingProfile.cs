@@ -4,6 +4,7 @@ using MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.AuthenticationDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.BlogWriterDto;
+using MemoryHotelApi.BusinessLogicLayer.DTOs.RequestDTOs.ExploreDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AccountDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto;
 using MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AuthenticationDto;
@@ -167,6 +168,16 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             CreateMap<Service, AdminServiceDto>();
             CreateMap<RequestUploadServiceDto, Service>();
             CreateMap<Service, ServiceExploreDto>();
+            #endregion
+
+            #region MotorcycleHistoryMapping
+            CreateMap<RequestMotorcycleRentalDto, MotorcycleRentalHistory>()
+                .ForMember(dest => dest.Items, otp => otp.Ignore());
+            #endregion
+
+            #region CarBookingHistoryMapping
+            CreateMap<RequestCarBookingDto, CarBookingHistory>()
+                .ForMember(dest => dest.Items, otp => otp.Ignore());
             #endregion
         }
     }

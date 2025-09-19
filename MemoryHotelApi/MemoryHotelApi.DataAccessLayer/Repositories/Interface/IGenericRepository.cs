@@ -14,5 +14,6 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories.Interface
         Task<int> GetMaxOrderAsync();
         Task<T?> GetEntityWithConditionAsync(Expression<Func<T, bool>> predicate, string[]? include = null);
         Task<int> CountEntitiesAsync(Expression<Func<T, bool>>? predicate = null);
+        Task<T?> GetLastEntityAsync(Expression<Func<T, bool>>? predicate = null, string[]? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null);
     }
 }

@@ -105,7 +105,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
             // Generate order code base on the last order code in the branch
             var lastOrder = await _unitOfWork.FoodOrderHistoryRepository!
-                .GetLastOrderByBranchIdAsync(request.BranchId);
+                .GetLastOrderAsync();
 
             // If there is no last order, set the order code to "ORDER-01"
             if (lastOrder == null)
@@ -141,8 +141,8 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                     Price = food.Price,
                     Image = food.Image,
                     Description = food.Description,
-                    Quantity = item.quantity,
-                    TotalPrice = food.Price * item.quantity,
+                    Quantity = item.Quantity,
+                    TotalPrice = food.Price * item.Quantity,
                 });
             }
 

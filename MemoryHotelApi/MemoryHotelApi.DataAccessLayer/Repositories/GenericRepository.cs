@@ -136,5 +136,27 @@ namespace MemoryHotelApi.DataAccessLayer.Repositories
         {
             _context.Update(entity);
         }
+
+        public async Task<T?> GetLastEntityAsync(Expression<Func<T, bool>>? predicate = null, string[]? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+        {
+            var query = _context.Set<T>().AsQueryable();
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+            if (include != null)
+            {
+                foreach (var inc in include)
+                {
+                    query = query.Include(inc);
+                }
+            }
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return await query.LastOrDefaultAsync();
+        }
     }
 }

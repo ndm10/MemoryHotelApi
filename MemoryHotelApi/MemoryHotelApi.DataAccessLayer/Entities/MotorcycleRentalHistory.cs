@@ -12,7 +12,7 @@
         public string? ReceptionistName { get; set; }
         public string? Note { get; set; }
         public int Status { get; set; }
-        ICollection<MotorcycleRentalHistoryDetail> Items { get; set; } = new List<MotorcycleRentalHistoryDetail>();
+        public ICollection<MotorcycleRentalHistoryDetail> Items { get; set; } = new List<MotorcycleRentalHistoryDetail>();
         public Branch Branch { get; set; } = null!;
     }
 }
