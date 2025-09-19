@@ -31,6 +31,11 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
         private IFoodOrderHistoryRepository _foodOrderHistoryRepository = null!;
         private IGroupChatZaloRepository? _groupChatZaloRepository = null!;
         private IZaloOaAuthenticationTokenRepository _zaloOaAuthenticationTokenRepository = null!;
+        private IServiceCategoryRepository? _serviceCategoryRepository = null!;
+        private IMotorcycleRentalHistoryRepository? _motorcycleRentalHistoryRepository = null!;
+        private IMotorcycleRentalHistoryDetailRepository? _motorcycleRentalHistoryDetailRepository = null!;
+        private ICarBookingHistoryRepository? _carBookingHistoryRepository = null!;
+        private ICarBookingHistoryDetailRepository? _carBookingHistoryDetailRepository = null!;
         private bool _disposed = false;
 
         public UnitOfWork(MemoryHotelApiDbContext context)
@@ -198,17 +203,59 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork
             }
         }
 
-        public IGroupChatZaloRepository GroupChatZaloRepository{
+        public IGroupChatZaloRepository GroupChatZaloRepository
+        {
             get
             {
                 return _groupChatZaloRepository ??= new GroupChatZaloRepository(_context);
             }
         }
 
-        public IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository{
+        public IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository
+        {
             get
             {
                 return _zaloOaAuthenticationTokenRepository ??= new ZaloOaAuthenticationTokenRepository(_context);
+            }
+        }
+
+        public IServiceCategoryRepository? ServiceCategoryRepository
+        {
+            get
+            {
+                return _serviceCategoryRepository ??= new ServiceCategoryRepository(_context);
+            }
+        }
+
+        public IMotorcycleRentalHistoryRepository? MotorcycleRentalHistoryRepository
+        {
+            get
+            {
+                return _motorcycleRentalHistoryRepository ??= new MotorcycleRentalHistoryRepository(_context);
+            }
+        }
+
+        public IMotorcycleRentalHistoryDetailRepository? MotorcycleRentalHistoryDetailRepository
+        {
+            get
+            {
+                return _motorcycleRentalHistoryDetailRepository ??= new MotorcycleRentalHistoryDetailRepository(_context);
+            }
+        }
+
+        public ICarBookingHistoryRepository? CarBookingHistoryRepository
+        {
+            get
+            {
+                return _carBookingHistoryRepository ??= new CarBookingHistoryRepository(_context);
+            }
+        }
+
+        public ICarBookingHistoryDetailRepository? CarBookingHistoryDetailRepository
+        {
+            get
+            {
+                return _carBookingHistoryDetailRepository ??= new CarBookingHistoryDetailRepository(_context);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class GenericResponsePagination<T>
+    public class GenericResponsePaginationDto<T>
     {
         public int StatusCode { get; set; }
         public List<T>? Data { get; set; }

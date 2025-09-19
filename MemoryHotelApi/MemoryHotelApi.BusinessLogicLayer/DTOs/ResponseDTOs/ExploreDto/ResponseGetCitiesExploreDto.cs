@@ -3,7 +3,7 @@ using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
-    public class ResponseGetCitiesExploreDto : GenericResponsePagination<CityExploreDto>
+    public class ResponseGetCitiesExploreDto : GenericResponsePaginationDto<CityExploreDto>
     {
     }
 

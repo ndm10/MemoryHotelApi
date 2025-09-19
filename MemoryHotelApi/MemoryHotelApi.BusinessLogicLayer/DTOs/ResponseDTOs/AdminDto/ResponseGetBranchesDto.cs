@@ -3,7 +3,7 @@ using MemoryHotelApi.DataAccessLayer.Entities;
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetBranchesDto : GenericResponsePagination<BranchDto>
+    public class ResponseGetBranchesDto : GenericResponsePaginationDto<BranchDto>
     {
     }
 
@@ -24,7 +24,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
         public List<string>? Images { get; set; }
         public List<ConvenienceDto>? GeneralConveniences { get; set; }
         public List<ConvenienceDto>? HighlightedConveniences { get; set; }
-        public ICollection<ResponseGetLocationExploreDtoCommon>? LocationExplores { get; set; }
+        public ICollection<ResponseGetLocationExploreCommonDto>? LocationExplores { get; set; }
         public ICollection<RoomCategoryDto>? RoomCategories { get; set; }
         public string? HotLine { get; set; }
     }

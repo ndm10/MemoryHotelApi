@@ -23,7 +23,7 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("blog")]
-        public async Task<ActionResult<GenericResponsePagination<BlogDto>>> GetBlogAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ActionResult<GenericResponsePaginationDto<BlogDto>>> GetBlogAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)

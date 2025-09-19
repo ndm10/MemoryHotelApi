@@ -1,6 +1,6 @@
 ﻿namespace MemoryHotelApi.BusinessLogicLayer.Common.ResponseDTOs
 {
-    public class FoodCategoryDtoCommon
+    public class FoodCategoryCommonDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

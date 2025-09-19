@@ -4,6 +4,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
     public class ResponseGetFoodCategoryExploreDto : BaseResponseDto
     {
-        public ExploreFoodCategoryDto? Data { get; set; }
+        public FoodCategoryExploreDto? Data { get; set; }
     }
 }

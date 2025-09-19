@@ -75,7 +75,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 StatusCode = 200,
                 IsSuccess = true,
                 Message = "Food retrieved successfully.",
-                Data = _mapper.Map<ExploreFoodDto>(food)
+                Data = _mapper.Map<FoodExploreDto>(food)
             };
         }
 
@@ -204,7 +204,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Map the foods to the response DTO
-            var foodsDto = _mapper.Map<List<ExploreFoodDto>>(foods.OrderBy(x => x.Order));
+            var foodsDto = _mapper.Map<List<FoodExploreDto>>(foods.OrderBy(x => x.Order));
 
             return new ResponseGetFoodsExploreDto
             {

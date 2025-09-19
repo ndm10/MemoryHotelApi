@@ -97,7 +97,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var subFoodCategories = await _unitOfWork.SubFoodCategoryRepository!.GetAllAsync(predicate, includes);
 
             // Map the sub food categories to the response DTO
-            var subFoodCategoriesDto = _mapper.Map<List<ExploreSubFoodCategoryDto>>(subFoodCategories.OrderBy(x => x.Order));
+            var subFoodCategoriesDto = _mapper.Map<List<SubFoodCategoryExploreDto>>(subFoodCategories.OrderBy(x => x.Order));
 
             // Return the response DTO
             return new ResponseGetSubFoodCategoriesExploreDto
@@ -159,7 +159,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Map the sub food category to the response DTO
-            var subFoodCategoryDto = _mapper.Map<ExploreSubFoodCategoryDto>(subFoodCategory);
+            var subFoodCategoryDto = _mapper.Map<SubFoodCategoryExploreDto>(subFoodCategory);
 
             // Return the response DTO
             return new ResponseGetSubFoodCategoryExploreDto

@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.ExploreDto
 {
-    public class ResponseGetStoriesExploreDto : GenericResponsePagination<StoryExploreDto>
+    public class ResponseGetStoriesExploreDto : GenericResponsePaginationDto<StoryExploreDto>
     {
     }
 

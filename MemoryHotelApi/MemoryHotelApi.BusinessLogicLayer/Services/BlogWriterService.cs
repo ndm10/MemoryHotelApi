@@ -224,7 +224,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponsePagination<AdminBlogDto>> GetBlogsAdminAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<GenericResponsePaginationDto<AdminBlogDto>> GetBlogsAdminAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             // Set default values for pageIndex and pageSize if they are null
             var pageIndexValue = pageIndex ?? 1;
@@ -253,7 +253,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
-            return new GenericResponsePagination<AdminBlogDto>
+            return new GenericResponsePaginationDto<AdminBlogDto>
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<AdminBlogDto>>(blogs),
@@ -262,7 +262,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponsePagination<BlogDto>> GetBlogsAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid authorId)
+        public async Task<GenericResponsePaginationDto<BlogDto>> GetBlogsAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status, Guid authorId)
         {
             var pageIndexValue = pageIndex ?? 1;
             var pageSizeValue = pageSize ?? 10;
@@ -290,7 +290,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
-            return new GenericResponsePagination<BlogDto>
+            return new GenericResponsePaginationDto<BlogDto>
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<BlogDto>>(blogs),
@@ -299,7 +299,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             };
         }
 
-        public async Task<GenericResponsePagination<BlogExploreDto>> GetBlogsExploreAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<GenericResponsePaginationDto<BlogExploreDto>> GetBlogsExploreAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             var pageIndexValue = pageIndex ?? 1;
             var pageSizeValue = pageSize ?? 10;
@@ -332,7 +332,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             // Calculate total pages
             var totalPages = (int)Math.Ceiling((decimal)totalRecords / pageSizeValue);
 
-            return new GenericResponsePagination<BlogExploreDto>
+            return new GenericResponsePaginationDto<BlogExploreDto>
             {
                 StatusCode = 200,
                 Data = _mapper.Map<List<BlogExploreDto>>(blogs),

@@ -34,8 +34,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly ISubFoodCategoryService _subFoodCategoryService;
         private readonly IFoodCategoryService _foodCategoryService;
         private readonly IFoodService _foodService;
+        private readonly IServiceCategoryService _serviceCategoryService;
 
-        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService, ISubFoodCategoryService subFoodCategoryService, IFoodCategoryService foodCategoryService, IFoodService foodService)
+        public AdminController(IBannerService bannerService, IStoryService storyService, ICityService cityService, ITourService tourService, ISubTourService subTourService, IBranchService branchService, IConvenienceService convenienceService, IRoomCategoryService roomCategoryService, IUserService userService, IMembershipTierService membershipTierService, IMembershipTierBenefitService membershipTierBenefitService, IRoomService roomService, IBlogWriterService blogWriterService, ISubFoodCategoryService subFoodCategoryService, IFoodCategoryService foodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService)
         {
             _bannerService = bannerService;
             _storyService = storyService;
@@ -53,6 +54,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _subFoodCategoryService = subFoodCategoryService;
             _foodCategoryService = foodCategoryService;
             _foodService = foodService;
+            _serviceCategoryService = serviceCategoryService;
         }
 
         [HttpGet("banner")]
@@ -497,7 +499,7 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("blog")]
-        public async Task<ActionResult<GenericResponsePagination<BlogDto>>> GetBlogsAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ActionResult<GenericResponsePaginationDto<BlogDto>>> GetBlogsAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             var response = await _blogWriterService.GetBlogsAdminAsync(pageIndex, pageSize, textSearch, status);
             return StatusCode(response.StatusCode, response);
@@ -645,6 +647,41 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<BaseResponseDto>> DeleteFoodAsync(Guid id)
         {
             var response = await _foodService.SoftDeleteFoodAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service-category")]
+        public async Task<ActionResult<ResponseAdminGetServiceCategoriesDto>> GetServiceCategoriesAsync(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        {
+            var response = await _serviceCategoryService.GetServiceCategoriesAsync(pageIndex, pageSize, textSearch, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service-category/{id}")]
+        public async Task<ActionResult<ResponseAdminGetServiceCategoryDto>> GetServiceCategoryAsync(Guid id)
+        {
+            var response = await _serviceCategoryService.GetServiceCategoryAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("service-category")]
+        public async Task<ActionResult<BaseResponseDto>> UploadServiceCategoryAsync(RequestUploadServiceCategoryDto dto)
+        {
+            var response = await _serviceCategoryService.UploadServiceCategoryAsync(dto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPut("service-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> UpdateServiceCategoryAsync(Guid id, RequestUpdateServiceCategoryDto dto)
+        {
+            var response = await _serviceCategoryService.UpdateServiceCategoryAsync(id, dto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("service-category/{id}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteServiceCategoryAsync(Guid id)
+        {
+            var response = await _serviceCategoryService.SoftDeleteServiceCategoryAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

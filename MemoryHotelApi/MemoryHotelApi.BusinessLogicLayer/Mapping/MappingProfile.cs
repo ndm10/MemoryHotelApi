@@ -46,7 +46,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region ImageMapping
-            CreateMap<Image, ResponseGetImageDtoCommon>().ReverseMap();
+            CreateMap<Image, ResponseGetImageCommonDto>().ReverseMap();
             #endregion
 
             #region TourMapping
@@ -63,12 +63,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #endregion
 
             #region CityMapping
-            CreateMap<City, ResponseGetCityDtoCommon>().ReverseMap();
+            CreateMap<City, ResponseGetCityCommonDto>().ReverseMap();
             #endregion
 
             #region ConvenienceMapping
             CreateMap<Convenience, ConvenienceDto>().ReverseMap();
-            CreateMap<Convenience, GetConvenienceDtoCommon>().ReverseMap();
+            CreateMap<Convenience, GetConvenienceCommonDto>().ReverseMap();
             CreateMap<Convenience, RequestUploadConvenienceDto>().ReverseMap();
             #endregion
 
@@ -80,7 +80,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
 
             #region LocationExploreMapping
             CreateMap<LocationExplore, UploadLocationExploreDto>().ReverseMap();
-            CreateMap<LocationExplore, ResponseGetLocationExploreDtoCommon>().ReverseMap();
+            CreateMap<LocationExplore, ResponseGetLocationExploreCommonDto>().ReverseMap();
             CreateMap<GetBranchExploreDto, Branch>().ReverseMap()
                 .ForMember(dest => dest.Images, otp => otp.MapFrom(src => src.BranchImages.Select(img => img.Image.Url).ToList()));
             #endregion
@@ -94,7 +94,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
             #region MembershipTierMapping
             CreateMap<MembershipTier, MembershipTierDto>()
                 .ForMember(dest => dest.Benefits, opt => opt.MapFrom(src => src.Benefits));
-            CreateMap<MembershipTier, MembershipTierDtoCommon>();
+            CreateMap<MembershipTier, MembershipTierCommonDto>();
             CreateMap<RequestUploadMembershipTierDto, MembershipTier>().ForMember(dest => dest.Benefits, otp => otp.Ignore());
             #endregion
 
@@ -109,7 +109,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
                 .ForMember(dest => dest.Benefit, otp => otp.MapFrom(src => src.MembershipTierBenefit.Benefit))
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value));
 
-            CreateMap<MembershipTierMembershipTierBenefit, MembershipTierMembershipTierBenefitDtoCommon>()
+            CreateMap<MembershipTierMembershipTierBenefit, MembershipTierMembershipTierBenefitCommonDto>()
                 .ForMember(dest => dest.Id, otp => otp.MapFrom(src => src.MembershipTierBenefit.Id))
                 .ForMember(dest => dest.Benefit, otp => otp.MapFrom(src => src.MembershipTierBenefit.Benefit))
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value));
@@ -130,22 +130,22 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
 
             #region FoodCategoryMapping
             CreateMap<FoodCategory, AdminFoodCategoryDto>();
-            CreateMap<FoodCategory, FoodCategoryDtoCommon>();
+            CreateMap<FoodCategory, FoodCategoryCommonDto>();
             CreateMap<RequestUploadFoodCategoryDto, FoodCategory>();
-            CreateMap<FoodCategory, ExploreFoodCategoryDto>();
+            CreateMap<FoodCategory, FoodCategoryExploreDto>();
             #endregion
 
             #region SubFoodCategoryMapping
             CreateMap<SubFoodCategory, AdminSubFoodCategoryDto>();
             CreateMap<RequestUploadSubFoodCategoryDto, SubFoodCategory>();
-            CreateMap<SubFoodCategory, ExploreSubFoodCategoryDto>();
+            CreateMap<SubFoodCategory, SubFoodCategoryExploreDto>();
             CreateMap<SubFoodCategory, ResponseSubFoodCategoryCommonDto>();
             #endregion
 
             #region FoodMapping
             CreateMap<Food, AdminFoodDto>();
             CreateMap<RequestUploadFoodDto, Food>();
-            CreateMap<Food, ExploreFoodDto>();
+            CreateMap<Food, FoodExploreDto>();
             #endregion
 
             #region FoodOrderHistoryMapping
@@ -155,6 +155,12 @@ namespace MemoryHotelApi.BusinessLogicLayer.Mapping
 
             #region FoodOrderHistoryDetailMapping
             CreateMap<FoodOrderHistoryDetail, FoodOrderHistoryDetailDto>();
+            #endregion
+
+            #region ServiceCategoryMapping
+            CreateMap<ServiceCategory, AdminServiceCategoryDto>();
+            CreateMap<ServiceCategory, ServiceCategoryExploreDto>();
+            CreateMap<RequestUploadServiceCategoryDto, ServiceCategory>();
             #endregion
         }
     }

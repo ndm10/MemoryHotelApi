@@ -83,7 +83,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             var foodCategories = await _unitOfWork.FoodCategoryRepository!.GetAllAsync(predicate, includes);
 
             // Map the food categories to the response DTO
-            var foodCategoriesDto = _mapper.Map<List<ExploreFoodCategoryDto>>(foodCategories.OrderBy(x => x.Order));
+            var foodCategoriesDto = _mapper.Map<List<FoodCategoryExploreDto>>(foodCategories.OrderBy(x => x.Order));
 
             return new ResponseGetFoodCategoriesExploreDto
             {
@@ -96,7 +96,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
 
         public async Task<ResponseAdminGetFoodCategoryDto> GetFoodCategoryAsync(Guid id)
         {
-
             var includes = new string[]
             {
                 nameof(FoodCategory.SubFoodCategories)
@@ -126,7 +125,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 IsSuccess = true,
                 Message = "Food category retrieved successfully."
             };
-
         }
 
         public async Task<ResponseGetFoodCategoryExploreDto> GetFoodCategoryExploreAsync(Guid id)
@@ -152,7 +150,7 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
             }
 
             // Map the food category to the response DTO
-            var foodCategoryDto = _mapper.Map<ExploreFoodCategoryDto>(foodCategory);
+            var foodCategoryDto = _mapper.Map<FoodCategoryExploreDto>(foodCategory);
 
             return new ResponseGetFoodCategoryExploreDto
             {
@@ -208,7 +206,6 @@ namespace MemoryHotelApi.BusinessLogicLayer.Services
                 IsSuccess = true,
                 Message = "Food category deleted successfully."
             };
-
         }
 
         public async Task<BaseResponseDto> UpdateFoodCategoryAsync(Guid id, RequestUpdateFoodCategoryDto request)

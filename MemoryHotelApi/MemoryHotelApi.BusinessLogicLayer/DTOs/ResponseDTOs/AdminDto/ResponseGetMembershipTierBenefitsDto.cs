@@ -2,7 +2,7 @@
 
 namespace MemoryHotelApi.BusinessLogicLayer.DTOs.ResponseDTOs.AdminDto
 {
-    public class ResponseGetMembershipTierBenefitsDto : GenericResponsePagination<MembershipTierBenefitDto>
+    public class ResponseGetMembershipTierBenefitsDto : GenericResponsePaginationDto<MembershipTierBenefitDto>
     {
     }
 

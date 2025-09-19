@@ -18,9 +18,9 @@ namespace MemoryHotelApi.Controller.Controllers
         private readonly IFoodCategoryService _foodCategoryService;
         private readonly ISubFoodCategoryService _subFoodCategoryService;
         private readonly IFoodService _foodService;
+        private readonly IServiceCategoryService _serviceCategoryService;
 
-
-        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService)
+        public ExploreController(IBannerService bannerService, IBranchService branchService, ITourService tourService, ICityService cityService, IStoryService storyService, IBlogWriterService blogWriterService, IFoodCategoryService foodCategoryService, ISubFoodCategoryService subFoodCategoryService, IFoodService foodService, IServiceCategoryService serviceCategoryService)
         {
             _bannerService = bannerService;
             _branchService = branchService;
@@ -31,6 +31,7 @@ namespace MemoryHotelApi.Controller.Controllers
             _foodCategoryService = foodCategoryService;
             _subFoodCategoryService = subFoodCategoryService;
             _foodService = foodService;
+            _serviceCategoryService = serviceCategoryService;
         }
 
         [HttpGet("banner")]
@@ -76,7 +77,7 @@ namespace MemoryHotelApi.Controller.Controllers
         }
 
         [HttpGet("blog")]
-        public async Task<ActionResult<GenericResponsePagination<BlogExploreDto>>> GetBlogs(int? pageIndex, int? pageSize, string? textSearch, bool? status)
+        public async Task<ActionResult<GenericResponsePaginationDto<BlogExploreDto>>> GetBlogs(int? pageIndex, int? pageSize, string? textSearch, bool? status)
         {
             var response = await _blogWriterService.GetBlogsExploreAsync(pageIndex, pageSize, textSearch, status);
             return StatusCode(response.StatusCode, response);
@@ -128,6 +129,20 @@ namespace MemoryHotelApi.Controller.Controllers
         public async Task<ActionResult<ResponseGetFoodExploreDto>> GetFood(Guid id)
         {
             var response = await _foodService.GetFoodExploreAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service-category")]
+        public async Task<ActionResult<ResponseGetServiceCategoriesExploreDto>> GetServiceCategories(int? pageIndex, int? pageSize, string? textSearch)
+        {
+            var response = await _serviceCategoryService.GetServiceCategoriesExploreAsync(pageIndex, pageSize, textSearch);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("service-category/{id}")]
+        public async Task<ActionResult<ResponseGetServiceCategoriesExploreDto>> GetServiceCategories(Guid id)
+        {
+            var response = await _serviceCategoryService.GetServiceCategoryExploreAsync(id);
             return StatusCode(response.StatusCode, response);
         }
     }

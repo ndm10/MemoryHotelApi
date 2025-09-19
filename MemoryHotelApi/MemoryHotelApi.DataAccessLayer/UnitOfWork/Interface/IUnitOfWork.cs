@@ -28,6 +28,11 @@ namespace MemoryHotelApi.DataAccessLayer.UnitOfWork.Interface
         IFoodOrderHistoryRepository FoodOrderHistoryRepository { get; }
         IGroupChatZaloRepository GroupChatZaloRepository { get; }
         IZaloOaAuthenticationTokenRepository ZaloOaAuthenticationTokenRepository { get; }
+        IServiceCategoryRepository? ServiceCategoryRepository { get; }
+        IMotorcycleRentalHistoryRepository? MotorcycleRentalHistoryRepository { get; }
+        IMotorcycleRentalHistoryDetailRepository? MotorcycleRentalHistoryDetailRepository { get; }
+        ICarBookingHistoryRepository? CarBookingHistoryRepository { get; }
+        ICarBookingHistoryDetailRepository? CarBookingHistoryDetailRepository { get; }
         Task<int> SaveChangesAsync();
         IDbContextTransaction BeginTransaction();
     }
